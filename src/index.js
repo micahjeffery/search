@@ -8,6 +8,10 @@ var sites = [
     aliases: ["bang", "bangs", "search", "home", "repo"],
     home: "https://github.com/micahjeffery/search"
   },
+  {
+    aliases: ["edit"],
+    home: "https://github.com/micahjeffery/search/edit/main/src/index.js"
+  },
   // Google
   {
     aliases: ["g", "goog", "google"],
