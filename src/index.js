@@ -202,26 +202,26 @@ var sites = [
     search: "https://www.linkedin.com/search/results/all/?keywords={q}"
   },
 
-    // Bible
+  // Bible
   {
-    aliases: ["blb", "bible", "esv"],
+    aliases: ["blb", "bible", "blbesv", "esv"],
     home: "https://www.blueletterbible.org/",
-    search: "https://www.blueletterbible.org/search/search.cfm?criteria={q}&t=ESV"
+    search: "BLB:ESV"
   },
   {
-    aliases: ["blblsb", "lsb"],
+    aliases: ["lsb", "blblsb"],
     home: "https://www.blueletterbible.org/",
-    search: "https://www.blueletterbible.org/search/search.cfm?criteria={q}&t=LSB"
+    search: "BLB:LSB"
   },
   {
-    aliases: ["blbniv", "niv"],
+    aliases: ["niv", "blbniv"],
     home: "https://www.blueletterbible.org/",
-    search: "https://www.blueletterbible.org/search/search.cfm?criteria={q}&t=NIV"
+    search: "BLB:NIV"
   },
   {
-    aliases: ["blbkjv", "kjv"],
+    aliases: ["kjv", "blbkjv"],
     home: "https://www.blueletterbible.org/",
-    search: "https://www.blueletterbible.org/search/search.cfm?criteria={q}&t=KJV"
+    search: "BLB:KJV"
   },
   
   // PC / games / deals
@@ -662,6 +662,16 @@ function redirectTo(template, query = "") {
     302
   );
 }
+
+function redirectToBlueLetterBible(version, query) {
+  const text = query.trim();
+
+  return Response.redirect(
+    `https://www.blueletterbible.org/tools/MultiVerse.cfm?mvText=${encodeURIComponent(text)}&t=${encodeURIComponent(version)}`,
+    302
+  );
+}
+
 __name(redirectTo, "redirectTo");
 function getDefaultEngineFromPath(pathname) {
   const key = pathname.replace(/^\/+|\/+$/g, "").toLowerCase();
@@ -723,10 +733,16 @@ var index_default = {
     const shortcut = findShortcut(raw);
     if (shortcut && bangs[shortcut.bang]) {
       const site = bangs[shortcut.bang];
-      if (shortcut.query && site.search) {
-        return redirectTo(site.search, shortcut.query);
-      }
-      return redirectTo(site.home);
+     if (shortcut.query && site.search) {
+    if (site.search.startsWith("BLB:")) {
+      const version = site.search.split(":")[1];
+      return redirectToBlueLetterBible(version, shortcut.query);
+    }
+  
+    return redirectTo(site.search, shortcut.query);
+  }
+  
+  return redirectTo(site.home);
     }
     return redirectTo(defaultEngine.search, raw);
   }
