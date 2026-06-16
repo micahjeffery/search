@@ -500,7 +500,7 @@ var sites = [
   {
   aliases: ["qrdecode", "qrd"],
   home: "http://zxing.org/w/decode?u={{qe}}",
-  search: "http://zxing.org"
+  search: "https://zxing.org/w/decode.jspx"
   },  
   {
     aliases: ["sms"],
