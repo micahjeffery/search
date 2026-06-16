@@ -204,25 +204,25 @@ var sites = [
 
     // Bible
   {
-    aliases: ["blb", "bible", "esv"],
-    home: "https://www.blueletterbible.org/",
-    search: "https://www.blueletterbible.org/search/search.cfm?criteria={q}&t=ESV"
+    aliases: ["blb", "bible", "blbesv", "esv"],
+    home: "https://www.blueletterbible.org/esv/jhn/1/1/",
+    search: "https://www.blb.org/search/preSearch.cfm?plugin=yes&Criteria={q}&t=ESV"
   },
   {
-    aliases: ["blblsb", "lsb"],
-    home: "https://www.blueletterbible.org/",
-    search: "https://www.blueletterbible.org/search/search.cfm?criteria={q}&t=LSB"
+    aliases: ["lsb", "blblsb"],
+    home: "https://www.blueletterbible.org/lsb/jhn/1/1/",
+    search: "https://www.blb.org/search/preSearch.cfm?plugin=yes&Criteria={q}&t=LSB"
   },
   {
-    aliases: ["blbniv", "niv"],
-    home: "https://www.blueletterbible.org/",
-    search: "https://www.blueletterbible.org/search/search.cfm?criteria={q}&t=NIV"
+    aliases: ["niv", "blbniv"],
+    home: "https://www.blueletterbible.org/niv/jhn/1/1/",
+    search: "https://www.blb.org/search/preSearch.cfm?plugin=yes&Criteria={q}&t=NIV"
   },
   {
-    aliases: ["blbkjv", "kjv"],
-    home: "https://www.blueletterbible.org/",
-    search: "https://www.blueletterbible.org/search/search.cfm?criteria={q}&t=KJV"
-  },
+    aliases: ["kjv", "blbkjv"],
+    home: "https://www.blueletterbible.org/kjv/jhn/1/1/",
+    search: "https://www.blb.org/search/preSearch.cfm?plugin=yes&Criteria={q}&t=KJV"
+  }
   
   // PC / games / deals
   {
