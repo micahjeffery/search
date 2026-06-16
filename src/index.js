@@ -137,7 +137,7 @@ var sites = [
   },
   {
     aliases: ["scrabble", "scrab", "words", "wordfinder", "bg", "bananagram"],
-    home: "https://scrabble.merriam.com/finder/",
+    home: "https://scrabble.merriam.com/word-lists",
     search: "https://scrabble.merriam.com/finder/{q}"
   }, 
   {
@@ -494,9 +494,14 @@ var sites = [
   },
   {
   aliases: ["qr", "qrcode"],
-  home: "https://quickchart.io/qr-code-api/",
+  home: "https://quickchart.io/qr-code-api/#:~:text=Build%20your%20own%20QR%20code",
   search: "https://quickchart.io/qr?text={q}"
   }, 
+  {
+  aliases: ["qrdecode", "qrd"],
+  home: "http://zxing.org/w/decode?u={{qe}}",
+  search: "http://zxing.org"
+  },  
   {
     aliases: ["sms"],
     home: "https://receive-sms.cc/"
