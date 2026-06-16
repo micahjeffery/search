@@ -132,6 +132,16 @@ var sites = [
     search: "https://www.urbandictionary.com/define.php?term={q}"
   },
   {
+    aliases: ["scrabble", "scrab", "words", "wordfinder", "bg", "bananagram"],
+    home: "https://scrabble.merriam.com/finder/",
+    search: "https://scrabble.merriam.com/finder/{q}"
+  }, 
+  {
+    aliases: ["gh", "github"],
+    home: "https://github.com/",
+    search: "https://github.com/search?q={q}"
+  },
+  {
     aliases: ["hltr", "howlongtoread", "readtime"],
     home: "https://howlongtoread.com/",
     search: "https://howlongtoread.com/results/{q}"
@@ -191,6 +201,29 @@ var sites = [
     home: "https://www.linkedin.com/",
     search: "https://www.linkedin.com/search/results/all/?keywords={q}"
   },
+
+    // Bible
+  {
+    aliases: ["blb", "bible", "esv"],
+    home: "https://www.blueletterbible.org/",
+    search: "https://www.blueletterbible.org/search/search.cfm?criteria={q}&t=ESV"
+  },
+  {
+    aliases: ["blblsb", "lsb"],
+    home: "https://www.blueletterbible.org/",
+    search: "https://www.blueletterbible.org/search/search.cfm?criteria={q}&t=LSB"
+  },
+  {
+    aliases: ["blbniv", "niv"],
+    home: "https://www.blueletterbible.org/",
+    search: "https://www.blueletterbible.org/search/search.cfm?criteria={q}&t=NIV"
+  },
+  {
+    aliases: ["blbkjv", "kjv"],
+    home: "https://www.blueletterbible.org/",
+    search: "https://www.blueletterbible.org/search/search.cfm?criteria={q}&t=KJV"
+  },
+  
   // PC / games / deals
   {
     aliases: ["hlb", "hltb", "howlongtobeat"],
@@ -456,9 +489,10 @@ var sites = [
     home: "https://tinywow.com/tools/pdf"
   },
   {
-    aliases: ["qr"],
-    home: "https://it-tools.tech/qrcode-generator"
-  },
+  aliases: ["qr", "qrcode"],
+  home: "https://quickchart.io/qr-code-api/",
+  search: "https://quickchart.io/qr?text={q}"
+  }, 
   {
     aliases: ["sms"],
     home: "https://receive-sms.cc/"
