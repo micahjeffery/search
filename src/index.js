@@ -6,7 +6,7 @@ var sites = [
   // Github link
   {
     aliases: ["bang", "bangs", "search", "home", "repo"],
-    home: "https://github.com/micahjeffery.com/search"
+    home: "https://github.com/micahjeffery/search"
   },
   // Google
   {
