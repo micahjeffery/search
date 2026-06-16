@@ -202,26 +202,26 @@ var sites = [
     search: "https://www.linkedin.com/search/results/all/?keywords={q}"
   },
 
-  // Bible
+    // Bible
   {
-    aliases: ["blb", "bible", "blbesv", "esv"],
+    aliases: ["blb", "bible", "esv"],
     home: "https://www.blueletterbible.org/",
-    search: "BLB:ESV"
+    search: "https://www.blueletterbible.org/search/search.cfm?criteria={q}&t=ESV"
   },
   {
-    aliases: ["lsb", "blblsb"],
+    aliases: ["blblsb", "lsb"],
     home: "https://www.blueletterbible.org/",
-    search: "BLB:LSB"
+    search: "https://www.blueletterbible.org/search/search.cfm?criteria={q}&t=LSB"
   },
   {
-    aliases: ["niv", "blbniv"],
+    aliases: ["blbniv", "niv"],
     home: "https://www.blueletterbible.org/",
-    search: "BLB:NIV"
+    search: "https://www.blueletterbible.org/search/search.cfm?criteria={q}&t=NIV"
   },
   {
-    aliases: ["kjv", "blbkjv"],
+    aliases: ["blbkjv", "kjv"],
     home: "https://www.blueletterbible.org/",
-    search: "BLB:KJV"
+    search: "https://www.blueletterbible.org/search/search.cfm?criteria={q}&t=KJV"
   },
   
   // PC / games / deals
@@ -662,16 +662,6 @@ function redirectTo(template, query = "") {
     302
   );
 }
-
-function redirectToBlueLetterBible(version, query) {
-  const text = query.trim();
-
-  return Response.redirect(
-    `https://www.blueletterbible.org/tools/MultiVerse.cfm?mvText=${encodeURIComponent(text)}&t=${encodeURIComponent(version)}`,
-    302
-  );
-}
-
 __name(redirectTo, "redirectTo");
 function getDefaultEngineFromPath(pathname) {
   const key = pathname.replace(/^\/+|\/+$/g, "").toLowerCase();
@@ -733,16 +723,10 @@ var index_default = {
     const shortcut = findShortcut(raw);
     if (shortcut && bangs[shortcut.bang]) {
       const site = bangs[shortcut.bang];
-     if (shortcut.query && site.search) {
-    if (site.search.startsWith("BLB:")) {
-      const version = site.search.split(":")[1];
-      return redirectToBlueLetterBible(version, shortcut.query);
-    }
-  
-    return redirectTo(site.search, shortcut.query);
-  }
-  
-  return redirectTo(site.home);
+      if (shortcut.query && site.search) {
+        return redirectTo(site.search, shortcut.query);
+      }
+      return redirectTo(site.home);
     }
     return redirectTo(defaultEngine.search, raw);
   }
