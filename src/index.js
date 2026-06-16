@@ -226,7 +226,7 @@ var sites = [
     aliases: ["kjv", "blbkjv"],
     home: "https://www.blueletterbible.org/kjv/jhn/1/1/",
     search: "https://www.blb.org/search/preSearch.cfm?plugin=yes&Criteria={q}&t=KJV"
-  }
+  },
   
   // PC / games / deals
   {
