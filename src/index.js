@@ -205,6 +205,11 @@ var sites = [
     home: "https://www.linkedin.com/",
     search: "https://www.linkedin.com/search/results/all/?keywords={q}"
   },
+  {
+    aliases: ["x", "twitter"],
+    home: "https://x.com/",
+    search: "https://x.com/search?q={q}"
+  },
 
     // Bible
   {
@@ -265,6 +270,16 @@ var sites = [
     search: "https://steamdb.info/search/?a=app&q={q}"
   },
   {
+    aliases: ["gog"],
+    home: "https://www.gog.com/",
+    search: "https://www.gog.com/en/games?query={q}"
+  },
+  {
+    aliases: ["namemc", "mcname", "mcskin"],
+    home: "https://namemc.com/",
+    search: "https://namemc.com/search?q={q}"
+  },
+  {
     aliases: ["pcpp", "pcpartpicker", "partpicker"],
     home: "https://pcpartpicker.com/",
     search: "https://pcpartpicker.com/search/?q={q}"
@@ -290,6 +305,26 @@ var sites = [
     home: "https://cults3d.com/en",
     search: "https://cults3d.com/en/search?q={q}"
   },
+  // Precious metals
+  {
+    aliases: ["monument", "monumentmetals", "mm"],
+    home: "https://monumentmetals.com/",
+    search: "https://monumentmetals.com/search.html?query={q}"
+  },
+  {
+    aliases: ["apmex", "spot", "metals", "pmspot"],
+    home: "https://www.apmex.com/gold-and-silver-price-charts",
+    search: "https://www.apmex.com/search?q={q}"
+  },
+  {
+    aliases: ["gold", "apmexgold"],
+    home: "https://www.apmex.com/gold-price"
+  },
+  {
+    aliases: ["silver", "apmexsilver"],
+    home: "https://www.apmex.com/silver-price"
+  },
+  
   // Finance / tax / government
   {
     aliases: ["death", "estate"],
@@ -493,15 +528,24 @@ var sites = [
     home: "https://tinywow.com/tools/pdf"
   },
   {
-  aliases: ["qr", "qrcode"],
-  home: "https://quickchart.io/qr-code-api/#:~:text=Build%20your%20own%20QR%20code",
-  search: "https://quickchart.io/qr?text={q}"
+    aliases: ["qr", "qrcode"],
+    home: "https://quickchart.io/qr-code-api/#:~:text=Build%20your%20own%20QR%20code",
+    search: "https://quickchart.io/qr?text={q}"
   }, 
   {
-  aliases: ["qrdecode", "qrd"],
-  home: "http://zxing.org/w/decode?u={{qe}}",
-  search: "https://zxing.org/w/decode.jspx"
+    aliases: ["qrdecode", "qrd"],
+    home: "http://zxing.org/w/decode?u={{qe}}",
+    search: "https://zxing.org/w/decode.jspx"
   },  
+  {
+    aliases: ["archive", "wayback"],
+    home: "https://web.archive.org/",
+    search: "https://web.archive.org/web/*/{q}"
+  },
+  {
+    aliases: ["regex"],
+    home: "https://regex101.com/"
+  },
   {
     aliases: ["sms"],
     home: "https://receive-sms.cc/"
