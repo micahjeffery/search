@@ -53,6 +53,10 @@ var sites = [
     home: "https://scholar.google.com/",
     search: "https://scholar.google.com/scholar?q={q}"
   },
+  {
+    aliases: ["gf", "gfinance", "googlefinance"],
+    home: "https://www.google.com/finance/
+  },
   // DuckDuckGo
   {
     aliases: ["d", "duck", "ddg"],
@@ -124,6 +128,11 @@ var sites = [
     aliases: ["ccc", "camel", "camelcamelcamel"],
     home: "https://camelcamelcamel.com/",
     search: "https://camelcamelcamel.com/search?sq={q}"
+  },
+  {
+    aliases: ["costco", "co"],
+    home: "https://www.costco.com/",
+    search: "https://www.costco.com/CatalogSearch?keyword={q}"
   },
   {
     aliases: ["wiki", "w", "wikipedia"],
@@ -210,8 +219,38 @@ var sites = [
     home: "https://x.com/",
     search: "https://x.com/search?q={q}"
   },
+  {
+    aliases: ["ig", "insta", "instagram"],
+    home: "https://www.instagram.com/",
+    search: "https://www.instagram.com/explore/search/keyword/?q={q}"
+  },
+  {
+    aliases: ["fb", "facebook"],
+    home: "https://www.facebook.com/",
+    search: "https://www.facebook.com/search/top?q={q}"
+  },
+  {
+    aliases: ["pin", "pinterest"],
+    home: "https://www.pinterest.com/",
+    search: "https://www.pinterest.com/search/pins/?q={q}"
+  },
+  {
+    aliases: ["r", "reddit"],
+    home: "https://www.reddit.com/",
+    search: "https://www.reddit.com/search/?q={q}"
+  },
+  {
+    aliases: ["tt", "tiktok"],
+    home: "https://www.tiktok.com/",
+    search: "https://www.tiktok.com/search?q={q}"
+  },
+  {
+    aliases: ["dc", "discord"],
+    home: "https://discord.com/channels/@me"
+  },
 
-    // Bible
+  
+  // Bible
   {
     aliases: ["blb", "bible", "blbesv", "esv"],
     home: "https://www.blueletterbible.org/esv/jhn/1/1/",
@@ -231,6 +270,22 @@ var sites = [
     aliases: ["kjv", "blbkjv"],
     home: "https://www.blueletterbible.org/kjv/jhn/1/1/",
     search: "https://www.blb.org/search/preSearch.cfm?plugin=yes&Criteria={q}&t=KJV"
+  },
+
+  // Fitness / lifting
+  {
+    aliases: ["strengthlevel", "sl"],
+    home: "https://strengthlevel.com/",
+    search: "https://strengthlevel.com/strength-standards/{q}"
+  },
+  {
+    aliases: ["symmetric", "sym"],
+    home: "https://symmetricstrength.com/"
+  },
+  {
+    aliases: ["strongerbyscience", "sbs"],
+    home: "https://www.strongerbyscience.com/",
+    search: "https://www.strongerbyscience.com/?s={q}"
   },
   
   // PC / games / deals
@@ -317,11 +372,11 @@ var sites = [
     search: "https://www.apmex.com/search?q={q}"
   },
   {
-    aliases: ["gold", "apmexgold"],
+    aliases: ["gld", "gold", "apmexgold"],
     home: "https://www.apmex.com/gold-price"
   },
   {
-    aliases: ["silver", "apmexsilver"],
+    aliases: ["slv", "silver", "apmexsilver"],
     home: "https://www.apmex.com/silver-price"
   },
   
@@ -359,6 +414,11 @@ var sites = [
     home: "https://www.forbes.com/advisor/taxes/taxes-federal-income-tax-bracket/#:~:text=maintains%20the%20previous%20tax%20brackets%3A"
   },
   {
+    aliases: ["investopedia", "invest"],
+    home: "https://www.investopedia.com/",
+    search: "https://www.investopedia.com/search?q={q}"
+  },
+  {
     aliases: ["vbil", "bil", "sgov"],
     home: "https://www.youtube.com/watch?v=DSwBc-d9Ukc"
   },
@@ -373,9 +433,19 @@ var sites = [
     search: "https://robinhood.com/stocks/{q}"
   },
   {
+    aliases: ["yf", "yfinance", "yahoo finance"],
+    home: "https://finance.yahoo.com/",
+    search: "https://finance.yahoo.com/quote/{q}"
+  },
+  {
     aliases: ["fred", "stlouisfed"],
     home: "https://fred.stlouisfed.org/",
     search: "https://fred.stlouisfed.org/searchresults?st={q}"
+  },
+  {
+    aliases: ["z", "zillow"],
+    home: "https://www.zillow.com/",
+    search: "https://www.zillow.com/homes/{q}_rb/"
   },
   // Translation
   {
