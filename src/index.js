@@ -55,7 +55,7 @@ var sites = [
   },
   {
     aliases: ["gf", "gfinance", "googlefinance"],
-    home: "https://www.google.com/finance/
+    home: "https://www.google.com/finance/"
   },
   // DuckDuckGo
   {
