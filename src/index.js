@@ -113,6 +113,33 @@ var sites = [
     home: "https://search.brave.com/videos",
     search: "https://search.brave.com/videos?q={q}"
   },
+    // Yahoo
+  {
+    aliases: ["y", "yahoo"],
+    home: "https://search.yahoo.com/",
+    search: "https://search.yahoo.com/search?p={q}"
+  },
+  {
+    aliases: ["yi", "yimg", "yimage", "yimages"],
+    home: "https://images.search.yahoo.com/",
+    search: "https://images.search.yahoo.com/search/images?p={q}"
+  },
+  {
+    aliases: ["yv", "yvideo", "yvideos"],
+    home: "https://video.search.yahoo.com/",
+    search: "https://video.search.yahoo.com/search/video?p={q}"
+  },
+  {
+    aliases: ["yn", "ynews"],
+    home: "https://news.search.yahoo.com/",
+    search: "https://news.search.yahoo.com/search?p={q}"
+  },
+  {
+    aliases: ["ys", "yshop", "yshopping"],
+    home: "https://shopping.yahoo.com/",
+    search: "https://shopping.yahoo.com/search?p={q}"
+  }, 
+   
   // Shopping / reference
   {
     aliases: ["e", "ebay"],
