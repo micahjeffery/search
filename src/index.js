@@ -147,6 +147,11 @@ var sites = [
     search: "https://www.ebay.com/sch/i.html?_nkw={q}"
   },
   {
+    aliases: ["fbm", "fbmarket", "marketplace", "facebookmarketplace"],
+    home: "https://www.facebook.com/marketplace/",
+    search: "https://www.facebook.com/marketplace/search/?query={q}"
+  },
+  {
     aliases: ["a", "amz", "amazon"],
     home: "https://www.amazon.com/",
     search: "https://www.amazon.com/s?k={q}"
@@ -160,6 +165,11 @@ var sites = [
     aliases: ["costco", "co"],
     home: "https://www.costco.com/",
     search: "https://www.costco.com/CatalogSearch?keyword={q}"
+  },
+  {
+    aliases: ["h", "hd", "homedepot"],
+    home: "https://www.homedepot.com/",
+    search: "https://www.homedepot.com/s/{q}"
   },
   {
     aliases: ["wiki", "w", "wikipedia"],
@@ -177,9 +187,24 @@ var sites = [
     search: "https://scrabble.merriam.com/finder/{q}"
   }, 
   {
+    aliases: ["thesaurus", "thes", "syn", "synonym"],
+    home: "https://www.merriam-webster.com/thesaurus",
+    search: "https://www.merriam-webster.com/thesaurus/{q}"
+  },
+  {
+    aliases: ["o", "onelook"],
+    home: "https://www.onelook.com/",
+    search: "https://www.onelook.com/?w={q}"
+  },
+  {
     aliases: ["gh", "github"],
     home: "https://github.com/",
     search: "https://github.com/search?q={q}"
+  },
+  {
+    aliases: ["onedrive", "od"],
+    home: "https://onedrive.live.com/",
+    search: "https://onedrive.live.com/?qt=search&q={q}"
   },
   {
     aliases: ["hltr", "howlongtoread", "readtime"],
