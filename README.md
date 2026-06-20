@@ -19,7 +19,7 @@ Open your browser’s search engine settings:
 
 ## Features
 
-* Normal searches default to DuckDuckGo
+* Normal searches default to DuckDuckGo (or preferred search engine) 
 * Optional default engines by path, like `/google/`, `/brave/`, `/startpage/`
 * Custom shortcuts using `!`, `;`, `:`, or `.`
 * Aliases for the same shortcut, like `g`, `goog`, and `google`
@@ -98,4 +98,4 @@ Use `{q}` where the search query should go. Omit the `search` line for bookmark-
 
 ## Notes
 
-Leading `/` shortcuts are avoided because browsers treat `/g` as a local file path. Use `.g`, `;g`, `:g`, or `!g` instead.
+`/` shortcuts are avoided because browsers treat it as a local file path.
