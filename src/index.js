@@ -89,7 +89,7 @@ var sites = [
     search: "https://noai.duckduckgo.com/?q={q}"
   },
   {
-    aliases: ["ai", "duckai", "duck"],
+    aliases: ["ai", "duckai"],
     home: "https://duck.ai/"
   },
   // Brave
@@ -192,7 +192,7 @@ var sites = [
     search: "https://www.merriam-webster.com/thesaurus/{q}"
   },
   {
-    aliases: ["o", "onelook"],
+    aliases: ["o", "onelook", "1", "1l", "1look"],
     home: "https://www.onelook.com/",
     search: "https://www.onelook.com/?w={q}"
   },
