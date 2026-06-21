@@ -1313,7 +1313,7 @@ function renderHelpPage(requestUrl) {
     .badge, .type { border: 1px solid var(--border); border-radius: 999px; padding: 4px 9px; color: var(--muted); font-size: .78rem; white-space: nowrap; }
     .type.search { color: var(--good); }
     .type.open { color: var(--warn); }
-    .type.internal { color: var(--info); }
+    .type.help { color: var(--info); }
     .toolbar, .defaults, .warning { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; }
     .toolbar { padding: 14px; margin: 20px 0; }
     .toolbar-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
