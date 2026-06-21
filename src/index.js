@@ -240,7 +240,7 @@ const SITE_GROUPS = [
       },
       {
         name: "GitHub",
-        aliases: ["gh", "github", "git],
+        aliases: ["gh", "github", "git"],
         home: "https://github.com/",
         search: "https://github.com/search?q={q}"
       },
