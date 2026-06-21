@@ -1376,11 +1376,11 @@ function renderHelpPage(requestUrl) {
       <a href="${escapeAttribute(PROJECT.repository)}" target="_blank" rel="noreferrer">Repository ↗</a>
     </header>
     ${warning}
-    <section class="defaults">
-      <h2>Browser default-search URLs</h2>
-      <p>Click one to copy it. Go to Settings > Search Engine > Add custom search engine, paste it and make it the default. </p>
+    <details class="defaults" id="defaults" open>
+      <summary>Browser default-search URLs</summary>
+      <p>Click one to copy it. Go to Settings > Search Engine > Add custom search engine, paste it and make it the default.</p>
       <div class="engine-grid">${engineCards}</div>
-    </section>
+     </details>
     <div class="toolbar">
       <input id="filter" type="search" autocomplete="off" placeholder="Filter by name, alias, or category…" autofocus>
       <div class="toolbar-actions">
@@ -1399,6 +1399,7 @@ function renderHelpPage(requestUrl) {
     const empty = document.getElementById("empty");
     filter.addEventListener("input", () => {
       const query = filter.value.trim().toLowerCase();
+      document.getElementById("defaults").hidden = query.length > 0;
       let visible = 0;
       cards.forEach((card) => {
         const matches = !query || card.dataset.search.includes(query);
@@ -1494,7 +1495,6 @@ export default {
     const raw = (url.searchParams.get("q") || "").trim();
     // Root is the landing/help page. Search-engine URLs always include ?q=%s,
     // so this does not interfere with normal address-bar searching.
-    // Direct /help and /bangs links also work.
     if ((route === "" && !raw) || route === "help" || route === "bangs") {
       return renderHelpPage(url);
     }
