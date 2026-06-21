@@ -1376,11 +1376,6 @@ function renderHelpPage(requestUrl) {
       <a href="${escapeAttribute(PROJECT.repository)}" target="_blank" rel="noreferrer">Repository ↗</a>
     </header>
     ${warning}
-    <details class="defaults" id="defaults" open>
-      <summary>Browser default-search URLs</summary>
-      <p>Click one to copy it. Go to Settings > Search Engine > Add custom search engine, paste it and make it the default.</p>
-      <div class="engine-grid">${engineCards}</div>
-     </details>
     <div class="toolbar">
       <input id="filter" type="search" autocomplete="off" placeholder="Filter by name, alias, or category…" autofocus>
       <div class="toolbar-actions">
@@ -1388,6 +1383,11 @@ function renderHelpPage(requestUrl) {
         <button class="toolbar-button" id="collapse-all" type="button">Collapse all</button>
       </div>
     </div>
+    <details class="defaults" id="defaults" open>
+      <summary>Browser default-search URLs</summary>
+      <p>Click one to copy it. Go to Settings > Search Engine > Add custom search engine, paste it and make it the default.</p>
+      <div class="engine-grid">${engineCards}</div>
+    </details>
     <div id="empty" class="empty">No bangs match that filter.</div>
     <div id="groups">${groups}</div>
     <p class="footer">footer</p>
