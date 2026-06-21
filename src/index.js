@@ -761,7 +761,7 @@ const SITE_GROUPS = [
     ]
   },
   {
-    category: "Bible & Faith",
+    category: "Bible",
     sites: [
       {
         name: "Blue Letter Bible — ESV",
@@ -790,7 +790,7 @@ const SITE_GROUPS = [
     ]
   },
   {
-    category: "Translation & Languages",
+    category: "Translation",
     sites: [
       {
         name: "Google Translate",
@@ -1377,6 +1377,11 @@ function renderHelpPage(requestUrl) {
       <a href="${escapeAttribute(PROJECT.repository)}" target="_blank" rel="noreferrer">Repository ↗</a>
     </header>
     ${warning}
+    <section class="defaults">
+      <h2>Browser default-search URLs</h2>
+      <p>Click one to copy it. Go to Settings > Search Engine > Add custom search engine, paste it and make it the default. </p>
+      <div class="engine-grid">${engineCards}</div>
+    </section>
     <div class="toolbar">
       <input id="filter" type="search" autocomplete="off" placeholder="Filter by name, alias, or category…" autofocus>
       <div class="toolbar-actions">
@@ -1384,14 +1389,9 @@ function renderHelpPage(requestUrl) {
         <button class="toolbar-button" id="collapse-all" type="button">Collapse all</button>
       </div>
     </div>
-    <section class="defaults">
-      <h2>Browser default-search URLs</h2>
-      <p>Click one to copy it. Root and <code>/ddg/</code> use DuckDuckGo; each named path uses its own engine.</p>
-      <div class="engine-grid">${engineCards}</div>
-    </section>
     <div id="empty" class="empty">No bangs match that filter.</div>
     <div id="groups">${groups}</div>
-    <p class="footer">Bangs are case-insensitive. For example, <code>.C</code> and <code>.c</code> are the same.</p>
+    <p class="footer">footer</p>
   </main>
   <script>
     const filter = document.getElementById("filter");
@@ -1460,7 +1460,7 @@ function renderSiteCard(site) {
     </article>`;
 }
 function getSiteType(site) {
-  if (site.handler === "help") return { label: "Internal", className: "internal" };
+  if (site.handler === "help") return { label: "Help", className: "help" };
   if (site.handler === "virustotal" || site.search) {
     return { label: "Search", className: "search" };
   }
