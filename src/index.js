@@ -1,22 +1,103 @@
+const PROJECT = {
+  name: "Search",
+  repository: "https://github.com/micahjeffery/search",
+  editSource: "https://github.com/micahjeffery/search/edit/main/src/index.js"
+};
+
+// -----------------------------------------------------------------------------
+// 1. DEFAULT SEARCH ENGINES
+// -----------------------------------------------------------------------------
+
+const DEFAULT_ENGINES = [
+  {
+    name: "DuckDuckGo",
+    paths: ["", "d", "ddg", "duckduckgo"],
+    home: "https://duckduckgo.com/",
+    search: "https://duckduckgo.com/?q={q}"
+  },
+  {
+    name: "DuckDuckGo No AI",
+    paths: ["noai", "noaiddg"],
+    home: "https://noai.duckduckgo.com/",
+    search: "https://noai.duckduckgo.com/?q={q}"
+  },
+  {
+    name: "Google",
+    paths: ["google", "g"],
+    home: "https://www.google.com/",
+    search: "https://www.google.com/search?q={q}"
+  },
+  {
+    name: "Brave Search",
+    paths: ["brave", "b"],
+    home: "https://search.brave.com/",
+    search: "https://search.brave.com/search?q={q}"
+  },
+  {
+    name: "Startpage",
+    paths: ["startpage", "sp"],
+    home: "https://www.startpage.com/",
+    search: "https://www.startpage.com/sp/search?query={q}"
+  },
+  {
+    name: "Bing",
+    paths: ["bing"],
+    home: "https://www.bing.com/",
+    search: "https://www.bing.com/search?q={q}"
+  },
+  {
+    name: "Ecosia",
+    paths: ["ecosia", "eco"],
+    home: "https://www.ecosia.org/",
+    search: "https://www.ecosia.org/search?q={q}"
+  },
+  {
+    name: "Yahoo",
+    paths: ["yahoo", "y"],
+    home: "https://search.yahoo.com/",
+    search: "https://search.yahoo.com/search?p={q}"
+  }
+];
+
+// -----------------------------------------------------------------------------
+// 2. BANGS, ORGANIZED BY CATEGORY
+// -----------------------------------------------------------------------------
+// Every site uses the same format:
+//   name:    Display name used on the help page.
+//   aliases: Bang words.
+//   home:    Destination for a bang with no querye.
+//   search:  Destination for a bang with a query.
+//   handler: Optional special behavior for help, Bible references, or VirusTotal.
+
 const SITE_GROUPS = [
   {
-    category: "Project",
+    category: "Project & Developer",
     sites: [
       {
         name: "Search Project",
-        aliases: ["bang", "bangs", "search", "home", "repo"],
-        home: "https://github.com/micahjeffery/search"
+        aliases: ["bang", "search", "home", "repo", "project"],
+        home: PROJECT.repository
       },
       {
-        name: "Edit Search Project",
+        name: "Edit Search Source",
         aliases: ["edit"],
-        home: "https://github.com/micahjeffery/search/edit/main/src/index.js"
+        home: PROJECT.editSource
+      },
+      {
+        name: "Bangs & Help",
+        aliases: ["help", "bangs", "commands", "shortcuts"],
+        handler: "help"
+      },
+      {
+        name: "GitHub",
+        aliases: ["gh", "github"],
+        home: "https://github.com/",
+        search: "https://github.com/search?q={q}"
       }
     ]
   },
-
   {
-    category: "Search Engines",
+    category: "Search Engines & AI",
     sites: [
       {
         name: "Google",
@@ -53,23 +134,6 @@ const SITE_GROUPS = [
         aliases: ["m", "gm", "gmap", "gmaps", "maps"],
         home: "https://www.google.com/maps",
         search: "https://www.google.com/maps/search/{q}"
-      },
-      {
-        name: "Gmail",
-        aliases: ["go", "gma", "gmail", "mail"],
-        home: "https://mail.google.com/",
-        search: "https://mail.google.com/mail/u/0/#search/{q}"
-      },
-      {
-        name: "Google Scholar",
-        aliases: ["scholar", "gscholar"],
-        home: "https://scholar.google.com/",
-        search: "https://scholar.google.com/scholar?q={q}"
-      },
-      {
-        name: "Google Finance",
-        aliases: ["gf", "gfinance", "googlefinance"],
-        home: "https://www.google.com/finance/"
       },
       {
         name: "DuckDuckGo",
@@ -137,6 +201,42 @@ const SITE_GROUPS = [
         search: "https://search.brave.com/videos?q={q}"
       },
       {
+        name: "Startpage",
+        aliases: ["sp", "startpage"],
+        home: "https://www.startpage.com/",
+        search: "https://www.startpage.com/sp/search?query={q}"
+      },
+      {
+        name: "Startpage Images",
+        aliases: ["spi", "spimg", "spimages"],
+        home: "https://www.startpage.com/?cat=images",
+        search: "https://www.startpage.com/sp/search?query={q}&cat=images"
+      },
+      {
+        name: "Startpage Videos",
+        aliases: ["spv", "spvideo", "spvideos"],
+        home: "https://www.startpage.com/?cat=video",
+        search: "https://www.startpage.com/sp/search?query={q}&cat=video"
+      },
+      {
+        name: "Startpage News",
+        aliases: ["spn", "spnews"],
+        home: "https://www.startpage.com/?cat=news",
+        search: "https://www.startpage.com/sp/search?query={q}&cat=news"
+      },
+      {
+        name: "Bing",
+        aliases: ["bing"],
+        home: "https://www.bing.com/",
+        search: "https://www.bing.com/search?q={q}"
+      },
+      {
+        name: "Ecosia",
+        aliases: ["eco", "ecosia"],
+        home: "https://www.ecosia.org/",
+        search: "https://www.ecosia.org/search?q={q}"
+      },
+      {
         name: "Yahoo",
         aliases: ["y", "yahoo"],
         home: "https://search.yahoo.com/",
@@ -168,46 +268,9 @@ const SITE_GROUPS = [
       }
     ]
   },
-
   {
-    category: "Shopping, Reference & Cloud",
+    category: "Reference, Research & Words",
     sites: [
-      {
-        name: "eBay",
-        aliases: ["e", "ebay"],
-        home: "https://www.ebay.com/",
-        search: "https://www.ebay.com/sch/i.html?_nkw={q}"
-      },
-      {
-        name: "Facebook Marketplace",
-        aliases: ["fbm", "fbmarket", "marketplace", "facebookmarketplace"],
-        home: "https://www.facebook.com/marketplace/",
-        search: "https://www.facebook.com/marketplace/search/?query={q}"
-      },
-      {
-        name: "Amazon",
-        aliases: ["a", "amz", "amazon"],
-        home: "https://www.amazon.com/",
-        search: "https://www.amazon.com/s?k={q}"
-      },
-      {
-        name: "CamelCamelCamel",
-        aliases: ["c", "ccc", "camel", "camelcamelcamel"],
-        home: "https://camelcamelcamel.com/",
-        search: "https://camelcamelcamel.com/search?sq={q}"
-      },
-      {
-        name: "Costco",
-        aliases: ["costco", "co"],
-        home: "https://www.costco.com/",
-        search: "https://www.costco.com/CatalogSearch?keyword={q}"
-      },
-      {
-        name: "Home Depot",
-        aliases: ["h", "hd", "homedepot"],
-        home: "https://www.homedepot.com/",
-        search: "https://www.homedepot.com/s/{q}"
-      },
       {
         name: "Wikipedia",
         aliases: ["wiki", "w", "wikipedia"],
@@ -215,22 +278,16 @@ const SITE_GROUPS = [
         search: "https://en.wikipedia.org/wiki/Special:Search?search={q}&vectornightmode=1"
       },
       {
-        name: "Urban Dictionary",
-        aliases: ["u", "ud", "urban", "urbandictionary"],
-        home: "https://www.urbandictionary.com/",
-        search: "https://www.urbandictionary.com/define.php?term={q}"
+        name: "Google Scholar",
+        aliases: ["scholar", "gscholar"],
+        home: "https://scholar.google.com/",
+        search: "https://scholar.google.com/scholar?q={q}"
       },
       {
-        name: "Scrabble Word Finder",
-        aliases: ["scrabble", "scrab", "words", "wordfinder", "bg", "bananagram"],
-        home: "https://scrabble.merriam.com/word-lists",
-        search: "https://scrabble.merriam.com/finder/{q}"
-      },
-      {
-        name: "Merriam-Webster Thesaurus",
-        aliases: ["thesaurus", "thes", "syn", "synonym"],
-        home: "https://www.merriam-webster.com/thesaurus",
-        search: "https://www.merriam-webster.com/thesaurus/{q}"
+        name: "PubMed",
+        aliases: ["pubmed", "pub"],
+        home: "https://pubmed.ncbi.nlm.nih.gov/",
+        search: "https://pubmed.ncbi.nlm.nih.gov/?term={q}"
       },
       {
         name: "OneLook",
@@ -239,16 +296,22 @@ const SITE_GROUPS = [
         search: "https://www.onelook.com/?w={q}"
       },
       {
-        name: "GitHub",
-        aliases: ["gh", "github", "git"],
-        home: "https://github.com/",
-        search: "https://github.com/search?q={q}"
+        name: "Merriam-Webster Thesaurus",
+        aliases: ["thesaurus", "thes", "syn", "synonym"],
+        home: "https://www.merriam-webster.com/thesaurus",
+        search: "https://www.merriam-webster.com/thesaurus/{q}"
       },
       {
-        name: "OneDrive",
-        aliases: ["onedrive", "od", "1d"],
-        home: "https://onedrive.live.com/",
-        search: "https://onedrive.live.com/?qt=search&q={q}"
+        name: "Merriam-Webster Scrabble Finder",
+        aliases: ["scrabble", "scrab", "words", "wordfinder", "bg", "bananagram"],
+        home: "https://scrabble.merriam.com/word-lists",
+        search: "https://scrabble.merriam.com/finder/{q}"
+      },
+      {
+        name: "Urban Dictionary",
+        aliases: ["u", "ud", "urban", "urbandictionary"],
+        home: "https://www.urbandictionary.com/",
+        search: "https://www.urbandictionary.com/define.php?term={q}"
       },
       {
         name: "How Long to Read",
@@ -257,16 +320,68 @@ const SITE_GROUPS = [
         search: "https://howlongtoread.com/results/{q}"
       },
       {
-        name: "PubMed",
-        aliases: ["pubmed", "pub", "med"],
-        home: "https://pubmed.ncbi.nlm.nih.gov/",
-        search: "https://pubmed.ncbi.nlm.nih.gov/?term={q}"
+        name: "ToS;DR",
+        aliases: ["tosdr", "tos"],
+        home: "https://tosdr.org/en",
+        search: "https://tosdr.org/en/search/{q}"
+      }
+    ]
+  },
+  {
+    category: "Shopping & Deals",
+    sites: [
+      {
+        name: "Amazon",
+        aliases: ["a", "amz", "amazon"],
+        home: "https://www.amazon.com/",
+        search: "https://www.amazon.com/s?k={q}"
       },
       {
-        name: "Have I Been Pwned",
-        aliases: ["hibp", "pwned", "haveibeenpwned"],
-        home: "https://haveibeenpwned.com/",
-        search: "https://haveibeenpwned.com/account/{q}"
+        name: "eBay",
+        aliases: ["e", "ebay"],
+        home: "https://www.ebay.com/",
+        search: "https://www.ebay.com/sch/i.html?_nkw={q}"
+      },
+      {
+        name: "Costco",
+        aliases: ["costco", "co"],
+        home: "https://www.costco.com/",
+        search: "https://www.costco.com/CatalogSearch?keyword={q}"
+      },
+      {
+        name: "Facebook Marketplace",
+        aliases: ["fbm", "fbmarket", "marketplace", "facebookmarketplace"],
+        home: "https://www.facebook.com/marketplace/",
+        search: "https://www.facebook.com/marketplace/search/?query={q}"
+      },
+      {
+        name: "CamelCamelCamel",
+        aliases: ["c", "ccc", "camel", "camelcamelcamel"],
+        home: "https://camelcamelcamel.com/",
+        search: "https://camelcamelcamel.com/search?sq={q}"
+      },
+      {
+        name: "Eneba",
+        aliases: ["eneba"],
+        home: "https://www.eneba.com/us/",
+        search: "https://www.eneba.com/us/store/all?text={q}"
+      }
+    ]
+  },
+  {
+    category: "Home, Auto & Property",
+    sites: [
+      {
+        name: "Home Depot",
+        aliases: ["h", "hd", "homedepot"],
+        home: "https://www.homedepot.com/",
+        search: "https://www.homedepot.com/s/{q}"
+      },
+      {
+        name: "Zillow",
+        aliases: ["z", "zillow"],
+        home: "https://www.zillow.com/",
+        search: "https://www.zillow.com/homes/{q}_rb/"
       },
       {
         name: "CarCareKiosk",
@@ -278,30 +393,124 @@ const SITE_GROUPS = [
         name: "AppliancePartsPros",
         aliases: ["app", "appliance", "applianceparts", "appliancepartspros"],
         home: "https://www.appliancepartspros.com/"
-      },
-      {
-        name: "Texturelabs",
-        aliases: ["texture", "textures", "texturelabs"],
-        home: "https://texturelabs.org/",
-        search: "https://texturelabs.org/?search_type=texture&s={q}"
       }
     ]
   },
-
   {
-    category: "Media, Social & Meetings",
+    category: "Finance & Markets",
     sites: [
       {
-        name: "Genius Lyrics",
-        aliases: ["lyrics", "lyric", "genius"],
-        home: "https://genius.com/",
-        search: "https://genius.com/search?q={q}"
+        name: "Google Finance",
+        aliases: ["gf", "gfinance", "googlefinance"],
+        home: "https://www.google.com/finance/"
       },
       {
-        name: "AZLyrics",
-        aliases: ["azlyrics", "azl"],
-        home: "https://www.azlyrics.com/"
+        name: "Yahoo Finance",
+        aliases: ["yf", "yfinance", "yahoofinance"],
+        home: "https://finance.yahoo.com/",
+        search: "https://finance.yahoo.com/quote/{q}"
       },
+      {
+        name: "Robinhood",
+        aliases: ["rh", "robinhood", "hood"],
+        home: "https://robinhood.com/",
+        search: "https://robinhood.com/stocks/{q}"
+      },
+      {
+        name: "FRED",
+        aliases: ["fred", "stlouisfed"],
+        home: "https://fred.stlouisfed.org/",
+        search: "https://fred.stlouisfed.org/searchresults?st={q}"
+      },
+      {
+        name: "Federal Funds Rate",
+        aliases: ["fed", "rate", "fedfunds"],
+        home: "https://fred.stlouisfed.org/series/fedfunds"
+      },
+      {
+        name: "Inflation Chart",
+        aliases: ["inflation"],
+        home: "https://fred.stlouisfed.org/graph/?g=1wmdD"
+      },
+      {
+        name: "Investopedia",
+        aliases: ["investopedia", "invest"],
+        home: "https://www.investopedia.com/",
+        search: "https://www.investopedia.com/search?q={q}"
+      },
+      {
+        name: "Monument Metals",
+        aliases: ["monument", "monumentmetals", "mm"],
+        home: "https://monumentmetals.com/",
+        search: "https://monumentmetals.com/search.html?query={q}"
+      },
+      {
+        name: "APMEX & Spot Prices",
+        aliases: ["apmex", "spot", "metals", "pmspot"],
+        home: "https://www.apmex.com/gold-and-silver-price-charts",
+        search: "https://www.apmex.com/search?q={q}"
+      },
+      {
+        name: "Gold Price",
+        aliases: ["gld", "gold", "apmexgold"],
+        home: "https://www.apmex.com/gold-price"
+      },
+      {
+        name: "Silver Price",
+        aliases: ["slv", "silver", "apmexsilver"],
+        home: "https://www.apmex.com/silver-price"
+      },
+      {
+        name: "Treasury Bills / SGOV",
+        aliases: ["vbil", "bil", "sgov"],
+        home: "https://www.youtube.com/watch?v=DSwBc-d9Ukc"
+      }
+    ]
+  },
+  {
+    category: "Tax, Government & Filings",
+    sites: [
+      {
+        name: "SEC EDGAR 10-K Search",
+        aliases: ["sec", "edgar"],
+        home: "https://www.sec.gov/edgar/search/",
+        search: "https://www.sec.gov/edgar/search/#/q={q}&filter_forms=10-K"
+      },
+      {
+        name: "Estate Tax",
+        aliases: ["death", "estate"],
+        home: "https://www.irs.gov/businesses/small-businesses-self-employed/estate-tax"
+      },
+      {
+        name: "IRA Contribution Limits",
+        aliases: ["ira"],
+        home: "https://www.irs.gov/retirement-plans/plan-participant-employee/retirement-topics-ira-contribution-limits"
+      },
+      {
+        name: "Capital Gains Tax",
+        aliases: ["ltcg", "capitalgains"],
+        home: "https://www.nerdwallet.com/taxes/learn/capital-gains-tax-rates#:~:text=Taxes%20on%20stocks-,Capital%20gains%20tax%20rate%202026,-The%20following%20rates"
+      },
+      {
+        name: "Standard Deduction",
+        aliases: ["standard", "std", "deduction"],
+        home: "https://www.irs.gov/newsroom/irs-releases-tax-inflation-adjustments-for-tax-year-2026-including-amendments-from-the-one-big-beautiful-bill#:~:text=standard%20deduction%20is%20%2423%2C625"
+      },
+      {
+        name: "Tariff Tracker",
+        aliases: ["tariff", "tarrif", "tarif", "tarriff"],
+        home: "https://bipartisanpolicy.org/explainer/tariff-tracker/"
+      },
+      {
+        name: "Federal Tax Brackets",
+        aliases: ["tax", "brackets", "taxbrackets"],
+        home: "https://www.forbes.com/advisor/taxes/taxes-federal-income-tax-bracket/#:~:text=maintains%20the%20previous%20tax%20brackets%3A"
+      }
+    ]
+  },
+  {
+    category: "Media & Entertainment",
+    sites: [
       {
         name: "YouTube",
         aliases: ["yt", "youtube"],
@@ -313,6 +522,17 @@ const SITE_GROUPS = [
         aliases: ["s", "spotify"],
         home: "https://open.spotify.com/",
         search: "https://open.spotify.com/search/{q}"
+      },
+      {
+        name: "Genius Lyrics",
+        aliases: ["lyrics", "lyric", "genius"],
+        home: "https://genius.com/",
+        search: "https://genius.com/search?q={q}"
+      },
+      {
+        name: "AZLyrics",
+        aliases: ["azlyrics", "azl"],
+        home: "https://www.azlyrics.com/"
       },
       {
         name: "IMDb",
@@ -331,7 +551,12 @@ const SITE_GROUPS = [
         aliases: ["jw", "justwatch"],
         home: "https://www.justwatch.com/",
         search: "https://www.justwatch.com/us/search?q={q}"
-      },
+      }
+    ]
+  },
+  {
+    category: "Social & Communities",
+    sites: [
       {
         name: "LinkedIn",
         aliases: ["l", "li", "linkedin"],
@@ -378,69 +603,11 @@ const SITE_GROUPS = [
         name: "Discord",
         aliases: ["dc", "discord"],
         home: "https://discord.com/channels/@me"
-      },
-      {
-        name: "Proton Meet",
-        aliases: ["meet", "pmeet", "protonmeet"],
-        home: "https://meet.proton.me/"
-      },
-      {
-        name: "Brave Talk",
-        aliases: ["talk", "btalk", "bravetalk"],
-        home: "https://talk.brave.com/"
       }
     ]
   },
-
   {
-    category: "Bible & Fitness",
-    sites: [
-      {
-        name: "Blue Letter Bible — ESV",
-        aliases: ["b", "blb", "bible", "blbesv", "esv"],
-        home: "https://www.blueletterbible.org/esv/jhn/1/1/",
-        search: "https://www.blb.org/search/preSearch.cfm?plugin=yes&Criteria={q}&t=ESV"
-      },
-      {
-        name: "Blue Letter Bible — LSB",
-        aliases: ["lsb", "blblsb"],
-        home: "https://www.blueletterbible.org/lsb/jhn/1/1/",
-        search: "https://www.blb.org/search/preSearch.cfm?plugin=yes&Criteria={q}&t=LSB"
-      },
-      {
-        name: "Blue Letter Bible — NIV",
-        aliases: ["niv", "blbniv"],
-        home: "https://www.blueletterbible.org/niv/jhn/1/1/",
-        search: "https://www.blb.org/search/preSearch.cfm?plugin=yes&Criteria={q}&t=NIV"
-      },
-      {
-        name: "Blue Letter Bible — KJV",
-        aliases: ["kjv", "blbkjv"],
-        home: "https://www.blueletterbible.org/kjv/jhn/1/1/",
-        search: "https://www.blb.org/search/preSearch.cfm?plugin=yes&Criteria={q}&t=KJV"
-      },
-      {
-        name: "StrengthLevel",
-        aliases: ["strengthlevel", "sl"],
-        home: "https://strengthlevel.com/",
-        search: "https://strengthlevel.com/strength-standards/{q}"
-      },
-      {
-        name: "Symmetric Strength",
-        aliases: ["symmetric", "sym"],
-        home: "https://symmetricstrength.com/"
-      },
-      {
-        name: "Stronger by Science",
-        aliases: ["strongerbyscience", "sbs"],
-        home: "https://www.strongerbyscience.com/",
-        search: "https://www.strongerbyscience.com/?s={q}"
-      }
-    ]
-  },
-
-  {
-    category: "Games & 3D Printing",
+    category: "Gaming & PC",
     sites: [
       {
         name: "HowLongToBeat",
@@ -453,12 +620,6 @@ const SITE_GROUPS = [
         aliases: ["itad", "isthereanydeal"],
         home: "https://isthereanydeal.com/",
         search: "https://isthereanydeal.com/search/?q={q}"
-      },
-      {
-        name: "Eneba",
-        aliases: ["eneba"],
-        home: "https://www.eneba.com/us/",
-        search: "https://www.eneba.com/us/store/all?text={q}"
       },
       {
         name: "Before I Play",
@@ -501,7 +662,12 @@ const SITE_GROUPS = [
         aliases: ["pcpp", "pcpartpicker", "partpicker"],
         home: "https://pcpartpicker.com/",
         search: "https://pcpartpicker.com/search/?q={q}"
-      },
+      }
+    ]
+  },
+  {
+    category: "3D Printing & Maker",
+    sites: [
       {
         name: "Printables",
         aliases: ["printables", "prusa", "prusaprinters"],
@@ -525,121 +691,72 @@ const SITE_GROUPS = [
         aliases: ["cults", "cults3d"],
         home: "https://cults3d.com/en",
         search: "https://cults3d.com/en/search?q={q}"
+      },
+      {
+        name: "Texturelabs",
+        aliases: ["texture", "textures", "texturelabs"],
+        home: "https://texturelabs.org/",
+        search: "https://texturelabs.org/?search_type=texture&s={q}"
       }
     ]
   },
-
   {
-    category: "Finance, Tax & Metals",
+    category: "Health & Fitness",
     sites: [
       {
-        name: "Monument Metals",
-        aliases: ["monument", "monumentmetals", "mm"],
-        home: "https://monumentmetals.com/",
-        search: "https://monumentmetals.com/search.html?query={q}"
+        name: "StrengthLevel",
+        aliases: ["strengthlevel", "sl"],
+        home: "https://strengthlevel.com/",
+        search: "https://strengthlevel.com/strength-standards/{q}"
       },
       {
-        name: "APMEX",
-        aliases: ["apmex", "spot", "metals", "pmspot"],
-        home: "https://www.apmex.com/gold-and-silver-price-charts",
-        search: "https://www.apmex.com/search?q={q}"
+        name: "Symmetric Strength",
+        aliases: ["symmetric", "sym"],
+        home: "https://symmetricstrength.com/"
       },
       {
-        name: "Gold Spot Price",
-        aliases: ["gld", "gold", "apmexgold"],
-        home: "https://www.apmex.com/gold-price"
-      },
-      {
-        name: "Silver Spot Price",
-        aliases: ["slv", "silver", "apmexsilver"],
-        home: "https://www.apmex.com/silver-price"
-      },
-      {
-        name: "IRS Estate Tax",
-        aliases: ["death", "estate"],
-        home: "https://www.irs.gov/businesses/small-businesses-self-employed/estate-tax"
-      },
-      {
-        name: "Federal Funds Rate",
-        aliases: ["fed", "rate", "fedfunds"],
-        home: "https://fred.stlouisfed.org/series/fedfunds"
-      },
-      {
-        name: "Inflation Chart",
-        aliases: ["inflation"],
-        home: "https://fred.stlouisfed.org/graph/?g=1wmdD"
-      },
-      {
-        name: "IRS IRA Limits",
-        aliases: ["ira"],
-        home: "https://www.irs.gov/retirement-plans/plan-participant-employee/retirement-topics-ira-contribution-limits"
-      },
-      {
-        name: "Capital Gains Rates",
-        aliases: ["ltcg", "capitalgains"],
-        home: "https://www.nerdwallet.com/taxes/learn/capital-gains-tax-rates#:~:text=Taxes%20on%20stocks-,Capital%20gains%20tax%20rate%202026,-The%20following%20rates"
-      },
-      {
-        name: "Standard Deduction",
-        aliases: ["standard", "std", "deduction"],
-        home: "https://www.irs.gov/newsroom/irs-releases-tax-inflation-adjustments-for-tax-year-2026-including-amendments-from-the-one-big-beautiful-bill#:~:text=standard%20deduction%20is%20%2423%2C625"
-      },
-      {
-        name: "Tariff Tracker",
-        aliases: ["tariff", "tarrif", "tarif", "tarriff"],
-        home: "https://bipartisanpolicy.org/explainer/tariff-tracker/"
-      },
-      {
-        name: "Federal Income Tax Brackets",
-        aliases: ["tax", "brackets", "taxbrackets"],
-        home: "https://www.forbes.com/advisor/taxes/taxes-federal-income-tax-bracket/#:~:text=maintains%20the%20previous%20tax%20brackets%3A"
-      },
-      {
-        name: "Investopedia",
-        aliases: ["investopedia", "invest"],
-        home: "https://www.investopedia.com/",
-        search: "https://www.investopedia.com/search?q={q}"
-      },
-      {
-        name: "VBIL / SGOV Video",
-        aliases: ["vbil", "bil", "sgov"],
-        home: "https://www.youtube.com/watch?v=DSwBc-d9Ukc"
-      },
-      {
-        name: "SEC EDGAR — 10-K",
-        aliases: ["sec", "edgar"],
-        home: "https://www.sec.gov/edgar/search/",
-        search: "https://www.sec.gov/edgar/search/#/q={q}&filter_forms=10-K"
-      },
-      {
-        name: "Robinhood",
-        aliases: ["rh", "robinhood", "hood"],
-        home: "https://robinhood.com/",
-        search: "https://robinhood.com/stocks/{q}"
-      },
-      {
-        name: "Yahoo Finance",
-        aliases: ["yf", "yfinance", "yahoofinance"],
-        home: "https://finance.yahoo.com/",
-        search: "https://finance.yahoo.com/quote/{q}"
-      },
-      {
-        name: "FRED",
-        aliases: ["fred", "stlouisfed"],
-        home: "https://fred.stlouisfed.org/",
-        search: "https://fred.stlouisfed.org/searchresults?st={q}"
-      },
-      {
-        name: "Zillow",
-        aliases: ["z", "zillow"],
-        home: "https://www.zillow.com/",
-        search: "https://www.zillow.com/homes/{q}_rb/"
+        name: "Stronger by Science",
+        aliases: ["strongerbyscience", "sbs"],
+        home: "https://www.strongerbyscience.com/",
+        search: "https://www.strongerbyscience.com/?s={q}"
       }
     ]
   },
-
   {
-    category: "Translation",
+    category: "Bible",
+    sites: [
+      {
+        name: "Blue Letter Bible — ESV",
+        aliases: ["blb", "bible", "blbesv", "esv"],
+        home: "https://www.blueletterbible.org/esv/jhn/1/1/",
+        handler: "bible",
+        translation: "ESV"
+      },
+      {
+        name: "Blue Letter Bible — LSB",
+        aliases: ["lsb", "blblsb"],
+        home: "https://www.blueletterbible.org/lsb/jhn/1/1/",
+        handler: "bible",
+        translation: "LSB"
+      },
+      {
+        name: "Blue Letter Bible — NIV",
+        aliases: ["niv", "blbniv"],
+        home: "https://www.blueletterbible.org/niv/jhn/1/1/",
+        handler: "bible",
+        translation: "NIV"
+      },
+      {
+        name: "Blue Letter Bible — KJV",
+        aliases: ["kjv", "blbkjv"],
+        home: "https://www.blueletterbible.org/kjv/jhn/1/1/",
+        handler: "bible",
+        translation: "KJV"
+      }
+    ]
+  },
+  {
+    category: "Translation & Languages",
     sites: [
       {
         name: "Google Translate",
@@ -653,100 +770,124 @@ const SITE_GROUPS = [
         home: "https://www.deepl.com/translator",
         search: "https://www.deepl.com/translator#xx/en/{q}"
       },
-      { name: "DeepL — English to Spanish", aliases: ["enes"], home: "https://www.deepl.com/translator#en/es", search: "https://www.deepl.com/translator#en/es/{q}" },
-      { name: "DeepL — Spanish to English", aliases: ["esen"], home: "https://www.deepl.com/translator#es/en", search: "https://www.deepl.com/translator#es/en/{q}" },
-      { name: "DeepL — English to French", aliases: ["enfr"], home: "https://www.deepl.com/translator#en/fr", search: "https://www.deepl.com/translator#en/fr/{q}" },
-      { name: "DeepL — French to English", aliases: ["fren"], home: "https://www.deepl.com/translator#fr/en", search: "https://www.deepl.com/translator#fr/en/{q}" },
-      { name: "DeepL — Spanish to French", aliases: ["esfr"], home: "https://www.deepl.com/translator#es/fr", search: "https://www.deepl.com/translator#es/fr/{q}" },
-      { name: "DeepL — French to Spanish", aliases: ["fres"], home: "https://www.deepl.com/translator#fr/es", search: "https://www.deepl.com/translator#fr/es/{q}" },
-      { name: "DeepL — English to German", aliases: ["ende"], home: "https://www.deepl.com/translator#en/de", search: "https://www.deepl.com/translator#en/de/{q}" },
-      { name: "DeepL — German to English", aliases: ["deen"], home: "https://www.deepl.com/translator#de/en", search: "https://www.deepl.com/translator#de/en/{q}" },
-      { name: "DeepL — English to Italian", aliases: ["enit"], home: "https://www.deepl.com/translator#en/it", search: "https://www.deepl.com/translator#en/it/{q}" },
-      { name: "DeepL — Italian to English", aliases: ["iten"], home: "https://www.deepl.com/translator#it/en", search: "https://www.deepl.com/translator#it/en/{q}" },
-      { name: "DeepL — English to Portuguese", aliases: ["enpt"], home: "https://www.deepl.com/translator#en/pt", search: "https://www.deepl.com/translator#en/pt/{q}" },
-      { name: "DeepL — Portuguese to English", aliases: ["pten"], home: "https://www.deepl.com/translator#pt/en", search: "https://www.deepl.com/translator#pt/en/{q}" },
-      { name: "DeepL — English to Japanese", aliases: ["enja"], home: "https://www.deepl.com/translator#en/ja", search: "https://www.deepl.com/translator#en/ja/{q}" },
-      { name: "DeepL — Japanese to English", aliases: ["jaen"], home: "https://www.deepl.com/translator#ja/en", search: "https://www.deepl.com/translator#ja/en/{q}" },
-      { name: "DeepL — English to Chinese", aliases: ["enzh"], home: "https://www.deepl.com/translator#en/zh", search: "https://www.deepl.com/translator#en/zh/{q}" },
-      { name: "DeepL — Chinese to English", aliases: ["zhen"], home: "https://www.deepl.com/translator#zh/en", search: "https://www.deepl.com/translator#zh/en/{q}" },
-      { name: "DeepL — English to Korean", aliases: ["enko"], home: "https://www.deepl.com/translator#en/ko", search: "https://www.deepl.com/translator#en/ko/{q}" },
-      { name: "DeepL — Korean to English", aliases: ["koen"], home: "https://www.deepl.com/translator#ko/en", search: "https://www.deepl.com/translator#ko/en/{q}" }
-    ]
-  },
-
-  {
-    category: "Tools & Privacy",
-    sites: [
-      { name: "Caption Ninja", aliases: ["caption", "cap"], home: "https://caption.ninja/" },
-      { name: "Case Converter", aliases: ["case"], home: "https://it-tools.tech/case-converter" },
-      { name: "Coolors", aliases: ["color", "coolors"], home: "https://coolors.co/?home" },
-      { name: "Posys Cursors", aliases: ["cursor", "cursors"], home: "https://github.com/wrinkdater/Posys-Cursors-Improved-by-wrinkdater" },
-      { name: "Cobalt", aliases: ["download", "cobalt"], home: "https://cobalt.tools/" },
-      { name: "Excalidraw", aliases: ["draw", "excalidraw"], home: "https://excalidraw.com/" },
-      { name: "Emoji Picker", aliases: ["emoji"], home: "https://it-tools.tech/emoji-picker" },
-      { name: "Wormhole", aliases: ["file", "worm", "transfer", "wormhole"], home: "https://wormhole.app/" },
-      { name: "WhatFontIs", aliases: ["font", "whatfont"], home: "https://www.whatfontis.com/" },
-      { name: "VDO.Ninja", aliases: ["vdo", "obs"], home: "https://vdo.ninja/" },
-      { name: "Online OCR", aliases: ["ocr"], home: "https://www.onlineocr.net/" },
-      { name: "TinyWow PDF", aliases: ["pdf"], home: "https://tinywow.com/tools/pdf" },
       {
-        name: "QR Code Generator",
-        aliases: ["qr", "qrcode"],
-        home: "https://quickchart.io/qr-code-api/",
-        search: "https://quickchart.io/qr?text={q}"
+        name: "DeepL — English to Spanish",
+        aliases: ["enes"],
+        home: "https://www.deepl.com/translator#en/es",
+        search: "https://www.deepl.com/translator#en/es/{q}"
       },
       {
-        name: "QR Code Decoder",
-        aliases: ["qrdecode", "qrd"],
-        home: "https://zxing.org/w/decode.jspx"
+        name: "DeepL — Spanish to English",
+        aliases: ["esen"],
+        home: "https://www.deepl.com/translator#es/en",
+        search: "https://www.deepl.com/translator#es/en/{q}"
       },
       {
-        name: "Wayback Machine",
-        aliases: ["archive", "wayback"],
-        home: "https://web.archive.org/",
-        search: "https://web.archive.org/web/*/{q}"
-      },
-      { name: "Regex101", aliases: ["regex"], home: "https://regex101.com/" },
-      { name: "Receive SMS", aliases: ["sms"], home: "https://receive-sms.cc/" },
-      { name: "Temp Mail", aliases: ["spam", "temp", "tempmail"], home: "https://temp-mail.org/" },
-      { name: "Fast.com", aliases: ["test", "speed", "fast"], home: "https://fast.com/" },
-      { name: "Text Statistics", aliases: ["text"], home: "https://it-tools.tech/text-statistics" },
-      { name: "Upscale.media", aliases: ["upscale"], home: "https://www.upscale.media/upload" },
-      {
-        name: "VirusTotal — Domain Lookup",
-        aliases: ["virus", "vt", "virustotal"],
-        home: "https://www.virustotal.com/gui/home/url",
-        search: "https://www.virustotal.com/gui/domain/{q}",
-        queryTransform: "hostname"
+        name: "DeepL — English to French",
+        aliases: ["enfr"],
+        home: "https://www.deepl.com/translator#en/fr",
+        search: "https://www.deepl.com/translator#en/fr/{q}"
       },
       {
-        name: "Wallhaven",
-        aliases: ["wallpaper", "wall", "wallhaven"],
-        home: "https://wallhaven.cc/",
-        search: "https://wallhaven.cc/search?q={q}"
+        name: "DeepL — French to English",
+        aliases: ["fren"],
+        home: "https://www.deepl.com/translator#fr/en",
+        search: "https://www.deepl.com/translator#fr/en/{q}"
+      },
+      {
+        name: "DeepL — Spanish to French",
+        aliases: ["esfr"],
+        home: "https://www.deepl.com/translator#es/fr",
+        search: "https://www.deepl.com/translator#es/fr/{q}"
+      },
+      {
+        name: "DeepL — French to Spanish",
+        aliases: ["fres"],
+        home: "https://www.deepl.com/translator#fr/es",
+        search: "https://www.deepl.com/translator#fr/es/{q}"
+      },
+      {
+        name: "DeepL — English to German",
+        aliases: ["ende"],
+        home: "https://www.deepl.com/translator#en/de",
+        search: "https://www.deepl.com/translator#en/de/{q}"
+      },
+      {
+        name: "DeepL — German to English",
+        aliases: ["deen"],
+        home: "https://www.deepl.com/translator#de/en",
+        search: "https://www.deepl.com/translator#de/en/{q}"
+      },
+      {
+        name: "DeepL — English to Italian",
+        aliases: ["enit"],
+        home: "https://www.deepl.com/translator#en/it",
+        search: "https://www.deepl.com/translator#en/it/{q}"
+      },
+      {
+        name: "DeepL — Italian to English",
+        aliases: ["iten"],
+        home: "https://www.deepl.com/translator#it/en",
+        search: "https://www.deepl.com/translator#it/en/{q}"
+      },
+      {
+        name: "DeepL — English to Portuguese",
+        aliases: ["enpt"],
+        home: "https://www.deepl.com/translator#en/pt",
+        search: "https://www.deepl.com/translator#en/pt/{q}"
+      },
+      {
+        name: "DeepL — Portuguese to English",
+        aliases: ["pten"],
+        home: "https://www.deepl.com/translator#pt/en",
+        search: "https://www.deepl.com/translator#pt/en/{q}"
+      },
+      {
+        name: "DeepL — English to Japanese",
+        aliases: ["enja"],
+        home: "https://www.deepl.com/translator#en/ja",
+        search: "https://www.deepl.com/translator#en/ja/{q}"
+      },
+      {
+        name: "DeepL — Japanese to English",
+        aliases: ["jaen"],
+        home: "https://www.deepl.com/translator#ja/en",
+        search: "https://www.deepl.com/translator#ja/en/{q}"
+      },
+      {
+        name: "DeepL — English to Chinese",
+        aliases: ["enzh"],
+        home: "https://www.deepl.com/translator#en/zh",
+        search: "https://www.deepl.com/translator#en/zh/{q}"
+      },
+      {
+        name: "DeepL — Chinese to English",
+        aliases: ["zhen"],
+        home: "https://www.deepl.com/translator#zh/en",
+        search: "https://www.deepl.com/translator#zh/en/{q}"
+      },
+      {
+        name: "DeepL — English to Korean",
+        aliases: ["enko"],
+        home: "https://www.deepl.com/translator#en/ko",
+        search: "https://www.deepl.com/translator#en/ko/{q}"
+      },
+      {
+        name: "DeepL — Korean to English",
+        aliases: ["koen"],
+        home: "https://www.deepl.com/translator#ko/en",
+        search: "https://www.deepl.com/translator#ko/en/{q}"
       }
     ]
   },
-
   {
-    category: "Proton & Google Apps",
+    category: "Communication, Cloud & Accounts",
     sites: [
       {
-        name: "Proton Mail",
-        aliases: ["pm", "protonmail"],
-        home: "https://mail.proton.me/",
-        search: "https://mail.proton.me/u/0/almost-all-mail#keyword={q}"
-      },
-      {
-        name: "Proton Drive",
-        aliases: ["pd", "protondrive"],
-        home: "https://drive.proton.me/",
-        search: "https://drive.proton.me/u/0/search#q={q}"
-      },
-      {
-        name: "Proton Landing Page",
-        aliases: ["p", "proton"],
-        home: "https://micahjeffery.com/proton/"
+        name: "Gmail",
+        aliases: ["go", "gma", "gmail", "mail"],
+        home: "https://mail.google.com/",
+        search: "https://mail.google.com/mail/u/0/#search/{q}"
       },
       {
         name: "Google Drive",
@@ -765,18 +906,61 @@ const SITE_GROUPS = [
         aliases: ["voice", "gvoice", "gvmail"],
         home: "https://voice.google.com/u/1/",
         search: "https://voice.google.com/u/1/search?from=%5B%5D&q=%5B%22{q}%22%5D"
+      },
+      {
+        name: "OneDrive",
+        aliases: ["onedrive", "od"],
+        home: "https://onedrive.live.com/",
+        search: "https://onedrive.live.com/?qt=search&q={q}"
+      },
+      {
+        name: "Proton Mail",
+        aliases: ["pm", "protonmail"],
+        home: "https://mail.proton.me/",
+        search: "https://mail.proton.me/u/0/almost-all-mail#keyword={q}"
+      },
+      {
+        name: "Proton Drive",
+        aliases: ["pd", "protondrive"],
+        home: "https://drive.proton.me/",
+        search: "https://drive.proton.me/u/0/search#q={q}"
+      },
+      {
+        name: "Proton",
+        aliases: ["p", "proton"],
+        home: "https://micahjeffery.com/proton/"
+      },
+      {
+        name: "Proton Meet",
+        aliases: ["meet", "pmeet", "protonmeet"],
+        home: "https://meet.proton.me/"
+      },
+      {
+        name: "Brave Talk",
+        aliases: ["talk", "btalk", "bravetalk"],
+        home: "https://talk.brave.com/"
       }
     ]
   },
-
   {
-    category: "Domains & Terms",
+    category: "Privacy, Security & Domains",
     sites: [
       {
-        name: "ToS;DR",
-        aliases: ["tosdr", "tos"],
-        home: "https://tosdr.org/en",
-        search: "https://tosdr.org/en/search/{q}"
+        name: "NextDNS",
+        aliases: ["nextdns", "ndns"],
+        home: "https://my.nextdns.io/"
+      },
+      {
+        name: "VirusTotal Domain Lookup",
+        aliases: ["virus", "vt", "virustotal"],
+        home: "https://www.virustotal.com/gui/home/url",
+        handler: "virustotal"
+      },
+      {
+        name: "Have I Been Pwned",
+        aliases: ["hibp", "pwned", "haveibeenpwned"],
+        home: "https://haveibeenpwned.com/",
+        search: "https://haveibeenpwned.com/account/{q}"
       },
       {
         name: "ICANN Lookup",
@@ -789,74 +973,352 @@ const SITE_GROUPS = [
         aliases: ["domain", "dom", "domains", "cfd", "cloudflaredomains"],
         home: "https://domains.cloudflare.com/",
         search: "https://domains.cloudflare.com/?domain={q}"
+      },
+      {
+        name: "Temp Mail",
+        aliases: ["spam", "temp", "tempmail"],
+        home: "https://temp-mail.org/"
+      }
+    ]
+  },
+  {
+    category: "Creative & Utilities",
+    sites: [
+      {
+        name: "Caption Ninja",
+        aliases: ["caption", "cap"],
+        home: "https://caption.ninja/"
+      },
+      {
+        name: "Case Converter",
+        aliases: ["case"],
+        home: "https://it-tools.tech/case-converter"
+      },
+      {
+        name: "Coolors",
+        aliases: ["color", "coolors"],
+        home: "https://coolors.co/?home"
+      },
+      {
+        name: "Cursors",
+        aliases: ["cursor", "cursors"],
+        home: "https://github.com/wrinkdater/Posys-Cursors-Improved-by-wrinkdater"
+      },
+      {
+        name: "Cobalt Downloader",
+        aliases: ["download", "cobalt"],
+        home: "https://cobalt.tools/"
+      },
+      {
+        name: "Excalidraw",
+        aliases: ["draw", "excalidraw"],
+        home: "https://excalidraw.com/"
+      },
+      {
+        name: "Emoji Picker",
+        aliases: ["emoji"],
+        home: "https://it-tools.tech/emoji-picker"
+      },
+      {
+        name: "Wormhole File Transfer",
+        aliases: ["file", "worm", "transfer", "wormhole"],
+        home: "https://wormhole.app/"
+      },
+      {
+        name: "WhatFontIs",
+        aliases: ["font", "whatfont"],
+        home: "https://www.whatfontis.com/"
+      },
+      {
+        name: "VDO.Ninja",
+        aliases: ["vdo", "obs"],
+        home: "https://vdo.ninja/"
+      },
+      {
+        name: "OnlineOCR",
+        aliases: ["ocr"],
+        home: "https://www.onlineocr.net/"
+      },
+      {
+        name: "TinyWow PDF Tools",
+        aliases: ["pdf"],
+        home: "https://tinywow.com/tools/pdf"
+      },
+      {
+        name: "QuickChart QR Generator",
+        aliases: ["qr", "qrcode"],
+        home: "https://quickchart.io/qr-code-api/",
+        search: "https://quickchart.io/qr?text={q}"
+      },
+      {
+        name: "ZXing QR Decoder",
+        aliases: ["qrdecode", "qrd"],
+        home: "https://zxing.org/w/decode.jspx"
+      },
+      {
+        name: "Wayback Machine",
+        aliases: ["archive", "wayback"],
+        home: "https://web.archive.org/",
+        search: "https://web.archive.org/web/*/{q}"
+      },
+      {
+        name: "Regex101",
+        aliases: ["regex"],
+        home: "https://regex101.com/"
+      },
+      {
+        name: "Receive SMS",
+        aliases: ["sms"],
+        home: "https://receive-sms.cc/"
+      },
+      {
+        name: "Fast.com",
+        aliases: ["test", "speed", "fast"],
+        home: "https://fast.com/"
+      },
+      {
+        name: "Text Statistics",
+        aliases: ["text"],
+        home: "https://it-tools.tech/text-statistics"
+      },
+      {
+        name: "Upscale.media",
+        aliases: ["upscale"],
+        home: "https://www.upscale.media/upload"
+      },
+      {
+        name: "Wallhaven",
+        aliases: ["wallpaper", "wall", "wallhaven"],
+        home: "https://wallhaven.cc/",
+        search: "https://wallhaven.cc/search?q={q}"
       }
     ]
   }
 ];
 
-const DEFAULT_ENGINES = {
-  ddg: { name: "DuckDuckGo", home: "https://duckduckgo.com/", search: "https://duckduckgo.com/?q={q}" },
-  duckduckgo: { name: "DuckDuckGo", home: "https://duckduckgo.com/", search: "https://duckduckgo.com/?q={q}" },
-  d: { name: "DuckDuckGo", home: "https://duckduckgo.com/", search: "https://duckduckgo.com/?q={q}" },
-  noai: { name: "DuckDuckGo No AI", home: "https://noai.duckduckgo.com/", search: "https://noai.duckduckgo.com/?q={q}" },
-  noaiddg: { name: "DuckDuckGo No AI", home: "https://noai.duckduckgo.com/", search: "https://noai.duckduckgo.com/?q={q}" },
-  google: { name: "Google", home: "https://www.google.com/", search: "https://www.google.com/search?q={q}" },
-  g: { name: "Google", home: "https://www.google.com/", search: "https://www.google.com/search?q={q}" },
-  startpage: { name: "Startpage", home: "https://www.startpage.com/", search: "https://www.startpage.com/sp/search?query={q}" },
-  sp: { name: "Startpage", home: "https://www.startpage.com/", search: "https://www.startpage.com/sp/search?query={q}" },
-  brave: { name: "Brave Search", home: "https://search.brave.com/", search: "https://search.brave.com/search?q={q}" },
-  b: { name: "Brave Search", home: "https://search.brave.com/", search: "https://search.brave.com/search?q={q}" },
-  bing: { name: "Bing", home: "https://www.bing.com/", search: "https://www.bing.com/search?q={q}" },
-  ecosia: { name: "Ecosia", home: "https://www.ecosia.org/", search: "https://www.ecosia.org/search?q={q}" },
-  eco: { name: "Ecosia", home: "https://www.ecosia.org/", search: "https://www.ecosia.org/search?q={q}" },
-  yahoo: { name: "Yahoo", home: "https://search.yahoo.com/", search: "https://search.yahoo.com/search?p={q}" },
-  y: { name: "Yahoo", home: "https://search.yahoo.com/", search: "https://search.yahoo.com/search?p={q}" }
-};
+// -----------------------------------------------------------------------------
+// 3. CONFIGURATION INDEXES AND VALIDATION
+// -----------------------------------------------------------------------------
 
-const sites = SITE_GROUPS.flatMap((group) =>
+const SITES = SITE_GROUPS.flatMap((group) =>
   group.sites.map((site) => ({ ...site, category: group.category }))
 );
 
-const { bangMap, aliasConflicts } = buildBangMap(sites);
+const DEFAULT_ENGINE_BY_PATH = buildDefaultEngineIndex(DEFAULT_ENGINES);
+const { byAlias: BANGS, conflicts: ALIAS_CONFLICTS, invalid: INVALID_ALIASES } =
+  buildBangIndex(SITES);
 
-function buildBangMap(entries) {
-  const bangMap = new Map();
-  const aliasConflicts = [];
+function buildDefaultEngineIndex(engines) {
+  const index = new Map();
 
-  for (const site of entries) {
-    for (const alias of site.aliases) {
-      const key = alias.toLowerCase();
-      const existing = bangMap.get(key);
-
-      if (existing) {
-        aliasConflicts.push({ alias: key, first: existing.name, second: site.name });
-        continue;
-      }
-
-      bangMap.set(key, site);
+  for (const engine of engines) {
+    for (const path of engine.paths) {
+      index.set(normalizePath(path), engine);
     }
   }
 
-  return { bangMap, aliasConflicts };
+  return index;
+}
+
+function buildBangIndex(sites) {
+  const byAlias = new Map();
+  const conflicts = [];
+  const invalid = [];
+
+  for (const site of sites) {
+    for (const rawAlias of site.aliases) {
+      const alias = String(rawAlias).trim().toLowerCase();
+
+      if (!/^[a-z0-9_-]+$/.test(alias)) {
+        invalid.push({ alias: rawAlias, site: site.name });
+        continue;
+      }
+
+      if (byAlias.has(alias)) {
+        conflicts.push({
+          alias,
+          first: byAlias.get(alias).name,
+          second: site.name
+        });
+        continue;
+      }
+
+      byAlias.set(alias, site);
+    }
+  }
+
+  return { byAlias, conflicts, invalid };
+}
+
+// -----------------------------------------------------------------------------
+// 4. SPECIAL HANDLERS
+// -----------------------------------------------------------------------------
+
+const BIBLE_BOOKS = {
+  genesis: "gen", gen: "gen", ge: "gen",
+  exodus: "exo", exo: "exo", ex: "exo",
+  leviticus: "lev", lev: "lev",
+  numbers: "num", num: "num", nu: "num",
+  deuteronomy: "deu", deut: "deu", deu: "deu", dt: "deu",
+  joshua: "jos", josh: "jos", jos: "jos",
+  judges: "jdg", judg: "jdg", jdg: "jdg",
+  ruth: "rut", ru: "rut",
+  "1samuel": "1sa", "1sam": "1sa", "1sa": "1sa",
+  "2samuel": "2sa", "2sam": "2sa", "2sa": "2sa",
+  "1kings": "1ki", "1king": "1ki", "1ki": "1ki",
+  "2kings": "2ki", "2king": "2ki", "2ki": "2ki",
+  "1chronicles": "1ch", "1chron": "1ch", "1chr": "1ch", "1ch": "1ch",
+  "2chronicles": "2ch", "2chron": "2ch", "2chr": "2ch", "2ch": "2ch",
+  ezra: "ezr", ezr: "ezr",
+  nehemiah: "neh", neh: "neh",
+  esther: "est", est: "est",
+  job: "job",
+  psalms: "psa", psalm: "psa", psa: "psa", ps: "psa",
+  proverbs: "pro", proverb: "pro", prov: "pro", pro: "pro", pr: "pro",
+  ecclesiastes: "ecc", eccl: "ecc", ecc: "ecc",
+  songofsolomon: "sng", songofsongs: "sng", song: "sng", sng: "sng",
+  isaiah: "isa", isa: "isa",
+  jeremiah: "jer", jer: "jer",
+  lamentations: "lam", lam: "lam",
+  ezekiel: "ezk", ezek: "ezk", ezk: "ezk",
+  daniel: "dan", dan: "dan",
+  hosea: "hos", hos: "hos",
+  joel: "joe", joe: "joe",
+  amos: "amo", amo: "amo",
+  obadiah: "oba", obad: "oba", oba: "oba",
+  jonah: "jon", jon: "jon",
+  micah: "mic", mic: "mic",
+  nahum: "nah", nah: "nah",
+  habakkuk: "hab", hab: "hab",
+  zephaniah: "zep", zeph: "zep", zep: "zep",
+  haggai: "hag", hag: "hag",
+  zechariah: "zec", zech: "zec", zec: "zec",
+  malachi: "mal", mal: "mal",
+  matthew: "mat", matt: "mat", mat: "mat", mt: "mat",
+  mark: "mar", mar: "mar", mk: "mar",
+  luke: "luk", luk: "luk", lk: "luk",
+  john: "jhn", jhn: "jhn", jn: "jhn",
+  acts: "act", act: "act",
+  romans: "rom", rom: "rom", ro: "rom",
+  "1corinthians": "1co", "1cor": "1co", "1co": "1co",
+  "2corinthians": "2co", "2cor": "2co", "2co": "2co",
+  galatians: "gal", gal: "gal",
+  ephesians: "eph", eph: "eph",
+  philippians: "php", phil: "php", php: "php",
+  colossians: "col", col: "col",
+  "1thessalonians": "1th", "1thess": "1th", "1th": "1th",
+  "2thessalonians": "2th", "2thess": "2th", "2th": "2th",
+  "1timothy": "1ti", "1tim": "1ti", "1ti": "1ti",
+  "2timothy": "2ti", "2tim": "2ti", "2ti": "2ti",
+  titus: "tit", tit: "tit",
+  philemon: "phm", phm: "phm", phile: "phm",
+  hebrews: "heb", heb: "heb",
+  james: "jas", jas: "jas", jm: "jas",
+  "1peter": "1pe", "1pet": "1pe", "1pe": "1pe",
+  "2peter": "2pe", "2pet": "2pe", "2pe": "2pe",
+  "1john": "1jn", "1jn": "1jn",
+  "2john": "2jn", "2jn": "2jn",
+  "3john": "3jn", "3jn": "3jn",
+  jude: "jud", jud: "jud",
+  revelation: "rev", rev: "rev", re: "rev"
+};
+
+function handleBibleLookup(site, query) {
+  const reference = parseBibleReference(query);
+
+  if (reference) {
+    const version = site.translation.toLowerCase();
+    const verse = reference.verse || "1";
+
+    return redirectTo(
+      `https://www.blueletterbible.org/${version}/${reference.book}/${reference.chapter}/${verse}/`
+    );
+  }
+
+  // Non-reference text stays a normal Blue Letter Bible text search.
+  const template =
+    "https://www.blb.org/search/preSearch.cfm?plugin=yes&Criteria={q}&t=" +
+    encodeURIComponent(site.translation);
+
+  return redirectTo(template, query);
+}
+
+function parseBibleReference(query) {
+  const cleaned = query.trim().replace(/[.]/g, "");
+  const match = cleaned.match(/^(.+?)\s+(\d+)(?::(\d+)(?:\s*[-–]\s*\d+)?)?$/i);
+
+  if (!match) return null;
+
+  const bookKey = match[1].toLowerCase().replace(/[^a-z0-9]/g, "");
+  const book = BIBLE_BOOKS[bookKey];
+
+  if (!book) return null;
+
+  return {
+    book,
+    chapter: match[2],
+    verse: match[3] || ""
+  };
+}
+
+function handleVirusTotalLookup(query) {
+  const domain = extractDomain(query);
+
+  if (!domain) {
+    return redirectTo("https://www.virustotal.com/gui/home/url");
+  }
+
+  return redirectTo(`https://www.virustotal.com/gui/domain/${encodeURIComponent(domain)}`);
+}
+
+function extractDomain(query) {
+  let value = query.trim().replace(/^[\s"'(<\[]+|[\s"')>\],.;]+$/g, "");
+
+  if (!value) return null;
+
+  // A pasted URL normally has no spaces. If it does, use the first URL-like token.
+  value = value.split(/\s+/)[0];
+
+  if (!/^[a-z][a-z0-9+.-]*:\/\//i.test(value)) {
+    value = `https://${value}`;
+  }
+
+  try {
+    const hostname = new URL(value).hostname.toLowerCase();
+    return hostname.replace(/^www\./, "") || null;
+  } catch {
+    return null;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 5. GENERAL HELPERS
+// -----------------------------------------------------------------------------
+
+function normalizePath(value) {
+  return String(value).replace(/^\/+|\/+$/g, "").toLowerCase();
+}
+
+function getDefaultEngine(pathname) {
+  return DEFAULT_ENGINE_BY_PATH.get(normalizePath(pathname)) || DEFAULT_ENGINE_BY_PATH.get("");
 }
 
 function redirectTo(template, query = "") {
-  const target = template.replaceAll("{q}", encodeURIComponent(query.trim()));
-  return Response.redirect(target, 302);
-}
-
-function getDefaultEngineFromPath(pathname) {
-  const key = pathname.replace(/^\/+|\/+$/g, "").toLowerCase();
-  return DEFAULT_ENGINES[key] || DEFAULT_ENGINES.ddg;
+  const destination = template.replaceAll("{q}", encodeURIComponent(query.trim()));
+  return Response.redirect(destination, 302);
 }
 
 function findShortcut(raw) {
   const symbols = "[!;:.]";
   const name = "[a-zA-Z0-9_-]+";
   const patterns = [
+    // ;yt or ;yt cats
     new RegExp(`^(${symbols})(${name})(?:\\s+(.+))?$`),
+    // yt; or yt; cats
     new RegExp(`^(${name})(${symbols})(?:\\s+(.+))?$`),
+    // cats ;yt
     new RegExp(`^(.+?)\\s+(${symbols})(${name})$`),
+    // cats yt;
     new RegExp(`^(.+?)\\s+(${name})(${symbols})$`)
   ];
 
@@ -873,186 +1335,211 @@ function findShortcut(raw) {
   return null;
 }
 
-function transformQuery(site, query) {
-  if (site.queryTransform === "hostname") {
-    return extractHostname(query);
+function handleSite(site, query, requestUrl) {
+  if (site.handler === "help") {
+    return renderHelpPage(requestUrl);
   }
 
-  return query.trim();
-}
-
-function extractHostname(value) {
-  const input = value.trim();
-  if (!input) return "";
-
-  const candidate = /^[a-z][a-z0-9+.-]*:\/\//i.test(input)
-    ? input
-    : `https://${input.replace(/^\/+/, "")}`;
-
-  try {
-    const hostname = new URL(candidate).hostname.toLowerCase().replace(/\.$/, "");
-    return hostname.replace(/^www\./, "");
-  } catch {
-    return "";
+  if (site.handler === "virustotal") {
+    return query ? handleVirusTotalLookup(query) : redirectTo(site.home);
   }
+
+  if (site.handler === "bible") {
+    return query ? handleBibleLookup(site, query) : redirectTo(site.home);
+  }
+
+  if (query && site.search) {
+    return redirectTo(site.search, query);
+  }
+
+  return redirectTo(site.home);
 }
 
-function escapeHtml(value) {
-  return String(value).replace(/[&<>'"]/g, (character) => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    "'": "&#39;",
-    "\"": "&quot;"
-  })[character]);
-}
+// -----------------------------------------------------------------------------
+// 6. AUTOMATIC HELP PAGE
+// -----------------------------------------------------------------------------
 
-function renderHelpPage(origin) {
-  const defaultEngineRows = Object.entries(DEFAULT_ENGINES)
-    .filter(([key]) => !["d", "g", "sp", "b", "eco", "y", "noaiddg"].includes(key))
-    .map(([key, engine]) => {
-      const searchUrl = `${origin}/${key === "ddg" ? "" : `${key}/`}?q=%s`;
-      return `<button class="engine" data-copy="${escapeHtml(searchUrl)}"><strong>${escapeHtml(engine.name)}</strong><span>/${escapeHtml(key)}</span></button>`;
-    })
-    .join("");
+function renderHelpPage(requestUrl) {
+  const origin = requestUrl.origin;
+  const totalAliases = BANGS.size;
+  const totalSites = SITES.length;
+  const issues = [...ALIAS_CONFLICTS, ...INVALID_ALIASES];
 
-  const groupCards = SITE_GROUPS.map((group) => {
-    const cards = group.sites.map((site) => {
-      const aliases = site.aliases
-        .map((alias) => `<button class="alias" data-copy=";${escapeHtml(alias)}">;${escapeHtml(alias)}</button>`)
-        .join("");
-      const type = site.search ? "Search" : "Open";
-      const searchData = [site.name, site.category, ...site.aliases, site.home].join(" ").toLowerCase();
-
-      return `
-        <article class="card" data-search="${escapeHtml(searchData)}">
-          <div class="card-heading">
-            <h3>${escapeHtml(site.name)}</h3>
-            <span class="type">${type}</span>
-          </div>
-          <div class="aliases">${aliases}</div>
-          <a class="site-link" href="${escapeHtml(site.home)}" target="_blank" rel="noreferrer">Open site ↗</a>
-        </article>`;
-    }).join("");
+  const engineCards = DEFAULT_ENGINES.map((engine) => {
+    const primaryPath = engine.paths[0];
+    const searchUrl = primaryPath
+      ? `${origin}/${primaryPath}/?q=%s`
+      : `${origin}/?q=%s`;
 
     return `
-      <section class="group" data-group>
-        <h2>${escapeHtml(group.category)}</h2>
-        <div class="grid">${cards}</div>
+      <button class="engine-card copyable" type="button" data-copy="${escapeAttribute(searchUrl)}">
+        <span>${escapeHtml(engine.name)}</span>
+        <code>${escapeHtml(searchUrl)}</code>
+      </button>`;
+  }).join("");
+
+  const groups = SITE_GROUPS.map((group) => {
+    const cards = group.sites.map((site) => renderSiteCard(site)).join("");
+
+    return `
+      <section class="group" data-group="${escapeAttribute(group.category.toLowerCase())}">
+        <div class="group-title">
+          <h2>${escapeHtml(group.category)}</h2>
+          <span>${group.sites.length}</span>
+        </div>
+        <div class="site-grid">${cards}</div>
       </section>`;
   }).join("");
 
-  const conflictNotice = aliasConflicts.length
-    ? `<p class="warning">Duplicate aliases: ${escapeHtml(aliasConflicts.map((item) => `${item.alias} (${item.first} / ${item.second})`).join(", "))}</p>`
+  const warning = issues.length
+    ? `<section class="warning"><strong>Configuration warning:</strong> ${escapeHtml(formatIssues(issues))}</section>`
     : "";
 
-  const mainSearchUrl = `${origin}/?q=%s`;
-
-  return new Response(`<!doctype html>
+  const html = `<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Search Bangs</title>
+  <title>${escapeHtml(PROJECT.name)} Bangs</title>
   <style>
-    :root { color-scheme: dark; }
+    :root {
+      color-scheme: dark;
+      --bg: #101114;
+      --panel: #191b20;
+      --panel-2: #22252c;
+      --border: #323640;
+      --text: #eef0f4;
+      --muted: #a7adb9;
+      --accent: #8ab4ff;
+      --good: #83d49b;
+      --warn: #ffca70;
+    }
     * { box-sizing: border-box; }
-    body { margin: 0; background: #0b1020; color: #e8edf7; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-    main { width: min(1180px, calc(100% - 32px)); margin: 0 auto; padding: 48px 0 72px; }
-    .hero { padding: 28px; border: 1px solid #29355a; border-radius: 22px; background: linear-gradient(135deg, #141d37, #0d1429); box-shadow: 0 20px 50px rgba(0,0,0,.24); }
-    h1 { margin: 0; font-size: clamp(2rem, 5vw, 3.6rem); letter-spacing: -.04em; }
-    h2 { margin: 42px 0 14px; font-size: 1.3rem; }
-    h3 { margin: 0; font-size: 1rem; }
-    p { line-height: 1.55; color: #abb7d5; }
-    code, .url { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; }
-    .url { display: inline-block; margin-top: 12px; padding: 10px 12px; border-radius: 10px; color: #b9d4ff; background: #0a0f20; border: 1px solid #2b3a64; word-break: break-all; }
-    .hint { margin-top: 16px; color: #abb7d5; }
-    .hint code { color: #fff; }
-    #filter { width: 100%; margin: 24px 0 8px; padding: 14px 16px; color: #eef4ff; border: 1px solid #3b4b77; border-radius: 12px; background: #090e1d; font: inherit; outline: none; }
-    #filter:focus { border-color: #89a8ff; box-shadow: 0 0 0 3px rgba(105,145,255,.2); }
-    .engines { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
-    button { font: inherit; cursor: pointer; }
-    .engine, .alias { border: 1px solid #33436d; color: #dbe7ff; background: #111a31; border-radius: 9px; }
-    .engine { padding: 9px 11px; display: inline-flex; gap: 8px; align-items: baseline; }
-    .engine span { color: #91a6d9; font-family: "SFMono-Regular", Consolas, monospace; font-size: .8rem; }
-    .alias { padding: 4px 7px; font-family: "SFMono-Regular", Consolas, monospace; font-size: .82rem; }
-    .engine:hover, .alias:hover { border-color: #85a6ff; background: #172446; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
-    .card { min-height: 132px; padding: 15px; border: 1px solid #26345b; border-radius: 14px; background: #10172a; }
-    .card-heading { display: flex; align-items: flex-start; gap: 8px; justify-content: space-between; }
-    .type { padding: 3px 7px; color: #8bd7ae; border-radius: 99px; background: #113324; font-size: .72rem; }
-    .aliases { display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0; }
-    .site-link { color: #91b7ff; font-size: .88rem; text-decoration: none; }
-    .site-link:hover { text-decoration: underline; }
-    .warning { padding: 12px 14px; color: #ffd8a8; border: 1px solid #76592f; border-radius: 10px; background: #2c2112; }
-    .empty { display: none; margin-top: 26px; color: #abb7d5; }
-    .toast { position: fixed; right: 18px; bottom: 18px; padding: 10px 14px; border: 1px solid #3d5284; border-radius: 10px; background: #15213d; color: #edf4ff; opacity: 0; transform: translateY(8px); transition: .18s; pointer-events: none; }
-    .toast.show { opacity: 1; transform: translateY(0); }
-    @media (max-width: 560px) { main { width: min(100% - 24px, 1180px); padding-top: 20px; } .hero { padding: 20px; } }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 16px/1.45 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    main { max-width: 1280px; margin: 0 auto; padding: 36px 20px 64px; }
+    header { display: flex; gap: 20px; align-items: flex-start; justify-content: space-between; margin-bottom: 24px; }
+    h1 { margin: 0; font-size: clamp(2rem, 5vw, 3rem); line-height: 1.05; }
+    h2 { margin: 0; font-size: 1.15rem; }
+    p { color: var(--muted); margin: 10px 0 0; }
+    a { color: var(--accent); }
+    .badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .badge, .type { border: 1px solid var(--border); border-radius: 999px; padding: 4px 9px; color: var(--muted); font-size: .78rem; white-space: nowrap; }
+    .type.search { color: var(--good); }
+    .type.open { color: var(--warn); }
+    .toolbar, .defaults, .warning { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; }
+    .toolbar { padding: 14px; margin: 20px 0; }
+    input {
+      width: 100%; padding: 13px 14px; border: 1px solid var(--border); border-radius: 10px;
+      background: var(--bg); color: var(--text); font: inherit;
+    }
+    .defaults { padding: 16px; margin: 20px 0 30px; }
+    .defaults h2 { margin-bottom: 10px; }
+    .engine-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(235px, 1fr)); gap: 10px; }
+    .engine-card {
+      display: flex; flex-direction: column; gap: 4px; padding: 10px; border: 1px solid var(--border);
+      border-radius: 10px; background: var(--panel-2); color: var(--text); text-align: left; cursor: pointer;
+    }
+    .engine-card:hover, .alias:hover { border-color: var(--accent); }
+    code { color: #c9d7ff; font: .8rem ui-monospace, SFMono-Regular, Menlo, monospace; overflow-wrap: anywhere; }
+    .group { margin: 28px 0; }
+    .group-title { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .group-title span { color: var(--muted); font-size: .85rem; }
+    .site-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(245px, 1fr)); gap: 10px; }
+    .site-card { padding: 14px; background: var(--panel); border: 1px solid var(--border); border-radius: 12px; }
+    .site-top { display: flex; gap: 10px; justify-content: space-between; align-items: flex-start; }
+    .site-name { color: var(--text); font-weight: 700; text-decoration: none; }
+    .aliases { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 11px; }
+    .alias {
+      appearance: none; border: 1px solid var(--border); border-radius: 7px; background: var(--panel-2);
+      color: var(--text); padding: 4px 7px; font: .78rem ui-monospace, SFMono-Regular, Menlo, monospace; cursor: pointer;
+    }
+    .site-url { display: block; margin-top: 12px; color: var(--muted); font-size: .77rem; overflow-wrap: anywhere; text-decoration: none; }
+    .warning { padding: 12px 14px; color: var(--warn); margin-bottom: 20px; }
+    .empty { display: none; color: var(--muted); margin: 30px 0; }
+    .footer { margin-top: 42px; color: var(--muted); font-size: .9rem; }
+    @media (max-width: 650px) { header { flex-direction: column; } main { padding-top: 25px; } }
   </style>
 </head>
 <body>
   <main>
-    <header class="hero">
-      <h1>Search Bangs</h1>
-      <p>Generated directly from this Worker’s configuration. Click an alias to copy it.</p>
-      <button class="url" data-copy="${escapeHtml(mainSearchUrl)}">${escapeHtml(mainSearchUrl)}</button>
-      <p class="hint">Use <code>!</code>, <code>;</code>, <code>:</code>, or <code>.</code> before an alias. Example: <code>;g cats</code>. You can also put it at the end: <code>cats ;g</code>.</p>
-      <input id="filter" type="search" placeholder="Filter by site, alias, or URL…" autocomplete="off" autofocus>
-      <div class="engines">${defaultEngineRows}</div>
-      ${conflictNotice}
+    <header>
+      <div>
+        <h1>${escapeHtml(PROJECT.name)} Bangs</h1>
+        <p>Type <code>;help</code> in the address bar any time to return here. Click a bang or default-search URL to copy it.</p>
+        <div class="badges">
+          <span class="badge">${totalSites} sites</span>
+          <span class="badge">${totalAliases} aliases</span>
+          <span class="badge">Symbols: ! ; : .</span>
+        </div>
+      </div>
+      <a href="${escapeAttribute(PROJECT.repository)}" target="_blank" rel="noreferrer">Repository ↗</a>
     </header>
-    <p id="empty" class="empty">No matching bangs.</p>
-    ${groupCards}
+
+    ${warning}
+
+    <div class="toolbar">
+      <input id="filter" type="search" autocomplete="off" placeholder="Filter by name, alias, or category…" autofocus>
+    </div>
+
+    <section class="defaults">
+      <h2>Browser default-search URLs</h2>
+      <p>Click one to copy it. Root and <code>/ddg/</code> both use DuckDuckGo.</p>
+      <div class="engine-grid">${engineCards}</div>
+    </section>
+
+    <div id="empty" class="empty">No bangs match that filter.</div>
+    <div id="groups">${groups}</div>
+
+    <p class="footer">Bangs are case-insensitive. For example, <code>.C</code> and <code>.c</code> are the same.</p>
   </main>
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
   <script>
     const filter = document.getElementById("filter");
-    const cards = [...document.querySelectorAll(".card")];
-    const groups = [...document.querySelectorAll("[data-group]")];
+    const groups = [...document.querySelectorAll(".group")];
+    const cards = [...document.querySelectorAll(".site-card")];
     const empty = document.getElementById("empty");
-    const toast = document.getElementById("toast");
-    let toastTimer;
-
-    function showToast(message) {
-      toast.textContent = message;
-      toast.classList.add("show");
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => toast.classList.remove("show"), 1300);
-    }
 
     filter.addEventListener("input", () => {
       const query = filter.value.trim().toLowerCase();
-      let visibleCount = 0;
+      let visible = 0;
 
       cards.forEach((card) => {
-        const visible = !query || card.dataset.search.includes(query);
-        card.hidden = !visible;
-        if (visible) visibleCount += 1;
+        const matches = !query || card.dataset.search.includes(query);
+        card.hidden = !matches;
+        if (matches) visible += 1;
       });
 
       groups.forEach((group) => {
-        group.hidden = ![...group.querySelectorAll(".card")].some((card) => !card.hidden);
+        group.hidden = ![...group.querySelectorAll(".site-card")].some((card) => !card.hidden);
       });
 
-      empty.style.display = visibleCount ? "none" : "block";
+      empty.style.display = visible ? "none" : "block";
     });
 
     document.addEventListener("click", async (event) => {
-      const button = event.target.closest("[data-copy]");
-      if (!button) return;
+      const target = event.target.closest("[data-copy]");
+      if (!target) return;
 
-      const value = button.dataset.copy;
+      const text = target.dataset.copy;
       try {
-        await navigator.clipboard.writeText(value);
-        showToast("Copied " + value);
+        await navigator.clipboard.writeText(text);
+        const original = target.textContent;
+        target.textContent = "Copied";
+        setTimeout(() => { target.textContent = original; }, 900);
       } catch {
-        showToast("Copy this: " + value);
+        window.prompt("Copy this:", text);
       }
     });
   </script>
 </body>
-</html>`, {
+</html>`;
+
+  return new Response(html, {
     headers: {
       "content-type": "text/html; charset=utf-8",
       "cache-control": "no-store"
@@ -1060,32 +1547,84 @@ function renderHelpPage(origin) {
   });
 }
 
+function renderSiteCard(site) {
+  const aliases = site.aliases
+    .map((alias) => `<button class="alias" type="button" data-copy=";${escapeAttribute(alias)}">;${escapeHtml(alias)}</button>`)
+    .join("");
+
+  const type = getSiteType(site);
+  const searchText = [site.name, site.category, ...site.aliases, site.home || ""].join(" ").toLowerCase();
+  const link = site.home || "#";
+
+  return `
+    <article class="site-card" data-search="${escapeAttribute(searchText)}">
+      <div class="site-top">
+        <a class="site-name" href="${escapeAttribute(link)}" target="_blank" rel="noreferrer">${escapeHtml(site.name)}</a>
+        <span class="type ${type.className}">${type.label}</span>
+      </div>
+      <div class="aliases">${aliases}</div>
+      ${site.home ? `<a class="site-url" href="${escapeAttribute(site.home)}" target="_blank" rel="noreferrer">${escapeHtml(site.home)}</a>` : ""}
+    </article>`;
+}
+
+function getSiteType(site) {
+  if (site.handler === "bible") return { label: "Verse / search", className: "search" };
+  if (site.handler === "virustotal") return { label: "Domain lookup", className: "search" };
+  if (site.handler === "help") return { label: "Internal", className: "open" };
+  if (site.search) return { label: "Search", className: "search" };
+  return { label: "Open", className: "open" };
+}
+
+function formatIssues(issues) {
+  return issues
+    .map((issue) => {
+      if ("first" in issue) return `duplicate alias “${issue.alias}” (${issue.first} and ${issue.second})`;
+      return `invalid alias “${issue.alias}” (${issue.site})`;
+    })
+    .join("; ");
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function escapeAttribute(value) {
+  return escapeHtml(value);
+}
+
+// -----------------------------------------------------------------------------
+// 7. WORKER ENTRY POINT
+// -----------------------------------------------------------------------------
+
 export default {
   async fetch(request) {
     const url = new URL(request.url);
-    const pathname = url.pathname.replace(/\/+$/, "") || "/";
+    const route = normalizePath(url.pathname);
+    const raw = (url.searchParams.get("q") || "").trim();
 
-    if (pathname === "/help" || pathname === "/bangs") {
-      return renderHelpPage(url.origin);
+    // Direct links still work, but ;help is easier from the address bar.
+    if (route === "help" || route === "bangs") {
+      return renderHelpPage(url);
     }
 
-    const raw = (url.searchParams.get("q") || "").trim();
-    const defaultEngine = getDefaultEngineFromPath(url.pathname);
+    const defaultEngine = getDefaultEngine(url.pathname);
 
     if (!raw) {
       return redirectTo(defaultEngine.home);
     }
 
     const shortcut = findShortcut(raw);
-    const site = shortcut ? bangMap.get(shortcut.bang) : null;
 
-    if (site) {
-      if (shortcut.query && site.search) {
-        const query = transformQuery(site, shortcut.query);
-        if (query) return redirectTo(site.search, query);
+    if (shortcut) {
+      const site = BANGS.get(shortcut.bang);
+      if (site) {
+        return handleSite(site, shortcut.query, url);
       }
-
-      return redirectTo(site.home);
     }
 
     return redirectTo(defaultEngine.search, raw);
