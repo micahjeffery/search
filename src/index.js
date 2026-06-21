@@ -18,8 +18,7 @@ const PROJECT = {
 // 1. DEFAULT SEARCH ENGINES
 // -----------------------------------------------------------------------------
 // These paths let one Worker act as several browser search engines.
-// Example: https://search.mydomain.com/google/?q=%s
-// The empty path ("") below means the root URL only. It is NOT an empty bang alias.
+
 const DEFAULT_ENGINES = [
   {
     name: "DuckDuckGo",
@@ -28,7 +27,7 @@ const DEFAULT_ENGINES = [
       "d",
       "ddg",
       "duckduckgo",
-    ], // "" = root path: https://search.mydomain.com/?q=%s
+    ], 
     home: "https://duckduckgo.com/",
     search: "https://duckduckgo.com/?q={q}"
   },
@@ -98,10 +97,10 @@ const DEFAULT_ENGINES = [
 // -----------------------------------------------------------------------------
 // Every site uses the same shape:
 //   name:    Display name used on the help page.
-//   aliases: Bang words, without ! ; : or .
-//   home:    Destination for a bang with no query, such as ;youtube.
-//   search:  Destination for a bang with a query, such as ;youtube music.
-//   handler: Optional special behavior for the help page or VirusTotal.
+//   aliases: Bang words.
+//   home:    Destination for a bang with no query.
+//   search:  Destination for a bang with a query.
+//   handler: Optional special behavior.
 const SITE_GROUPS = [
   {
     category: "Project & Developer",
