@@ -1,41 +1,70 @@
+/**
+ * Search — personal search redirector
+ *
+ * Edit the configuration sections below:
+ *   1. DEFAULT_ENGINES controls browser-search URLs such as /google/?q=%s.
+ *   2. SITE_GROUPS controls your bangs and the automatically generated help page.
+ *
+ * Supported bang symbols: ! ; : .
+ * Examples:
+ *   ;g cats        .yt music        cats ;reddit        ;help
+ */
 const PROJECT = {
   name: "Search",
   repository: "https://github.com/micahjeffery/search",
   editSource: "https://github.com/micahjeffery/search/edit/main/src/index.js"
 };
-
 // -----------------------------------------------------------------------------
 // 1. DEFAULT SEARCH ENGINES
 // -----------------------------------------------------------------------------
-
+// These paths let one Worker act as several browser search engines.
+// Example: https://search.mydomain.com/google/?q=%s
+// The empty path ("") below means the root URL only. It is NOT an empty bang alias.
 const DEFAULT_ENGINES = [
   {
     name: "DuckDuckGo",
-    paths: ["", "d", "ddg", "duckduckgo"],
+    paths: [
+      "",
+      "d",
+      "ddg",
+      "duckduckgo",
+    ], // "" = root path: https://search.mydomain.com/?q=%s
     home: "https://duckduckgo.com/",
     search: "https://duckduckgo.com/?q={q}"
   },
   {
     name: "DuckDuckGo No AI",
-    paths: ["noai", "noaiddg"],
+    paths: [
+      "noai",
+      "noaiddg",
+    ],
     home: "https://noai.duckduckgo.com/",
     search: "https://noai.duckduckgo.com/?q={q}"
   },
   {
     name: "Google",
-    paths: ["google", "g"],
+    paths: [
+      "google",
+      "g",
+    ],
     home: "https://www.google.com/",
     search: "https://www.google.com/search?q={q}"
   },
   {
     name: "Brave Search",
-    paths: ["brave", "b"],
+    paths: [
+      "brave",
+      "b",
+    ],
     home: "https://search.brave.com/",
     search: "https://search.brave.com/search?q={q}"
   },
   {
     name: "Startpage",
-    paths: ["startpage", "sp"],
+    paths: [
+      "startpage",
+      "sp",
+    ],
     home: "https://www.startpage.com/",
     search: "https://www.startpage.com/sp/search?query={q}"
   },
@@ -47,28 +76,32 @@ const DEFAULT_ENGINES = [
   },
   {
     name: "Ecosia",
-    paths: ["ecosia", "eco"],
+    paths: [
+      "ecosia",
+      "eco",
+    ],
     home: "https://www.ecosia.org/",
     search: "https://www.ecosia.org/search?q={q}"
   },
   {
     name: "Yahoo",
-    paths: ["yahoo", "y"],
+    paths: [
+      "yahoo",
+      "y",
+    ],
     home: "https://search.yahoo.com/",
     search: "https://search.yahoo.com/search?p={q}"
   }
 ];
-
 // -----------------------------------------------------------------------------
 // 2. BANGS, ORGANIZED BY CATEGORY
 // -----------------------------------------------------------------------------
-// Every site uses the same format:
+// Every site uses the same shape:
 //   name:    Display name used on the help page.
-//   aliases: Bang words.
-//   home:    Destination for a bang with no querye.
-//   search:  Destination for a bang with a query.
-//   handler: Optional special behavior for help, Bible references, or VirusTotal.
-
+//   aliases: Bang words, without ! ; : or .
+//   home:    Destination for a bang with no query, such as ;youtube.
+//   search:  Destination for a bang with a query, such as ;youtube music.
+//   handler: Optional special behavior for the help page or VirusTotal.
 const SITE_GROUPS = [
   {
     category: "Project & Developer",
@@ -93,6 +126,11 @@ const SITE_GROUPS = [
         aliases: ["gh", "github"],
         home: "https://github.com/",
         search: "https://github.com/search?q={q}"
+      },
+      {
+        name: "Cloudflare Dashboard",
+        aliases: ["cf", "cloudflare"],
+        home: "https://dash.cloudflare.com/"
       }
     ]
   },
@@ -723,35 +761,31 @@ const SITE_GROUPS = [
     ]
   },
   {
-    category: "Bible",
+    category: "Bible & Faith",
     sites: [
       {
         name: "Blue Letter Bible — ESV",
         aliases: ["blb", "bible", "blbesv", "esv"],
         home: "https://www.blueletterbible.org/esv/jhn/1/1/",
-        handler: "bible",
-        translation: "ESV"
+        search: "https://www.blb.org/search/preSearch.cfm?plugin=yes&Criteria={q}&t=ESV"
       },
       {
         name: "Blue Letter Bible — LSB",
         aliases: ["lsb", "blblsb"],
         home: "https://www.blueletterbible.org/lsb/jhn/1/1/",
-        handler: "bible",
-        translation: "LSB"
+        search: "https://www.blb.org/search/preSearch.cfm?plugin=yes&Criteria={q}&t=LSB"
       },
       {
         name: "Blue Letter Bible — NIV",
         aliases: ["niv", "blbniv"],
         home: "https://www.blueletterbible.org/niv/jhn/1/1/",
-        handler: "bible",
-        translation: "NIV"
+        search: "https://www.blb.org/search/preSearch.cfm?plugin=yes&Criteria={q}&t=NIV"
       },
       {
         name: "Blue Letter Bible — KJV",
         aliases: ["kjv", "blbkjv"],
         home: "https://www.blueletterbible.org/kjv/jhn/1/1/",
-        handler: "bible",
-        translation: "KJV"
+        search: "https://www.blb.org/search/preSearch.cfm?plugin=yes&Criteria={q}&t=KJV"
       }
     ]
   },
@@ -947,7 +981,7 @@ const SITE_GROUPS = [
     sites: [
       {
         name: "NextDNS",
-        aliases: ["nextdns", "ndns"],
+        aliases: ["dns", "nextdns", "ndns"],
         home: "https://my.nextdns.io/"
       },
       {
@@ -1021,7 +1055,7 @@ const SITE_GROUPS = [
       },
       {
         name: "Wormhole File Transfer",
-        aliases: ["file", "worm", "transfer", "wormhole"],
+        aliases: ["file", "wh", "worm", "transfer", "wormhole"],
         home: "https://wormhole.app/"
       },
       {
@@ -1095,45 +1129,35 @@ const SITE_GROUPS = [
     ]
   }
 ];
-
 // -----------------------------------------------------------------------------
 // 3. CONFIGURATION INDEXES AND VALIDATION
 // -----------------------------------------------------------------------------
-
 const SITES = SITE_GROUPS.flatMap((group) =>
   group.sites.map((site) => ({ ...site, category: group.category }))
 );
-
 const DEFAULT_ENGINE_BY_PATH = buildDefaultEngineIndex(DEFAULT_ENGINES);
 const { byAlias: BANGS, conflicts: ALIAS_CONFLICTS, invalid: INVALID_ALIASES } =
   buildBangIndex(SITES);
-
 function buildDefaultEngineIndex(engines) {
   const index = new Map();
-
   for (const engine of engines) {
     for (const path of engine.paths) {
       index.set(normalizePath(path), engine);
     }
   }
-
   return index;
 }
-
 function buildBangIndex(sites) {
   const byAlias = new Map();
   const conflicts = [];
   const invalid = [];
-
   for (const site of sites) {
     for (const rawAlias of site.aliases) {
       const alias = String(rawAlias).trim().toLowerCase();
-
       if (!/^[a-z0-9_-]+$/.test(alias)) {
         invalid.push({ alias: rawAlias, site: site.name });
         continue;
       }
-
       if (byAlias.has(alias)) {
         conflicts.push({
           alias,
@@ -1142,147 +1166,29 @@ function buildBangIndex(sites) {
         });
         continue;
       }
-
       byAlias.set(alias, site);
     }
   }
-
   return { byAlias, conflicts, invalid };
 }
-
 // -----------------------------------------------------------------------------
 // 4. SPECIAL HANDLERS
 // -----------------------------------------------------------------------------
-
-const BIBLE_BOOKS = {
-  genesis: "gen", gen: "gen", ge: "gen",
-  exodus: "exo", exo: "exo", ex: "exo",
-  leviticus: "lev", lev: "lev",
-  numbers: "num", num: "num", nu: "num",
-  deuteronomy: "deu", deut: "deu", deu: "deu", dt: "deu",
-  joshua: "jos", josh: "jos", jos: "jos",
-  judges: "jdg", judg: "jdg", jdg: "jdg",
-  ruth: "rut", ru: "rut",
-  "1samuel": "1sa", "1sam": "1sa", "1sa": "1sa",
-  "2samuel": "2sa", "2sam": "2sa", "2sa": "2sa",
-  "1kings": "1ki", "1king": "1ki", "1ki": "1ki",
-  "2kings": "2ki", "2king": "2ki", "2ki": "2ki",
-  "1chronicles": "1ch", "1chron": "1ch", "1chr": "1ch", "1ch": "1ch",
-  "2chronicles": "2ch", "2chron": "2ch", "2chr": "2ch", "2ch": "2ch",
-  ezra: "ezr", ezr: "ezr",
-  nehemiah: "neh", neh: "neh",
-  esther: "est", est: "est",
-  job: "job",
-  psalms: "psa", psalm: "psa", psa: "psa", ps: "psa",
-  proverbs: "pro", proverb: "pro", prov: "pro", pro: "pro", pr: "pro",
-  ecclesiastes: "ecc", eccl: "ecc", ecc: "ecc",
-  songofsolomon: "sng", songofsongs: "sng", song: "sng", sng: "sng",
-  isaiah: "isa", isa: "isa",
-  jeremiah: "jer", jer: "jer",
-  lamentations: "lam", lam: "lam",
-  ezekiel: "ezk", ezek: "ezk", ezk: "ezk",
-  daniel: "dan", dan: "dan",
-  hosea: "hos", hos: "hos",
-  joel: "joe", joe: "joe",
-  amos: "amo", amo: "amo",
-  obadiah: "oba", obad: "oba", oba: "oba",
-  jonah: "jon", jon: "jon",
-  micah: "mic", mic: "mic",
-  nahum: "nah", nah: "nah",
-  habakkuk: "hab", hab: "hab",
-  zephaniah: "zep", zeph: "zep", zep: "zep",
-  haggai: "hag", hag: "hag",
-  zechariah: "zec", zech: "zec", zec: "zec",
-  malachi: "mal", mal: "mal",
-  matthew: "mat", matt: "mat", mat: "mat", mt: "mat",
-  mark: "mar", mar: "mar", mk: "mar",
-  luke: "luk", luk: "luk", lk: "luk",
-  john: "jhn", jhn: "jhn", jn: "jhn",
-  acts: "act", act: "act",
-  romans: "rom", rom: "rom", ro: "rom",
-  "1corinthians": "1co", "1cor": "1co", "1co": "1co",
-  "2corinthians": "2co", "2cor": "2co", "2co": "2co",
-  galatians: "gal", gal: "gal",
-  ephesians: "eph", eph: "eph",
-  philippians: "php", phil: "php", php: "php",
-  colossians: "col", col: "col",
-  "1thessalonians": "1th", "1thess": "1th", "1th": "1th",
-  "2thessalonians": "2th", "2thess": "2th", "2th": "2th",
-  "1timothy": "1ti", "1tim": "1ti", "1ti": "1ti",
-  "2timothy": "2ti", "2tim": "2ti", "2ti": "2ti",
-  titus: "tit", tit: "tit",
-  philemon: "phm", phm: "phm", phile: "phm",
-  hebrews: "heb", heb: "heb",
-  james: "jas", jas: "jas", jm: "jas",
-  "1peter": "1pe", "1pet": "1pe", "1pe": "1pe",
-  "2peter": "2pe", "2pet": "2pe", "2pe": "2pe",
-  "1john": "1jn", "1jn": "1jn",
-  "2john": "2jn", "2jn": "2jn",
-  "3john": "3jn", "3jn": "3jn",
-  jude: "jud", jud: "jud",
-  revelation: "rev", rev: "rev", re: "rev"
-};
-
-function handleBibleLookup(site, query) {
-  const reference = parseBibleReference(query);
-
-  if (reference) {
-    const version = site.translation.toLowerCase();
-    const verse = reference.verse || "1";
-
-    return redirectTo(
-      `https://www.blueletterbible.org/${version}/${reference.book}/${reference.chapter}/${verse}/`
-    );
-  }
-
-  // Non-reference text stays a normal Blue Letter Bible text search.
-  const template =
-    "https://www.blb.org/search/preSearch.cfm?plugin=yes&Criteria={q}&t=" +
-    encodeURIComponent(site.translation);
-
-  return redirectTo(template, query);
-}
-
-function parseBibleReference(query) {
-  const cleaned = query.trim().replace(/[.]/g, "");
-  const match = cleaned.match(/^(.+?)\s+(\d+)(?::(\d+)(?:\s*[-–]\s*\d+)?)?$/i);
-
-  if (!match) return null;
-
-  const bookKey = match[1].toLowerCase().replace(/[^a-z0-9]/g, "");
-  const book = BIBLE_BOOKS[bookKey];
-
-  if (!book) return null;
-
-  return {
-    book,
-    chapter: match[2],
-    verse: match[3] || ""
-  };
-}
-
 function handleVirusTotalLookup(query) {
   const domain = extractDomain(query);
-
   if (!domain) {
     return redirectTo("https://www.virustotal.com/gui/home/url");
   }
-
   return redirectTo(`https://www.virustotal.com/gui/domain/${encodeURIComponent(domain)}`);
 }
-
 function extractDomain(query) {
   let value = query.trim().replace(/^[\s"'(<\[]+|[\s"')>\],.;]+$/g, "");
-
   if (!value) return null;
-
   // A pasted URL normally has no spaces. If it does, use the first URL-like token.
   value = value.split(/\s+/)[0];
-
   if (!/^[a-z][a-z0-9+.-]*:\/\//i.test(value)) {
     value = `https://${value}`;
   }
-
   try {
     const hostname = new URL(value).hostname.toLowerCase();
     return hostname.replace(/^www\./, "") || null;
@@ -1290,24 +1196,19 @@ function extractDomain(query) {
     return null;
   }
 }
-
 // -----------------------------------------------------------------------------
 // 5. GENERAL HELPERS
 // -----------------------------------------------------------------------------
-
 function normalizePath(value) {
   return String(value).replace(/^\/+|\/+$/g, "").toLowerCase();
 }
-
 function getDefaultEngine(pathname) {
   return DEFAULT_ENGINE_BY_PATH.get(normalizePath(pathname)) || DEFAULT_ENGINE_BY_PATH.get("");
 }
-
 function redirectTo(template, query = "") {
   const destination = template.replaceAll("{q}", encodeURIComponent(query.trim()));
   return Response.redirect(destination, 302);
 }
-
 function findShortcut(raw) {
   const symbols = "[!;:.]";
   const name = "[a-zA-Z0-9_-]+";
@@ -1321,80 +1222,61 @@ function findShortcut(raw) {
     // cats yt;
     new RegExp(`^(.+?)\\s+(${name})(${symbols})$`)
   ];
-
   for (let index = 0; index < patterns.length; index += 1) {
     const match = raw.match(patterns[index]);
     if (!match) continue;
-
     if (index === 0) return { bang: match[2].toLowerCase(), query: match[3] || "" };
     if (index === 1) return { bang: match[1].toLowerCase(), query: match[3] || "" };
     if (index === 2) return { bang: match[3].toLowerCase(), query: match[1] || "" };
     if (index === 3) return { bang: match[2].toLowerCase(), query: match[1] || "" };
   }
-
   return null;
 }
-
 function handleSite(site, query, requestUrl) {
   if (site.handler === "help") {
     return renderHelpPage(requestUrl);
   }
-
   if (site.handler === "virustotal") {
     return query ? handleVirusTotalLookup(query) : redirectTo(site.home);
   }
-
-  if (site.handler === "bible") {
-    return query ? handleBibleLookup(site, query) : redirectTo(site.home);
-  }
-
   if (query && site.search) {
     return redirectTo(site.search, query);
   }
-
   return redirectTo(site.home);
 }
-
 // -----------------------------------------------------------------------------
 // 6. AUTOMATIC HELP PAGE
 // -----------------------------------------------------------------------------
-
 function renderHelpPage(requestUrl) {
   const origin = requestUrl.origin;
   const totalAliases = BANGS.size;
   const totalSites = SITES.length;
   const issues = [...ALIAS_CONFLICTS, ...INVALID_ALIASES];
-
   const engineCards = DEFAULT_ENGINES.map((engine) => {
     const primaryPath = engine.paths[0];
     const searchUrl = primaryPath
       ? `${origin}/${primaryPath}/?q=%s`
       : `${origin}/?q=%s`;
-
     return `
       <button class="engine-card copyable" type="button" data-copy="${escapeAttribute(searchUrl)}">
         <span>${escapeHtml(engine.name)}</span>
         <code>${escapeHtml(searchUrl)}</code>
       </button>`;
   }).join("");
-
   const groups = SITE_GROUPS.map((group) => {
     const cards = group.sites.map((site) => renderSiteCard(site)).join("");
-
     return `
-      <section class="group" data-group="${escapeAttribute(group.category.toLowerCase())}">
-        <div class="group-title">
+      <details class="group" data-group="${escapeAttribute(group.category.toLowerCase())}" open>
+        <summary class="group-title">
           <h2>${escapeHtml(group.category)}</h2>
           <span>${group.sites.length}</span>
-        </div>
+        </summary>
         <div class="site-grid">${cards}</div>
-      </section>`;
+      </details>`;
   }).join("");
-
   const warning = issues.length
     ? `<section class="warning"><strong>Configuration warning:</strong> ${escapeHtml(formatIssues(issues))}</section>`
     : "";
-
   const html = `<!doctype html>
 <html lang="en">
 <head>
@@ -1413,6 +1295,7 @@ function renderHelpPage(requestUrl) {
       --accent: #8ab4ff;
       --good: #83d49b;
       --warn: #ffca70;
+      --info: #c9a7ff;
     }
     * { box-sizing: border-box; }
     body {
@@ -1431,8 +1314,15 @@ function renderHelpPage(requestUrl) {
     .badge, .type { border: 1px solid var(--border); border-radius: 999px; padding: 4px 9px; color: var(--muted); font-size: .78rem; white-space: nowrap; }
     .type.search { color: var(--good); }
     .type.open { color: var(--warn); }
+    .type.internal { color: var(--info); }
     .toolbar, .defaults, .warning { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; }
     .toolbar { padding: 14px; margin: 20px 0; }
+    .toolbar-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .toolbar-button {
+      appearance: none; border: 1px solid var(--border); border-radius: 8px; background: var(--panel-2);
+      color: var(--text); padding: 7px 10px; font: inherit; font-size: .85rem; cursor: pointer;
+    }
+    .toolbar-button:hover { border-color: var(--accent); }
     input {
       width: 100%; padding: 13px 14px; border: 1px solid var(--border); border-radius: 10px;
       background: var(--bg); color: var(--text); font: inherit;
@@ -1447,8 +1337,15 @@ function renderHelpPage(requestUrl) {
     .engine-card:hover, .alias:hover { border-color: var(--accent); }
     code { color: #c9d7ff; font: .8rem ui-monospace, SFMono-Regular, Menlo, monospace; overflow-wrap: anywhere; }
     .group { margin: 28px 0; }
-    .group-title { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .group-title {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 10px; cursor: pointer;
+      list-style: none; user-select: none;
+    }
+    .group-title::-webkit-details-marker { display: none; }
+    .group-title::before { content: "▾"; color: var(--muted); transition: transform .15s ease; }
+    .group:not([open]) .group-title::before { transform: rotate(-90deg); }
     .group-title span { color: var(--muted); font-size: .85rem; }
+    .group:not([open]) .group-title { margin-bottom: 0; }
     .site-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(245px, 1fr)); gap: 10px; }
     .site-card { padding: 14px; background: var(--panel); border: 1px solid var(--border); border-radius: 12px; }
     .site-top { display: flex; gap: 10px; justify-content: space-between; align-items: flex-start; }
@@ -1470,7 +1367,7 @@ function renderHelpPage(requestUrl) {
     <header>
       <div>
         <h1>${escapeHtml(PROJECT.name)} Bangs</h1>
-        <p>Type <code>;help</code> in the address bar any time to return here. Click a bang or default-search URL to copy it.</p>
+        <p>Type <code>;help</code> — or just <code>;</code> — in the address bar any time to return here. Click a bang or default-search URL to copy it.</p>
         <div class="badges">
           <span class="badge">${totalSites} sites</span>
           <span class="badge">${totalAliases} aliases</span>
@@ -1479,52 +1376,52 @@ function renderHelpPage(requestUrl) {
       </div>
       <a href="${escapeAttribute(PROJECT.repository)}" target="_blank" rel="noreferrer">Repository ↗</a>
     </header>
-
     ${warning}
-
     <div class="toolbar">
       <input id="filter" type="search" autocomplete="off" placeholder="Filter by name, alias, or category…" autofocus>
+      <div class="toolbar-actions">
+        <button class="toolbar-button" id="expand-all" type="button">Expand all</button>
+        <button class="toolbar-button" id="collapse-all" type="button">Collapse all</button>
+      </div>
     </div>
-
     <section class="defaults">
       <h2>Browser default-search URLs</h2>
-      <p>Click one to copy it. Root and <code>/ddg/</code> both use DuckDuckGo.</p>
+      <p>Click one to copy it. Root and <code>/ddg/</code> use DuckDuckGo; each named path uses its own engine.</p>
       <div class="engine-grid">${engineCards}</div>
     </section>
-
     <div id="empty" class="empty">No bangs match that filter.</div>
     <div id="groups">${groups}</div>
-
     <p class="footer">Bangs are case-insensitive. For example, <code>.C</code> and <code>.c</code> are the same.</p>
   </main>
-
   <script>
     const filter = document.getElementById("filter");
     const groups = [...document.querySelectorAll(".group")];
     const cards = [...document.querySelectorAll(".site-card")];
     const empty = document.getElementById("empty");
-
     filter.addEventListener("input", () => {
       const query = filter.value.trim().toLowerCase();
       let visible = 0;
-
       cards.forEach((card) => {
         const matches = !query || card.dataset.search.includes(query);
         card.hidden = !matches;
         if (matches) visible += 1;
       });
-
       groups.forEach((group) => {
-        group.hidden = ![...group.querySelectorAll(".site-card")].some((card) => !card.hidden);
+        const hasVisibleCard = [...group.querySelectorAll(".site-card")].some((card) => !card.hidden);
+        group.hidden = !hasVisibleCard;
+        if (query && hasVisibleCard) group.open = true;
       });
-
       empty.style.display = visible ? "none" : "block";
     });
-
+    document.getElementById("expand-all").addEventListener("click", () => {
+      groups.forEach((group) => { group.open = true; });
+    });
+    document.getElementById("collapse-all").addEventListener("click", () => {
+      groups.forEach((group) => { group.open = false; });
+    });
     document.addEventListener("click", async (event) => {
       const target = event.target.closest("[data-copy]");
       if (!target) return;
-
       const text = target.dataset.copy;
       try {
         await navigator.clipboard.writeText(text);
@@ -1538,7 +1435,6 @@ function renderHelpPage(requestUrl) {
   </script>
 </body>
 </html>`;
-
   return new Response(html, {
     headers: {
       "content-type": "text/html; charset=utf-8",
@@ -1546,16 +1442,13 @@ function renderHelpPage(requestUrl) {
     }
   });
 }
-
 function renderSiteCard(site) {
   const aliases = site.aliases
     .map((alias) => `<button class="alias" type="button" data-copy=";${escapeAttribute(alias)}">;${escapeHtml(alias)}</button>`)
     .join("");
-
   const type = getSiteType(site);
   const searchText = [site.name, site.category, ...site.aliases, site.home || ""].join(" ").toLowerCase();
   const link = site.home || "#";
-
   return `
     <article class="site-card" data-search="${escapeAttribute(searchText)}">
       <div class="site-top">
@@ -1566,15 +1459,13 @@ function renderSiteCard(site) {
       ${site.home ? `<a class="site-url" href="${escapeAttribute(site.home)}" target="_blank" rel="noreferrer">${escapeHtml(site.home)}</a>` : ""}
     </article>`;
 }
-
 function getSiteType(site) {
-  if (site.handler === "bible") return { label: "Verse / search", className: "search" };
-  if (site.handler === "virustotal") return { label: "Domain lookup", className: "search" };
-  if (site.handler === "help") return { label: "Internal", className: "open" };
-  if (site.search) return { label: "Search", className: "search" };
+  if (site.handler === "help") return { label: "Internal", className: "internal" };
+  if (site.handler === "virustotal" || site.search) {
+    return { label: "Search", className: "search" };
+  }
   return { label: "Open", className: "open" };
 }
-
 function formatIssues(issues) {
   return issues
     .map((issue) => {
@@ -1583,7 +1474,6 @@ function formatIssues(issues) {
     })
     .join("; ");
 }
-
 function escapeHtml(value) {
   return String(value)
     .replaceAll("&", "&amp;")
@@ -1592,41 +1482,38 @@ function escapeHtml(value) {
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
 }
-
 function escapeAttribute(value) {
   return escapeHtml(value);
 }
-
 // -----------------------------------------------------------------------------
 // 7. WORKER ENTRY POINT
 // -----------------------------------------------------------------------------
-
 export default {
   async fetch(request) {
     const url = new URL(request.url);
     const route = normalizePath(url.pathname);
     const raw = (url.searchParams.get("q") || "").trim();
-
-    // Direct links still work, but ;help is easier from the address bar.
-    if (route === "help" || route === "bangs") {
+    // Root is the landing/help page. Search-engine URLs always include ?q=%s,
+    // so this does not interfere with normal address-bar searching.
+    // Direct /help and /bangs links also work.
+    if ((route === "" && !raw) || route === "help" || route === "bangs") {
       return renderHelpPage(url);
     }
-
     const defaultEngine = getDefaultEngine(url.pathname);
-
     if (!raw) {
       return redirectTo(defaultEngine.home);
     }
-
+    // A bare shortcut symbol is a compact way to open the Help page.
+    if (["!", ";", ":", "."].includes(raw)) {
+      return renderHelpPage(url);
+    }
     const shortcut = findShortcut(raw);
-
     if (shortcut) {
       const site = BANGS.get(shortcut.bang);
       if (site) {
         return handleSite(site, shortcut.query, url);
       }
     }
-
     return redirectTo(defaultEngine.search, raw);
   }
 };
