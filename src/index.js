@@ -1,14 +1,3 @@
-/**
- * Search — personal search redirector
- *
- * Edit the configuration sections below:
- *   1. DEFAULT_ENGINES controls browser-search URLs such as /google/?q=%s.
- *   2. SITE_GROUPS controls your bangs and the automatically generated help page.
- *
- * Supported bang symbols: ! ; : .
- * Examples:
- *   ;g cats        .yt music        cats ;reddit        ;help
- */
 const PROJECT = {
   name: "Search",
   repository: "https://github.com/micahjeffery/search",
@@ -22,48 +11,31 @@ const PROJECT = {
 const DEFAULT_ENGINES = [
   {
     name: "DuckDuckGo",
-    paths: [
-      "",
-      "d",
-      "ddg",
-      "duckduckgo",
-    ], 
+    paths: ["d", "ddg", "duckduckgo"], 
     home: "https://duckduckgo.com/",
     search: "https://duckduckgo.com/?q={q}"
   },
   {
     name: "DuckDuckGo No AI",
-    paths: [
-      "noai",
-      "noaiddg",
-    ],
+    paths: ["noai", "noaiddg"],
     home: "https://noai.duckduckgo.com/",
     search: "https://noai.duckduckgo.com/?q={q}"
   },
   {
     name: "Google",
-    paths: [
-      "google",
-      "g",
-    ],
+    paths: ["google", "g"],
     home: "https://www.google.com/",
     search: "https://www.google.com/search?q={q}"
   },
   {
     name: "Brave Search",
-    paths: [
-      "brave",
-      "b",
-    ],
+    paths: ["brave", "b"],
     home: "https://search.brave.com/",
     search: "https://search.brave.com/search?q={q}"
   },
   {
     name: "Startpage",
-    paths: [
-      "startpage",
-      "sp",
-    ],
+    paths: ["startpage", "sp"],
     home: "https://www.startpage.com/",
     search: "https://www.startpage.com/sp/search?query={q}"
   },
@@ -75,19 +47,13 @@ const DEFAULT_ENGINES = [
   },
   {
     name: "Ecosia",
-    paths: [
-      "ecosia",
-      "eco",
-    ],
+    paths: ["ecosia", "eco"],
     home: "https://www.ecosia.org/",
     search: "https://www.ecosia.org/search?q={q}"
   },
   {
     name: "Yahoo",
-    paths: [
-      "yahoo",
-      "y",
-    ],
+    paths: ["yahoo","y"],
     home: "https://search.yahoo.com/",
     search: "https://search.yahoo.com/search?p={q}"
   }
