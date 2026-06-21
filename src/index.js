@@ -11,7 +11,7 @@ const PROJECT = {
 const DEFAULT_ENGINES = [
   {
     name: "DuckDuckGo",
-    paths: ["d", "ddg", "duckduckgo"], 
+    paths: ["", "d", "ddg", "duckduckgo"], 
     home: "https://duckduckgo.com/",
     search: "https://duckduckgo.com/?q={q}"
   },
