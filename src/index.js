@@ -439,12 +439,12 @@ const SITE_GROUPS = [
       },
       {
         name: "Federal Funds Rate",
-        aliases: ["fed", "rate", "fedfunds"],
+        aliases: ["fed", "ffr", "rate", "fedfunds"],
         home: "https://fred.stlouisfed.org/series/fedfunds"
       },
       {
         name: "Inflation Chart",
-        aliases: ["inflation"],
+        aliases: ["inflation", "in"],
         home: "https://fred.stlouisfed.org/graph/?g=1wmdD"
       },
       {
@@ -487,18 +487,18 @@ const SITE_GROUPS = [
     sites: [
       {
         name: "SEC EDGAR 10-K Search",
-        aliases: ["sec", "edgar"],
+        aliases: ["sec", "edgar", "10k", "10-k"],
         home: "https://www.sec.gov/edgar/search/",
         search: "https://www.sec.gov/edgar/search/#/q={q}&filter_forms=10-K"
       },
       {
         name: "Estate Tax",
-        aliases: ["death", "estate"],
+        aliases: ["death", "estate", "estatetax"],
         home: "https://www.irs.gov/businesses/small-businesses-self-employed/estate-tax"
       },
       {
         name: "IRA Contribution Limits",
-        aliases: ["ira"],
+        aliases: ["ira", "contribution"],
         home: "https://www.irs.gov/retirement-plans/plan-participant-employee/retirement-topics-ira-contribution-limits"
       },
       {
@@ -513,7 +513,7 @@ const SITE_GROUPS = [
       },
       {
         name: "Tariff Tracker",
-        aliases: ["tariff", "tarrif", "tarif", "tarriff"],
+        aliases: ["tariff", "tariffs", "tarrif", "tarif", "tarriff"],
         home: "https://bipartisanpolicy.org/explainer/tariff-tracker/"
       },
       {
@@ -534,13 +534,13 @@ const SITE_GROUPS = [
       },
       {
         name: "Spotify",
-        aliases: ["s", "spotify"],
+        aliases: ["s", "sptfy", "spfy", "spotify"],
         home: "https://open.spotify.com/",
         search: "https://open.spotify.com/search/{q}"
       },
       {
         name: "Genius Lyrics",
-        aliases: ["lyrics", "lyric", "genius"],
+        aliases: ["lyr", "lyrics", "lyric", "genius"],
         home: "https://genius.com/",
         search: "https://genius.com/search?q={q}"
       },
@@ -551,7 +551,7 @@ const SITE_GROUPS = [
       },
       {
         name: "IMDb",
-        aliases: ["imdb"],
+        aliases: ["imdb", "mov", "movie"],
         home: "https://www.imdb.com/",
         search: "https://www.imdb.com/find/?q={q}"
       },
@@ -604,19 +604,19 @@ const SITE_GROUPS = [
       },
       {
         name: "Reddit",
-        aliases: ["r", "reddit"],
+        aliases: ["r", "red", "reddit"],
         home: "https://www.reddit.com/",
         search: "https://www.reddit.com/search/?q={q}"
       },
       {
         name: "TikTok",
-        aliases: ["tt", "tiktok"],
+        aliases: ["tt", "tiktok", "braindamage"],
         home: "https://www.tiktok.com/",
         search: "https://www.tiktok.com/search?q={q}"
       },
       {
         name: "Discord",
-        aliases: ["dc", "discord"],
+        aliases: ["dc", "disc", "discord"],
         home: "https://discord.com/channels/@me"
       }
     ]
@@ -626,7 +626,7 @@ const SITE_GROUPS = [
     sites: [
       {
         name: "HowLongToBeat",
-        aliases: ["hlb", "hltb", "howlongtobeat"],
+        aliases: ["hlb", "beat", "hltb", "howlongtobeat"],
         home: "https://howlongtobeat.com/",
         search: "https://howlongtobeat.com/?q={q}"
       },
@@ -720,7 +720,7 @@ const SITE_GROUPS = [
     sites: [
       {
         name: "StrengthLevel",
-        aliases: ["strengthlevel", "sl"],
+        aliases: ["strengthlevel", "sl", "strength"],
         home: "https://strengthlevel.com/",
         search: "https://strengthlevel.com/strength-standards/{q}"
       },
@@ -771,25 +771,25 @@ const SITE_GROUPS = [
     sites: [
       {
         name: "Google Translate",
-        aliases: ["gt", "translate", "gtranslate"],
+        aliases: ["gt", "gtrans", "gtranslate"],
         home: "https://translate.google.com/",
         search: "https://translate.google.com/?sl=auto&tl=en&text={q}&op=translate"
       },
       {
         name: "DeepL — Auto to English",
-        aliases: ["deepl", "dl"],
+        aliases: ["deepl", "dl", "trans", "translate"],
         home: "https://www.deepl.com/translator",
         search: "https://www.deepl.com/translator#xx/en/{q}"
       },
       {
         name: "DeepL — English to Spanish",
-        aliases: ["enes"],
+        aliases: ["enes", "ensp"],
         home: "https://www.deepl.com/translator#en/es",
         search: "https://www.deepl.com/translator#en/es/{q}"
       },
       {
         name: "DeepL — Spanish to English",
-        aliases: ["esen"],
+        aliases: ["esen", "spen"],
         home: "https://www.deepl.com/translator#es/en",
         search: "https://www.deepl.com/translator#es/en/{q}"
       },
@@ -807,13 +807,13 @@ const SITE_GROUPS = [
       },
       {
         name: "DeepL — Spanish to French",
-        aliases: ["esfr"],
+        aliases: ["esfr", "spfr"],
         home: "https://www.deepl.com/translator#es/fr",
         search: "https://www.deepl.com/translator#es/fr/{q}"
       },
       {
         name: "DeepL — French to Spanish",
-        aliases: ["fres"],
+        aliases: ["fres", "frsp"],
         home: "https://www.deepl.com/translator#fr/es",
         search: "https://www.deepl.com/translator#fr/es/{q}"
       },
@@ -914,7 +914,7 @@ const SITE_GROUPS = [
       },
       {
         name: "Google Voice",
-        aliases: ["voice", "gvoice", "gvmail"],
+        aliases: ["voice", "gvo", "gvoice", "gvmail"],
         home: "https://voice.google.com/u/1/",
         search: "https://voice.google.com/u/1/search?from=%5B%5D&q=%5B%22{q}%22%5D"
       },
@@ -935,6 +935,24 @@ const SITE_GROUPS = [
         aliases: ["pd", "protondrive"],
         home: "https://drive.proton.me/",
         search: "https://drive.proton.me/u/0/search#q={q}"
+      },
+      {
+        name: "Proton Pass",
+        aliases: ["pp", "pass", "password"],
+        home: "https://pass.proton.me/",
+        search: "https://pass.proton.me/u/0/search#q={q}"
+      },
+      {
+        name: "Proton Calendar",
+        aliases: ["pc", "cal", "calendar"],
+        home: "https://drive.proton.me/",
+        search: "https://drive.proton.me/u/0/search#q={q}"
+      },
+      {
+        name: "Proton Docs",
+        aliases: ["pdoc", "pdocs", "protondocs"],
+        home: "https://docs.proton.me/",
+        search: "https://docs.proton.me/u/0/search#q={q}"
       },
       {
         name: "Proton",
@@ -975,7 +993,7 @@ const SITE_GROUPS = [
       },
       {
         name: "ICANN Lookup",
-        aliases: ["icann", "whois", "lookup"],
+        aliases: ["icann", "whois", "ican"],
         home: "https://lookup.icann.org/en",
         search: "https://lookup.icann.org/whois/en?q={q}&t=a"
       },
