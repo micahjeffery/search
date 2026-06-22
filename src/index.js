@@ -939,7 +939,7 @@ const SITE_GROUPS = [
       {
         name: "Proton Pass",
         aliases: ["pp", "pass", "password"],
-        home: "https://pass.proton.me/",
+        home: "https://pass.proton.me/u/0",
         search: "https://pass.proton.me/u/0/search#q={q}"
       },
       {
