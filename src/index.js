@@ -586,7 +586,7 @@ const SITE_GROUPS = [
       },
       {
         name: "Instagram",
-        aliases: ["ig", "in", "insta", "instagram"],
+        aliases: ["ig", "insta", "instagram"],
         home: "https://www.instagram.com/",
         search: "https://www.instagram.com/explore/search/keyword/?q={q}"
       },
@@ -1051,7 +1051,7 @@ const SITE_GROUPS = [
       },
       {
         name: "Wormhole File Transfer",
-        aliases: ["file", "wh", "worm", "transfer", "trans", "wormhole"],
+        aliases: ["file", "wh", "worm", "transfer", "transf", "wormhole"],
         home: "https://wormhole.app/"
       },
       {
