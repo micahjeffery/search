@@ -691,7 +691,7 @@ const SITE_GROUPS = [
       },
       {
         name: "MakerWorld",
-        aliases: ["mw", "maker", "makerworld"],
+        aliases: ["maker", "makerworld"],
         home: "https://makerworld.com/en",
         search: "https://makerworld.com/en/search/models?keyword={q}"
       },
