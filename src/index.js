@@ -939,14 +939,14 @@ const SITE_GROUPS = [
       {
         name: "Proton Pass",
         aliases: ["pp", "pass", "password"],
-        home: "https://pass.proton.me/u/0",
-        search: "https://pass.proton.me/u/0/search#q={q}"
+        home: "https://pass.proton.me/u/19",
+        search: "https://pass.proton.me/u/19/search#q={q}"
       },
       {
         name: "Proton Calendar",
         aliases: ["pc", "cal", "calendar"],
-        home: "https://drive.proton.me/",
-        search: "https://drive.proton.me/u/0/search#q={q}"
+        home: "https://calendar.proton.me/",
+        search: "https://calendar.proton.me/u/0/search#q={q}"
       },
       {
         name: "Proton Docs",
