@@ -176,7 +176,7 @@ const SITE_GROUPS = [
       },
       {
         name: "Duck.ai",
-        aliases: ["ai", "duckai"],
+        aliases: ["ai", "dai", "duckai"],
         home: "https://duck.ai/"
       },
       {
@@ -282,13 +282,13 @@ const SITE_GROUPS = [
       },
       {
         name: "Google Scholar",
-        aliases: ["scholar", "gscholar"],
+        aliases: ["gsch", "sch", "scholar", "gscholar"],
         home: "https://scholar.google.com/",
         search: "https://scholar.google.com/scholar?q={q}"
       },
       {
         name: "PubMed",
-        aliases: ["pubmed", "pub"],
+        aliases: ["pubmed", "pub", "med"],
         home: "https://pubmed.ncbi.nlm.nih.gov/",
         search: "https://pubmed.ncbi.nlm.nih.gov/?term={q}"
       },
@@ -297,6 +297,12 @@ const SITE_GROUPS = [
         aliases: ["o", "onelook", "1", "1l", "1look"],
         home: "https://www.onelook.com/",
         search: "https://www.onelook.com/?w={q}"
+      },
+      {
+        name: "Merriam-Webster dictionary",
+        aliases: ["def", "word", "mw", "definition", "webster", "dict", "dic", "dictionary"],
+        home: "https://www.merriam-webster.com/dictionary",
+        search: "https://www.merriam-webster.com/dictionary/{q}"
       },
       {
         name: "Merriam-Webster Thesaurus",
@@ -347,7 +353,7 @@ const SITE_GROUPS = [
       },
       {
         name: "Costco",
-        aliases: ["costco", "co"],
+        aliases: ["costco", "co", "cost"],
         home: "https://www.costco.com/",
         search: "https://www.costco.com/CatalogSearch?keyword={q}"
       },
@@ -376,9 +382,15 @@ const SITE_GROUPS = [
     sites: [
       {
         name: "Home Depot",
-        aliases: ["h", "hd", "homedepot"],
+        aliases: ["h", "hd", "homedepot", "depot"],
         home: "https://www.homedepot.com/",
         search: "https://www.homedepot.com/s/{q}"
+      },
+      {
+        name: "Walmart",
+        aliases: ["wm", "walmart", "wal"],
+        home: "https://www.walmart.com/",
+        search: "https://www.walmart.com/search?q={q}"
       },
       {
         name: "Zillow",
@@ -574,13 +586,13 @@ const SITE_GROUPS = [
       },
       {
         name: "Instagram",
-        aliases: ["ig", "insta", "instagram"],
+        aliases: ["ig", "in", "insta", "instagram"],
         home: "https://www.instagram.com/",
         search: "https://www.instagram.com/explore/search/keyword/?q={q}"
       },
       {
         name: "Facebook",
-        aliases: ["fb", "facebook"],
+        aliases: ["fb", "facebook", "face"],
         home: "https://www.facebook.com/",
         search: "https://www.facebook.com/search/top?q={q}"
       },
@@ -620,7 +632,7 @@ const SITE_GROUPS = [
       },
       {
         name: "IsThereAnyDeal",
-        aliases: ["itad", "isthereanydeal"],
+        aliases: ["itad", "isthereanydeal", "deal"],
         home: "https://isthereanydeal.com/",
         search: "https://isthereanydeal.com/search/?q={q}"
       },
@@ -673,7 +685,7 @@ const SITE_GROUPS = [
     sites: [
       {
         name: "Printables",
-        aliases: ["printables", "prusa", "prusaprinters"],
+        aliases: ["printables", "print", "prusa", "prusaprinters"],
         home: "https://www.printables.com/",
         search: "https://www.printables.com/search/models?q={q}"
       },
@@ -896,7 +908,7 @@ const SITE_GROUPS = [
       },
       {
         name: "Google Docs",
-        aliases: ["docs", "gdoc", "gdocs"],
+        aliases: ["gd", "docs", "gdoc", "gdocs"],
         home: "https://docs.google.com/document/u/0/",
         search: "https://docs.google.com/document/u/0/?q={q}"
       },
@@ -965,7 +977,7 @@ const SITE_GROUPS = [
         name: "ICANN Lookup",
         aliases: ["icann", "whois", "lookup"],
         home: "https://lookup.icann.org/en",
-        search: "https://lookup.icann.org/whois/en/index.layout.privacynotification:ackprivacy?q={q}"
+        search: "https://lookup.icann.org/whois/en?q={q}&t=a"
       },
       {
         name: "Cloudflare Domains",
@@ -1015,12 +1027,13 @@ const SITE_GROUPS = [
       },
       {
         name: "Emoji Picker",
-        aliases: ["emoji"],
-        home: "https://it-tools.tech/emoji-picker"
+        aliases: ["emoji", "emo", "emoj"],
+        home: "https://emojipedia.org/en/", 
+        search: "https://emojipedia.org/en/search?q=Test"
       },
       {
         name: "Wormhole File Transfer",
-        aliases: ["file", "wh", "worm", "transfer", "wormhole"],
+        aliases: ["file", "wh", "worm", "transfer", "trans", "wormhole"],
         home: "https://wormhole.app/"
       },
       {
@@ -1052,18 +1065,14 @@ const SITE_GROUPS = [
       {
         name: "ZXing QR Decoder",
         aliases: ["qrdecode", "qrd"],
-        home: "https://zxing.org/w/decode.jspx"
+        home: "https://zxing.org/w/decode.jspx", 
+        search: "https://zxing.org/w/decode?u={q}" 
       },
       {
         name: "Wayback Machine",
-        aliases: ["archive", "wayback"],
+        aliases: ["wb", "wbm", "archive", "wayback"],
         home: "https://web.archive.org/",
         search: "https://web.archive.org/web/*/{q}"
-      },
-      {
-        name: "Regex101",
-        aliases: ["regex"],
-        home: "https://regex101.com/"
       },
       {
         name: "Receive SMS",
@@ -1087,7 +1096,7 @@ const SITE_GROUPS = [
       },
       {
         name: "Wallhaven",
-        aliases: ["wallpaper", "wall", "wallhaven"],
+        aliases: ["wallpaper", "wall", "wallhaven", "wp"],
         home: "https://wallhaven.cc/",
         search: "https://wallhaven.cc/search?q={q}"
       }
