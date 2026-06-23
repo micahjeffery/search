@@ -1098,7 +1098,7 @@ const SITE_GROUPS = [
       },
       {
         name: "Blank Page",
-        aliases: ["page", "blank"],
+        aliases: ["page", "blank", "bp"],
         home: "https://blank.page"
       },
       {
@@ -1230,7 +1230,7 @@ const SITE_GROUPS = [
       },
       {
         name: "EthnoGuessr",
-        aliases: ["ethno", "ethnicity", "ethnogussr", "hbd"],
+        aliases: ["ethno", "race", "ethnicity", "ethnogussr", "hbd"],
         home: "https://hbd.gg/"
       },
       {
