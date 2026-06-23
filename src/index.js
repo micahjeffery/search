@@ -1621,7 +1621,7 @@ export default {
     if (!raw) {
       return redirectTo(defaultEngine.home);
     }
-    // A bare shortcut symbol is a compact way to open the Help page.
+    // A bare shortcut symbol is a quick way to open the Help page.
     if (["!", ";", ":", "."].includes(raw)) {
       return renderHelpPage(url);
     }
