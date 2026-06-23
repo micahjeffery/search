@@ -1089,7 +1089,7 @@ const SITE_GROUPS = [
       {
         name: "MindMup",
         aliases: ["mindmap", "mup"],
-        home: "https://excalidraw.com/"
+        home: "https://app.mindmup.com/map/new"
       },
       {
         name: "Diagram.net",
