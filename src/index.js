@@ -1,7 +1,8 @@
 const PROJECT = {
   name: "Search",
   repository: "https://github.com/micahjeffery/search",
-  editSource: "https://github.com/micahjeffery/search/edit/main/src/index.js"
+  editMain: "https://github.com/micahjeffery/search/edit/main/src/index.js",
+  editTest: "https://github.com/micahjeffery/search/edit/test/src/index.js"
 };
 // -----------------------------------------------------------------------------
 // 1. DEFAULT SEARCH ENGINES
@@ -79,7 +80,12 @@ const SITE_GROUPS = [
       {
         name: "Edit Search Source",
         aliases: ["edit"],
-        home: PROJECT.editSource
+        home: PROJECT.editMain
+      },
+      {
+        name: "Edit Test Branch",
+        aliases: ["edit"],
+        home: PROJECT.editTest
       },
       {
         name: "Bangs & Help",
