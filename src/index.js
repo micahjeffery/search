@@ -7,7 +7,6 @@ const PROJECT = {
 // -----------------------------------------------------------------------------
 // 1. DEFAULT SEARCH ENGINES
 // -----------------------------------------------------------------------------
-// These paths let one Worker act as several browser search engines.
 
 const DEFAULT_ENGINES = [
   {
@@ -572,6 +571,12 @@ const SITE_GROUPS = [
         aliases: ["jw", "justwatch"],
         home: "https://www.justwatch.com/",
         search: "https://www.justwatch.com/us/search?q={q}"
+      },
+      {
+        name: "TubiTV",
+        aliases: ["tubi", "tubitv"],
+        home: "https://tubitv.com/movies",
+        search: "https://tubitv.com/search/{q}"
       }
     ]
   },
@@ -930,6 +935,17 @@ const SITE_GROUPS = [
         home: "https://onedrive.live.com/",
         search: "https://onedrive.live.com/?qt=search&q={q}"
       },
+    ]
+  },
+  {
+    category: "Privacy, Security & Domains",
+    sites: [
+      {
+        name: "Techlore.tech",
+        aliases: ["spa", "techlore"],
+        home: "https://tools.techlore.tech/",
+        search: "https://www.youtube.com/@techlore/search?query={q}"
+      },
       {
         name: "Proton Mail",
         aliases: ["pm", "protonmail"],
@@ -974,16 +990,32 @@ const SITE_GROUPS = [
         name: "Brave Talk",
         aliases: ["talk", "btalk", "bravetalk"],
         home: "https://talk.brave.com/"
-      }
-    ]
-  },
-  {
-    category: "Privacy, Security & Domains",
-    sites: [
+      },
+      {
+        name: "Bitwarden",
+        aliases: ["bw", "bitwarden"],
+        home: "https://bitwarden.com/",
+        search: "https://vault.bitwarden.com/#/vault?search={q}
+      },
       {
         name: "NextDNS",
         aliases: ["dns", "nextdns", "ndns"],
         home: "https://my.nextdns.io/"
+      },
+      {
+        name: "Signal",
+        aliases: ["signal"],
+        home: "https://signal.org/download/"
+      },
+      {
+        name: "Ente Auth",
+        aliases: ["ente", "ea", "auth"],
+        home: "https://auth.ente.com/auth"
+      },
+      {
+        name: "Privacy.com",
+        aliases: ["privacy", "virtualcards", ],
+        home: "https://app.privacy.com/home"
       },
       {
         name: "VirusTotal Domain Lookup",
@@ -1010,9 +1042,14 @@ const SITE_GROUPS = [
         search: "https://domains.cloudflare.com/?domain={q}"
       },
       {
-        name: "Temp Mail",
-        aliases: ["spam", "temp", "tempmail"],
-        home: "https://temp-mail.org/"
+        name: "Tuta Mail",
+        aliases: ["tuta", "tm", "tutamail"],
+        home: "https://www.guerrillamail.com/inbox"
+      },
+      {
+        name: "Guerrilla Mail",
+        aliases: ["spam", "temp", "guerrilla"],
+        home: "https://www.guerrillamail.com/inbox"
       }
     ]
   },
@@ -1050,11 +1087,47 @@ const SITE_GROUPS = [
         home: "https://excalidraw.com/"
       },
       {
+        name: "MindMup",
+        aliases: ["mindmap", "mup"],
+        home: "https://excalidraw.com/"
+      },
+      {
+        name: "Diagram.net",
+        aliases: ["dia", "diagram"],
+        home: "https://app.diagrams.net/"
+      },
+      {
+        name: "Blank Page",
+        aliases: ["page", "blank"],
+        home: "https://blank.page"
+      },
+      {
+        name: ".ics / iCal editor",
+        aliases: ["ics", "ical"],
+        home: "https://giga.tools/data-tools/ical-event-file-creator"
+      },
+      {
+        name: "Image Backgroud Remover",
+        aliases: ["image", "background", "remove"],
+        home: "https://giga.tools/image-tools/background-remover"
+      },
+      {
+        name: "Image Metadata/EXIF Analyzer",
+        aliases: ["exif", "meta", "metadata"],
+        home: "https://giga.tools/image-tools/exif-reader"
+      },
+      {
         name: "Emoji Picker",
         aliases: ["emoji", "emo", "emoj"],
         home: "https://emojipedia.org/en/", 
         search: "https://emojipedia.org/en/search?q={q}"
       },
+      {
+        name: "Unicode Faces",
+        aliases: ["face", "unicode"],
+        home: "https://textfac.es/"
+      },
+      
       {
         name: "Wormhole File Transfer",
         aliases: ["file", "wh", "worm", "transfer", "transf", "wormhole"],
@@ -1125,7 +1198,54 @@ const SITE_GROUPS = [
         search: "https://wallhaven.cc/search?q={q}"
       }
     ]
-  }
+  },
+  {
+    category: "Learning",
+    sites: [
+      {
+        name: "Monkeytype",
+        aliases: ["type", "mt", "monkey"],
+        home: "https://monkeytype.com/"
+      },
+      {
+        name: "Agile Fingers",
+        aliases: ["af", "agile", "agilefingers"],
+        home: "https://agilefingers.com/custom-texts"
+      },
+      {
+        name: "Seterra",
+        aliases: ["geo", "set", "seterra", "settera", "geography", ],
+        home: "https://www.geoguessr.com/quiz/seterra"
+      },
+      {
+        name: "AnkiWeb",
+        aliases: ["anki", "flashcards"],
+        home: "https://ankiweb.net/decks",
+        search: "https://ankiweb.net/shared/decks?search={q}"
+      },
+      {
+        name: "Language Squad",
+        aliases: ["language", "ls", "languagesquad"],
+        home: "https://www.languagesquad.com/"
+      },
+      {
+        name: "EthnoGuessr",
+        aliases: ["ethno", "ethnicity", "ethnogussr", "hbd"],
+        home: "https://hbd.gg/"
+      },
+      {
+        name: "Justin Guitar",
+        aliases: ["guitar", "jg","justinguitar"],
+        home: "https://www.justinguitar.com/",
+        search: "https://www.justinguitar.com/advanced_search?q={q}"
+      }
+      {
+        name: "OpenCourseWare - MIT courses",
+        aliases: ["mit", "ocw"],
+        home: "https://ocw.mit.edu/",
+        search: "https://ocw.mit.edu/search/?q={q}"
+      }
+      
 ];
 // -----------------------------------------------------------------------------
 // 3. CONFIGURATION INDEXES AND VALIDATION
