@@ -84,7 +84,7 @@ const SITE_GROUPS = [
       },
       {
         name: "Edit Test Branch",
-        aliases: ["edit"],
+        aliases: ["edittest"],
         home: PROJECT.editTest
       },
       {
