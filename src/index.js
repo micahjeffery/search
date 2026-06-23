@@ -1238,7 +1238,7 @@ const SITE_GROUPS = [
         aliases: ["guitar", "jg","justinguitar"],
         home: "https://www.justinguitar.com/",
         search: "https://www.justinguitar.com/advanced_search?q={q}"
-      }
+      },
       {
         name: "OpenCourseWare - MIT courses",
         aliases: ["mit", "ocw"],
