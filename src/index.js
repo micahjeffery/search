@@ -1244,8 +1244,9 @@ const SITE_GROUPS = [
         aliases: ["mit", "ocw"],
         home: "https://ocw.mit.edu/",
         search: "https://ocw.mit.edu/search/?q={q}"
-      }
-      
+       }
+    ]
+  }
 ];
 // -----------------------------------------------------------------------------
 // 3. CONFIGURATION INDEXES AND VALIDATION
