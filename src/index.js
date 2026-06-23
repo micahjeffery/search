@@ -603,7 +603,7 @@ const SITE_GROUPS = [
       },
       {
         name: "Facebook",
-        aliases: ["fb", "facebook", "face"],
+        aliases: ["fb", "facebook"],
         home: "https://www.facebook.com/",
         search: "https://www.facebook.com/search/top?q={q}"
       },
