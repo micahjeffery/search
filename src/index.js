@@ -995,7 +995,7 @@ const SITE_GROUPS = [
         name: "Bitwarden",
         aliases: ["bw", "bitwarden"],
         home: "https://bitwarden.com/",
-        search: "https://vault.bitwarden.com/#/vault?search={q}
+        search: "https://vault.bitwarden.com/#/vault?search={q}"
       },
       {
         name: "NextDNS",
