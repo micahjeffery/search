@@ -5,7 +5,7 @@ const PROJECT = {
   editTest: "https://github.com/micahjeffery/search/edit/test/src/index.js"
 };
 // -----------------------------------------------------------------------------
-// 1. DEFAULT SEARCH ENGINES
+// 1. DEFAULT SEARCH ENGINES 
 // -----------------------------------------------------------------------------
 
 const DEFAULT_ENGINES = [
