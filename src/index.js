@@ -1047,7 +1047,7 @@ const SITE_GROUPS = [
         name: "Emoji Picker",
         aliases: ["emoji", "emo", "emoj"],
         home: "https://emojipedia.org/en/", 
-        search: "https://emojipedia.org/en/search?q=Test"
+        search: "https://emojipedia.org/en/search?q={q}"
       },
       {
         name: "Wormhole File Transfer",
