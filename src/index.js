@@ -1113,8 +1113,13 @@ const SITE_GROUPS = [
         home: "https://giga.tools/data-tools/ical-event-file-creator"
       },
       {
+        name: "Photopea",
+        aliases: ["photo", "ps"],
+        home: "https://www.photopea.com/"
+      },
+      {
         name: "Image Backgroud Remover",
-        aliases: ["image", "background", "remove"],
+        aliases: ["background", "remove", "bgrm"],
         home: "https://giga.tools/image-tools/background-remover"
       },
       {
