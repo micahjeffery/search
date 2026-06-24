@@ -343,7 +343,7 @@ const SITE_GROUPS = [
         name: "23andMe Surname Discovery tool",
         aliases: ["23", "surname", "sur", "dna"],
         home: "https://discover.23andme.com/",
-        search: "https://discover.23andme.com/last-name{q}"
+        search: "https://discover.23andme.com/last-name/{q}"
       }
     ]
   },
