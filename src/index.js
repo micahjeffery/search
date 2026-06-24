@@ -338,6 +338,12 @@ const SITE_GROUPS = [
         aliases: ["tosdr", "tos"],
         home: "https://tosdr.org/en",
         search: "https://tosdr.org/en/search/{q}"
+      },
+      {
+        name: "23andMe Surname Discovery tool",
+        aliases: ["23", "surname", "sur", "dna"],
+        home: "https://discover.23andme.com/",
+        search: "https://discover.23andme.com/last-name{q}"
       }
     ]
   },
@@ -1115,6 +1121,16 @@ const SITE_GROUPS = [
         name: "Image Metadata/EXIF Analyzer",
         aliases: ["exif", "meta", "metadata"],
         home: "https://giga.tools/image-tools/exif-reader"
+      },
+      {
+        name: "JPEG Optimizer",
+        aliases: ["jpeg", "compress"],
+        home: "https://jpeg-optimizer.com/"
+      },
+      {
+        name: "Image Extractor",
+        aliases: ["extract", "image", "pics"],
+        home: "https://extract.pics/"
       },
       {
         name: "Emoji Picker",
