@@ -73,7 +73,7 @@ const SITE_GROUPS = [
     sites: [
       {
         name: "Search Project",
-        aliases: ["bang", "search", "home", "repo", "project"],
+        aliases: ["repo", "project"],
         home: PROJECT.repository
       },
       {
@@ -88,8 +88,8 @@ const SITE_GROUPS = [
       },
       {
         name: "Bangs & Help",
-        aliases: ["help", "bangs", "commands", "shortcuts"],
-        handler: "help"
+        aliases: ["help", "bangs", "bang", "search", "home", "commands", "shortcuts"],
+        home: "https://search.micahjeffery.com/"
       },
       {
         name: "GitHub",
