@@ -544,6 +544,12 @@ const SITE_GROUPS = [
         search: "https://www.youtube.com/results?search_query={q}"
       },
       {
+        name: "YouTube Studio",
+        aliases: ["yts", "studio", "youtubestudio"],
+        home: "https://studio.youtube.com/",
+        search: "https://blog.youtube/search/?domain=youtube&query={q}&order=relevance"
+      },
+      {
         name: "Spotify",
         aliases: ["s", "sptfy", "spfy", "spotify"],
         home: "https://open.spotify.com/",
