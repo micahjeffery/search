@@ -72,6 +72,11 @@ const SITE_GROUPS = [
     category: "Project & Developer",
     sites: [
       {
+        name: "Bangs & Help",
+        aliases: ["help", "bangs", "bang", "search", "home", "commands", "shortcuts"],
+        home: "https://search.micahjeffery.com/"
+      },
+      {
         name: "Search Project",
         aliases: ["repo", "project"],
         home: PROJECT.repository
@@ -85,11 +90,6 @@ const SITE_GROUPS = [
         name: "Edit Test Branch",
         aliases: ["edittest"],
         home: PROJECT.editTest
-      },
-      {
-        name: "Bangs & Help",
-        aliases: ["help", "bangs", "bang", "search", "home", "commands", "shortcuts"],
-        home: "https://search.micahjeffery.com/"
       },
       {
         name: "GitHub",
