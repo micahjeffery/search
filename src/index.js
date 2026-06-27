@@ -176,7 +176,7 @@ const SITE_GROUPS = [
       },
       {
         name: "DuckDuckGo bangs",
-        aliases: ["ddgb", "ddgbangs"],
+        aliases: ["db", "ddgb", "ddgbangs"],
         home: "https://duckduckgo.com/bangs",
         search: "https://duckduckgo.com/bangs?q={q}"
       },
