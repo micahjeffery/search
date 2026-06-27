@@ -175,6 +175,12 @@ const SITE_GROUPS = [
         search: "https://noai.duckduckgo.com/?q={q}"
       },
       {
+        name: "DuckDuckGo bangs",
+        aliases: ["ddgb", "ddgbangs"],
+        home: "https://duckduckgo.com/bangs",
+        search: "https://duckduckgo.com/bangs?q={q}"
+      },
+      {
         name: "Duck.ai",
         aliases: ["ai", "dai", "duckai"],
         home: "https://duck.ai/"
