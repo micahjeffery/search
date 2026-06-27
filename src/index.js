@@ -96,11 +96,6 @@ const SITE_GROUPS = [
         aliases: ["gh", "github"],
         home: "https://github.com/",
         search: "https://github.com/search?q={q}"
-      },
-      {
-        name: "Cloudflare Dashboard",
-        aliases: ["cf", "cloudflare"],
-        home: "https://dash.cloudflare.com/"
       }
     ]
   },
@@ -399,7 +394,7 @@ const SITE_GROUPS = [
       },
       {
         name: "Walmart",
-        aliases: ["wm", "walmart", "wal"],
+        aliases: ["wm", "walmart", "wal", "wmt"],
         home: "https://www.walmart.com/",
         search: "https://www.walmart.com/search?q={q}"
       },
@@ -999,6 +994,18 @@ const SITE_GROUPS = [
         home: "https://meet.proton.me/"
       },
       {
+        name: "GrapheneOS",
+        aliases: ["gos", "graphene", "grapheneos"],
+        home: "https://grapheneos.org/",
+        search: "https://grapheneos.org/{q}"
+      },
+      {
+        name: "GrapheneOS Discussion Forum",
+        aliases: ["gosd", "graphened"],
+        home: "https://discuss.grapheneos.org/",
+        search: "https://grapheneos.org/{q}"
+      },
+      {
         name: "Brave Talk",
         aliases: ["talk", "btalk", "bravetalk"],
         home: "https://talk.brave.com/"
@@ -1052,6 +1059,11 @@ const SITE_GROUPS = [
         aliases: ["domain", "dom", "domains", "cfd", "cloudflaredomains"],
         home: "https://domains.cloudflare.com/",
         search: "https://domains.cloudflare.com/?domain={q}"
+      },
+      {
+        name: "Cloudflare Dashboard",
+        aliases: ["cf", "cloudflare"],
+        home: "https://dash.cloudflare.com/"
       },
       {
         name: "Tuta Mail",
