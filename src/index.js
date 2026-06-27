@@ -364,6 +364,12 @@ const SITE_GROUPS = [
         search: "https://www.costco.com/CatalogSearch?keyword={q}"
       },
       {
+        name: "Walmart",
+        aliases: ["wm", "walmart", "wal", "wmt"],
+        home: "https://www.walmart.com/",
+        search: "https://www.walmart.com/search?q={q}"
+      },
+      {
         name: "Facebook Marketplace",
         aliases: ["fbm", "fbmarket", "marketplace", "facebookmarketplace"],
         home: "https://www.facebook.com/marketplace/",
@@ -391,12 +397,6 @@ const SITE_GROUPS = [
         aliases: ["h", "hd", "homedepot", "depot"],
         home: "https://www.homedepot.com/",
         search: "https://www.homedepot.com/s/{q}"
-      },
-      {
-        name: "Walmart",
-        aliases: ["wm", "walmart", "wal", "wmt"],
-        home: "https://www.walmart.com/",
-        search: "https://www.walmart.com/search?q={q}"
       },
       {
         name: "Zillow",
@@ -1080,6 +1080,32 @@ const SITE_GROUPS = [
   {
     category: "Creative & Utilities",
     sites: [
+      {
+        name: "Micah Jeffery",
+        aliases: ["mj", "micah"],
+        home: "https://www.micahjeffery.com",
+        search: "https://www.micahjeffery.com/_/search?query="
+      },
+      {
+        name: "Micah Jeffery > apps",
+        aliases: ["apps", "mja"],
+        home: "https://www.micahjeffery.com/links/applications"
+      },
+      {
+        name: "Micah Jeffery > extensions",
+        aliases: ["mje", "extensions"],
+        home: "https://www.micahjeffery.com/links/extensions"
+      },
+      {
+        name: "Micah Jeffery > hysa",
+        aliases: ["mjs", "mjh", "hysa", "hysas", "apy", "savings"],
+        home: "https://www.micahjeffery.com/financial/hysas"
+      },
+      {
+        name: "Micah Jeffery > referrals",
+        aliases: ["refer", "mjr", "referral", "referrals"],
+        home: "https://www.micahjeffery.com/financial/hysas"
+      },
       {
         name: "Caption Ninja",
         aliases: ["caption", "cap"],
