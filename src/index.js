@@ -1557,7 +1557,6 @@ function renderHelpPage(requestUrl) {
     <header>
       <div>
         <h1>${escapeHtml(PROJECT.name)} Bangs</h1>
-        <p>Type <code>;help</code> — or just <code>;</code> — in the address bar any time to return here. Click a bang or default-search URL to copy it.</p>
         <div class="badges">
           <span class="badge">${totalSites} sites</span>
           <span class="badge">${totalAliases} aliases</span>
