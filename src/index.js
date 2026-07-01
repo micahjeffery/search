@@ -2,7 +2,8 @@ const PROJECT = {
   name: "Search",
   repository: "https://github.com/micahjeffery/search",
   editMain: "https://github.com/micahjeffery/search/edit/main/src/index.js",
-  editTest: "https://github.com/micahjeffery/search/edit/test/src/index.js"
+  editTest: "https://github.com/micahjeffery/search/edit/test/src/index.js",
+  support: "https://www.micahjeffery.com/financial/referrals" 
 };
 // -----------------------------------------------------------------------------
 // 1. DEFAULT SEARCH ENGINES 
@@ -16,7 +17,7 @@ const DEFAULT_ENGINES = [
     search: "https://duckduckgo.com/?q={q}"
   },
   {
-    name: "DuckDuckGo No AI",
+    name: "NOAI DDG",
     paths: ["noai", "noaiddg"],
     home: "https://noai.duckduckgo.com/",
     search: "https://noai.duckduckgo.com/?q={q}"
@@ -61,12 +62,13 @@ const DEFAULT_ENGINES = [
 // -----------------------------------------------------------------------------
 // 2. BANGS, ORGANIZED BY CATEGORY
 // -----------------------------------------------------------------------------
-// Every site uses the same shape:
-//   name:    Display name used on the help page.
-//   aliases: Bang words.
-//   home:    Destination for a bang with no query.
-//   search:  Destination for a bang with a query.
-//   handler: Optional special behavior.
+// Every site uses the same format:
+//   name:        Display name used on the help page.
+//   description: Optional descrition of the site.
+//   aliases:     Bang words.
+//   home:        Destination for a bang with no query.
+//   search:      Optional destination for a bang with a query.
+//   handler:     Optional special behavior.
 const SITE_GROUPS = [
   {
     category: "Project & Developer",
@@ -74,7 +76,7 @@ const SITE_GROUPS = [
       {
         name: "Home Page",
         description: "Open this start page and the full directory of bang shortcuts.",
-        aliases: ["help", "bangs", "bang", "search", "home", "commands", "shortcuts"],
+        aliases: ["search", "bangs", "home"],
         home: "https://search.micahjeffery.com/"
       },
       {
@@ -291,6 +293,12 @@ const SITE_GROUPS = [
         search: "https://en.wikipedia.org/wiki/Special:Search?search={q}&vectornightmode=1"
       },
       {
+        name: "Wikimedia",
+        description: "Open the Wikimedia project directory.",
+        aliases: ["wm", "wikimedia"],
+        home: "https://www.wikimedia.org/"
+      },
+      {
         name: "Google Scholar",
         aliases: ["gsch", "sch", "scholar", "gscholar"],
         home: "https://scholar.google.com/",
@@ -384,7 +392,7 @@ const SITE_GROUPS = [
       },
       {
         name: "Walmart",
-        aliases: ["wm", "walmart", "wal", "wmt"],
+        aliases: ["walmart", "wal", "wmt"],
         home: "https://www.walmart.com/",
         search: "https://www.walmart.com/search?q={q}"
       },
@@ -1625,6 +1633,26 @@ function renderHelpPage(requestUrl) {
 
   const homeEnginePaths = DEFAULT_ENGINES.map((engine) => engine.paths[0]);
 
+  const supportIcon = `<img src="https://upload.wikimedia.org/wikipedia/commons/8/86/A_perfect_SVG_heart.svg" alt="" width="19" height="19" referrerpolicy="no-referrer">`;
+  const supportControl = PROJECT.support
+    ? `<a class="icon-button support-link" href="${escapeAttribute(PROJECT.support)}" target="_blank" rel="noreferrer" aria-label="Support" title="Support">${supportIcon}</a>`
+    : `<span class="icon-button support" role="img" aria-label="Support" title="Support">${supportIcon}</span>`;
+
+  const browserBangSites = SITES.map((site) => [
+    site.name,
+    `!${site.aliases[0]}`,
+    site.handler === "virustotal" ? "domain" : site.search ? "search" : "link"
+  ]);
+  const browserBangAliases = Object.fromEntries(
+    SITES.flatMap((site, index) =>
+      site.aliases.map((alias) => [alias.toLowerCase(), index])
+    )
+  );
+  const browserBangDataJson = JSON.stringify({
+    sites: browserBangSites,
+    aliases: browserBangAliases
+  }).replaceAll("<", "\\u003c");
+
   const groups = SITE_GROUPS.map((group) => {
     const cards = group.sites
       .map((site) => renderSiteCard({
@@ -1657,12 +1685,17 @@ function renderHelpPage(requestUrl) {
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <script>
     (() => {
+      const resolveAutoTheme = () =>
+        window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+
       try {
         const saved = localStorage.getItem("search-help-theme");
-        document.documentElement.dataset.theme =
-          ["dark", "light", "amoled"].includes(saved) ? saved : "dark";
+        const preference = ["auto", "dark", "light", "black"].includes(saved) ? saved : "auto";
+        document.documentElement.dataset.theme = preference === "auto" ? resolveAutoTheme() : preference;
+        document.documentElement.dataset.themePreference = preference;
       } catch {
-        document.documentElement.dataset.theme = "dark";
+        document.documentElement.dataset.theme = resolveAutoTheme();
+        document.documentElement.dataset.themePreference = "auto";
       }
     })();
   </script>
@@ -1708,7 +1741,7 @@ function renderHelpPage(requestUrl) {
       --shadow: rgba(29, 43, 68, .10);
     }
 
-    :root[data-theme="amoled"] {
+    :root[data-theme="black"] {
       color-scheme: dark;
       --bg: #000000;
       --surface: #090909;
@@ -1768,7 +1801,7 @@ function renderHelpPage(requestUrl) {
     .type.search { color: var(--good); }
     .type.open { color: var(--warn); }
 
-    .toolbar, .defaults, .favorites, .warning {
+    .toolbar, .defaults, .favorites, .recent-searches, .warning {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 14px;
@@ -1779,7 +1812,7 @@ function renderHelpPage(requestUrl) {
     .search-row { display: flex; gap: 10px; align-items: stretch; }
     .search-row input { flex: 1; }
 
-    input, .theme-select, .layout-select, .home-engine-select, .toolbar-button, .engine-card, .alias, .favorite-button {
+    input, .theme-select, .layout-select, .home-engine-select, .toolbar-button, .engine-card, .alias, .favorite-button, .recent-search, .recent-clear, .history-disable, .dialog-button, .dialog-close, .icon-button, .minimalist-exit {
       font: inherit;
     }
 
@@ -1794,12 +1827,12 @@ function renderHelpPage(requestUrl) {
     }
 
     input:focus, .theme-select:focus, .layout-select:focus, .home-engine-select:focus, .toolbar-button:focus-visible, .engine-card:focus-visible,
-    .alias:focus-visible, .favorite-button:focus-visible, .site-name:focus-visible, .github-link:focus-visible {
+    .alias:focus-visible, .favorite-button:focus-visible, .recent-search:focus-visible, .recent-clear:focus-visible, .history-disable:focus-visible, .dialog-button:focus-visible, .dialog-close:focus-visible, .site-name:focus-visible, .github-link:focus-visible, .icon-button:focus-visible, .minimalist-exit:focus-visible {
       outline: 3px solid color-mix(in srgb, var(--accent) 45%, transparent);
       outline-offset: 2px;
     }
 
-    .search-button, .toolbar-button, .theme-select, .layout-select, .home-engine-select {
+    .search-button, .toolbar-button, .theme-select, .layout-select, .home-engine-select, .recent-search, .recent-clear, .history-disable, .dialog-button, .dialog-close {
       appearance: none;
       border: 1px solid var(--border);
       border-radius: 9px;
@@ -1829,7 +1862,7 @@ function renderHelpPage(requestUrl) {
       gap: 8px;
       margin-left: auto;
     }
-    .toolbar-button:hover, .theme-select:hover, .layout-select:hover, .home-engine-select:hover, .engine-card:hover, .alias:hover, .favorite-button:hover, .github-link:hover {
+    .toolbar-button:hover, .theme-select:hover, .layout-select:hover, .home-engine-select:hover, .engine-card:hover, .alias:hover, .favorite-button:hover, .recent-search:hover, .recent-clear:hover, .history-disable:hover, .dialog-button:hover, .dialog-close:hover, .github-link:hover, .icon-button:hover, .minimalist-exit:hover {
       border-color: var(--accent);
     }
 
@@ -1844,7 +1877,7 @@ function renderHelpPage(requestUrl) {
       white-space: nowrap;
     }
 
-    .github-link {
+    .github-link, .icon-button, .minimalist-exit {
       display: grid;
       place-items: center;
       width: 36px;
@@ -1853,28 +1886,137 @@ function renderHelpPage(requestUrl) {
       border-radius: 9px;
       color: var(--text);
       background: var(--surface-2);
+      text-decoration: none;
     }
 
-    .github-link svg { width: 19px; height: 19px; fill: currentColor; }
+    .icon-button {
+      appearance: none;
+      padding: 0;
+      cursor: pointer;
+      font-size: 1.15rem;
+      line-height: 1;
+    }
+
+    .minimalist-exit {
+      display: none;
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 20;
+      appearance: none;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    .github-link img,
+    #keyboard-shortcuts-button img,
+    .support-link img,
+    .minimalist-exit img {
+      display: block;
+      width: 19px;
+      height: 19px;
+      filter: brightness(0) invert(1);
+    }
+
+    :root[data-theme="light"] .github-link img,
+    :root[data-theme="light"] #keyboard-shortcuts-button img,
+    :root[data-theme="light"] .support-link img,
+    :root[data-theme="light"] .minimalist-exit img {
+      filter: brightness(0);
+    }
+
+    .dialog {
+      width: min(460px, calc(100vw - 32px));
+      max-height: calc(100vh - 32px);
+      margin: auto;
+      padding: 0;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--surface);
+      color: var(--text);
+      box-shadow: 0 20px 56px var(--shadow);
+    }
+
+    .dialog::backdrop { background: rgba(0, 0, 0, .58); }
+    .dialog-body { padding: 18px; }
+    .dialog-heading, .dialog-actions, .recent-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dialog-heading { justify-content: space-between; }
+    .dialog-heading h2 { margin: 0; }
+    .dialog-actions { justify-content: flex-end; margin-top: 18px; }
+    .dialog-button.danger { border-color: var(--danger); color: var(--danger); }
+
+    .shortcut-list {
+      display: grid;
+      gap: 8px;
+      margin: 16px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .shortcut-list li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      color: var(--muted);
+    }
+
+    kbd {
+      min-width: 2.1em;
+      padding: 3px 7px;
+      border: 1px solid var(--border-strong);
+      border-bottom-width: 2px;
+      border-radius: 6px;
+      background: var(--surface-2);
+      color: var(--text);
+      font: .78rem ui-monospace, SFMono-Regular, Menlo, monospace;
+      text-align: center;
+      white-space: nowrap;
+    }
 
     :root[data-density="compact"] main { padding: 18px 14px 34px; }
     :root[data-density="compact"] header { gap: 12px; margin-bottom: 14px; }
     :root[data-density="compact"] .badges { margin-top: 9px; }
     :root[data-density="compact"] .toolbar { padding: 10px; margin: 12px 0; }
     :root[data-density="compact"] .toolbar-actions { margin-top: 8px; }
-    :root[data-density="compact"] .favorites { padding: 12px; margin: 12px 0; }
+    :root[data-density="compact"] .favorites, :root[data-density="compact"] .recent-searches { padding: 12px; margin: 12px 0; }
     :root[data-density="compact"] .defaults { display: none; }
     :root[data-density="compact"] .group { margin: 16px 0; }
     :root[data-density="compact"] .engine-grid, :root[data-density="compact"] .site-grid { gap: 8px; }
     :root[data-density="compact"] .site-card { padding: 10px; }
     :root[data-density="compact"] .site-description { margin-top: 6px; }
     :root[data-density="compact"] .aliases { margin-top: 8px; }
-    :root[data-density="compact"] .site-url { margin-top: 9px; }
+    :root[data-density="compact"] .site-url { display: none; }
     :root[data-density="compact"] .footer { margin-top: 24px; }
 
+    :root[data-density="minimalist"] body { min-height: 100vh; }
+    :root[data-density="minimalist"] main {
+      min-height: 100vh;
+      max-width: none;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+    :root[data-density="minimalist"] main > :not(.toolbar) { display: none !important; }
+    :root[data-density="minimalist"] .toolbar {
+      width: min(760px, 100%);
+      margin: 0;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+    :root[data-density="minimalist"] .toolbar-actions,
+    :root[data-density="minimalist"] .bang-preview { display: none !important; }
+    :root[data-density="minimalist"] .minimalist-exit { display: grid; }
 
-    .favorites { padding: 16px; margin: 20px 0; }
-    .section-heading, .defaults summary {
+    .favorites, .recent-searches { padding: 16px; margin: 20px 0; }
+    .section-heading, .recent-heading, .defaults summary {
       display: flex;
       align-items: center;
       gap: 10px;
@@ -1882,8 +2024,43 @@ function renderHelpPage(requestUrl) {
       color: var(--text);
     }
 
-    .section-heading { justify-content: space-between; }
+    .section-heading, .recent-heading { justify-content: space-between; }
     .favorites-count { color: var(--muted); font-size: .84rem; font-weight: 400; }
+
+    .recent-heading h2 { font-size: 1rem; }
+    .recent-actions { margin-left: auto; }
+    .recent-clear, .history-disable { padding: 5px 8px; font-size: .8rem; }
+    .history-disable { color: var(--warn); }
+    .recent-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .recent-search {
+      max-width: 100%;
+      padding: 6px 9px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--surface-2);
+      color: var(--text);
+      cursor: pointer;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .bang-preview {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 6px 10px;
+      margin-top: 10px;
+      padding: 9px 11px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--surface-2);
+      color: var(--muted);
+      font-size: .88rem;
+    }
+
+    .bang-preview-title { color: var(--text); font-weight: 700; }
+    .bang-preview.is-unknown .bang-preview-title { color: var(--warn); }
 
     .defaults { padding: 0; margin: 20px 0 30px; overflow: clip; }
     .defaults summary {
@@ -1939,6 +2116,12 @@ function renderHelpPage(requestUrl) {
     .group:not([open]) .group-title::before { transform: rotate(-90deg); }
     .group-title span { color: var(--muted); font-size: .85rem; }
     .group:not([open]) .group-title { margin-bottom: 0; }
+
+    .site-card.is-keyboard-selected {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent);
+      scroll-margin-block: 16px;
+    }
 
     .site-card {
       display: flex;
@@ -2014,17 +2197,23 @@ function renderHelpPage(requestUrl) {
       <div class="header-actions">
         <label class="sr-only" for="theme-select">Color theme</label>
         <select id="theme-select" class="theme-select" aria-label="Color theme">
+          <option value="auto">Auto</option>
           <option value="dark">Dark</option>
           <option value="light">Light</option>
-          <option value="amoled">AMOLED</option>
+          <option value="black">Black</option>
         </select>
         <label class="sr-only" for="layout-select">Page density</label>
         <select id="layout-select" class="layout-select" aria-label="Page density">
           <option value="comfortable">Comfortable</option>
           <option value="compact">Compact</option>
+          <option value="minimalist">Minimalist</option>
         </select>
+        <button class="icon-button" id="keyboard-shortcuts-button" type="button" aria-haspopup="dialog" aria-controls="keyboard-shortcuts" aria-label="Keyboard shortcuts" title="Keyboard shortcuts">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/4/49/OOjs_UI_icon_keyboard-progressive.svg" alt="" width="19" height="19" referrerpolicy="no-referrer">
+        </button>
+        ${supportControl}
         <a class="github-link" href="${escapeAttribute(PROJECT.repository)}" target="_blank" rel="noreferrer" aria-label="Open the GitHub repository" title="Open the GitHub repository">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .7a11.3 11.3 0 0 0-3.57 22.02c.57.1.77-.25.77-.55v-2.15c-3.14.68-3.8-1.33-3.8-1.33-.51-1.3-1.26-1.65-1.26-1.65-1.03-.7.08-.69.08-.69 1.14.08 1.74 1.17 1.74 1.17 1.01 1.73 2.65 1.23 3.3.94.1-.73.4-1.23.72-1.51-2.51-.29-5.15-1.26-5.15-5.59 0-1.23.44-2.24 1.16-3.03-.12-.29-.5-1.43.11-2.98 0 0 .95-.3 3.11 1.16A10.8 10.8 0 0 1 12 5.2c.96 0 1.93.13 2.84.38 2.16-1.47 3.1-1.16 3.1-1.16.62 1.55.24 2.69.12 2.98.72.79 1.16 1.8 1.16 3.03 0 4.34-2.65 5.29-5.17 5.57.4.35.77 1.03.77 2.08v3.1c0 .3.2.66.78.55A11.3 11.3 0 0 0 12 .7Z"/></svg>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="" width="19" height="19" referrerpolicy="no-referrer">
         </a>
       </div>
     </header>
@@ -2041,15 +2230,21 @@ function renderHelpPage(requestUrl) {
           type="search"
           autocomplete="off"
           spellcheck="false"
-          placeholder="Search DuckDuckGo or filter bangs…"
+          placeholder="Filter bangs or search DuckDuckGo…"
+          title="Press Escape to clear"
           autofocus
         >
         <button class="search-button" type="submit">Search</button>
       </div>
 
+      <div id="bang-preview" class="bang-preview" hidden aria-live="polite">
+        <span id="bang-preview-title" class="bang-preview-title"></span>
+        <span id="bang-preview-text"></span>
+      </div>
+
       <div class="toolbar-actions">
         <label class="control-label" for="home-engine-select">
-          <span>Search with</span>
+          <span>Default to</span>
           <select id="home-engine-select" class="home-engine-select" aria-label="Home page search engine">${homeEngineOptions}</select>
         </label>
 
@@ -2060,12 +2255,54 @@ function renderHelpPage(requestUrl) {
       </div>
     </form>
 
+    <section class="recent-searches" id="recent-searches" hidden>
+      <div class="recent-heading">
+        <h2>Recent searches</h2>
+        <div class="recent-actions">
+          <button class="recent-clear" id="clear-recent-searches" type="button">Clear</button>
+          <button class="history-disable" id="disable-history" type="button">Disable history</button>
+        </div>
+      </div>
+      <div id="recent-search-list" class="recent-list"></div>
+    </section>
+
+    <dialog class="dialog" id="keyboard-shortcuts" aria-labelledby="keyboard-shortcuts-title">
+      <div class="dialog-body">
+        <div class="dialog-heading">
+          <h2 id="keyboard-shortcuts-title">Keyboard shortcuts</h2>
+          <button class="dialog-close" type="button" data-close-dialog="keyboard-shortcuts" aria-label="Close keyboard shortcuts">Close</button>
+        </div>
+        <ul class="shortcut-list">
+          <li><span>Focus or select the search box</span><kbd>/</kbd></li>
+          <li><span>Clear the search box</span><kbd>Esc</kbd></li>
+          <li><span>Collapse all categories</span><kbd>[</kbd></li>
+          <li><span>Expand all categories</span><kbd>]</kbd></li>
+          <li><span>Move through filtered cards</span><span><kbd>↑</kbd> <kbd>↓</kbd></span></li>
+          <li><span>Use the selected card</span><kbd>Enter</kbd></li>
+        </ul>
+      </div>
+    </dialog>
+
+    <dialog class="dialog" id="disable-history-dialog" aria-labelledby="disable-history-title">
+      <div class="dialog-body">
+        <div class="dialog-heading">
+          <h2 id="disable-history-title">Stop saving search history?</h2>
+          <button class="dialog-close" type="button" data-close-dialog="disable-history-dialog" aria-label="Close history warning">Close</button>
+        </div>
+        <p>Search history is stored only in this browser’s local site data. Continuing deletes the saved searches and prevents new searches from being saved.</p>
+        <p>To re-enable history later, you must clear site data for search.micahjeffery.com in your browser. That also clears this page’s theme, layout, favorites, and selected home search engine.</p>
+        <div class="dialog-actions">
+          <button class="dialog-button" id="cancel-disable-history" type="button">Cancel</button>
+          <button class="dialog-button danger" id="confirm-disable-history" type="button">Disable history</button>
+        </div>
+      </div>
+    </dialog>
+
     <section class="favorites" id="favorites" hidden>
       <div class="section-heading">
         <h2>Favorites</h2>
         <span id="favorites-count" class="favorites-count"></span>
       </div>
-      <p>Favorites are saved only in this browser.</p>
       <div id="favorites-grid" class="site-grid" style="margin-top: 14px;"></div>
     </section>
 
@@ -2079,8 +2316,12 @@ function renderHelpPage(requestUrl) {
 
     <div id="empty" class="empty">No bangs match that filter.</div>
     <div id="groups">${groups}</div>
-    <p class="footer">Click a bang to place it in the search box. Click ☆ to save a favorite. Your theme, layout, home search engine, favorites, and default-search section state stay on this browser and device.</p>
+    <p class="footer">Click a bang to place it in the search box. Click ☆ to save a favorite. Your theme, layout, home search engine, favorites, search history, and default-search selection stay private on this browser.</p>
   </main>
+
+  <button class="minimalist-exit" id="exit-minimalist" type="button" aria-label="Return to compact mode" title="Return to compact mode">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Back_Arrow.svg" alt="" width="19" height="19" referrerpolicy="no-referrer">
+  </button>
 
   <script>
     const STORAGE = {
@@ -2088,13 +2329,31 @@ function renderHelpPage(requestUrl) {
       layout: "search-help-layout",
       homeEngine: "search-help-home-engine",
       defaultsOpen: "search-help-defaults-open",
-      favorites: "search-help-favorites"
+      favorites: "search-help-favorites",
+      recentSearches: "search-help-recent-searches-v2",
+      historyDisabled: "search-help-history-disabled"
     };
 
+    const RECENT_SEARCH_LIMIT = 20;
     const HOME_ENGINE_PATHS = ${JSON.stringify(homeEnginePaths)};
+    const BANG_DATA = ${browserBangDataJson};
     const filter = document.getElementById("filter");
     const searchForm = document.getElementById("search-form");
     const homeEngineSelect = document.getElementById("home-engine-select");
+    const bangPreview = document.getElementById("bang-preview");
+    const bangPreviewTitle = document.getElementById("bang-preview-title");
+    const bangPreviewText = document.getElementById("bang-preview-text");
+    const recentSearchesSection = document.getElementById("recent-searches");
+    const recentSearchList = document.getElementById("recent-search-list");
+    const clearRecentSearchesButton = document.getElementById("clear-recent-searches");
+    const disableHistoryButton = document.getElementById("disable-history");
+    const keyboardShortcutsButton = document.getElementById("keyboard-shortcuts-button");
+    const keyboardShortcutsDialog = document.getElementById("keyboard-shortcuts");
+    const disableHistoryDialog = document.getElementById("disable-history-dialog");
+    const cancelDisableHistoryButton = document.getElementById("cancel-disable-history");
+    const confirmDisableHistoryButton = document.getElementById("confirm-disable-history");
+    const exitMinimalistButton = document.getElementById("exit-minimalist");
+
     function updateSearchPlaceholder() {
       const engineName =
         homeEngineSelect.selectedOptions[0]?.textContent.trim() || "DuckDuckGo";
@@ -2127,6 +2386,71 @@ function renderHelpPage(requestUrl) {
       } catch {}
     }
 
+    function normalizeRecentSearch(value) {
+      return String(value).trim().replace(/\\s+/g, " ");
+    }
+
+    function readRecentSearches() {
+      try {
+        const parsed = JSON.parse(readStorage(STORAGE.recentSearches, "[]"));
+        if (!Array.isArray(parsed)) return [];
+
+        return parsed
+          .filter((value) => typeof value === "string")
+          .map(normalizeRecentSearch)
+          .filter(Boolean)
+          .filter((value, index, values) =>
+            values.findIndex((other) => other.toLowerCase() === value.toLowerCase()) === index
+          )
+          .slice(0, RECENT_SEARCH_LIMIT);
+      } catch {
+        return [];
+      }
+    }
+
+    function saveRecentSearch(value) {
+      if (historyDisabled) return;
+      const search = normalizeRecentSearch(value);
+      if (!search) return;
+
+      recentSearches = [
+        search,
+        ...recentSearches.filter((item) => item.toLowerCase() !== search.toLowerCase())
+      ].slice(0, RECENT_SEARCH_LIMIT);
+
+      writeStorage(STORAGE.recentSearches, JSON.stringify(recentSearches));
+    }
+
+    function renderRecentSearches() {
+      recentSearchList.replaceChildren();
+
+      recentSearches.forEach((search) => {
+        const button = document.createElement("button");
+        button.className = "recent-search";
+        button.type = "button";
+        button.dataset.recentSearch = search;
+        button.textContent = search;
+        button.title = "Search again: " + search;
+        recentSearchList.append(button);
+      });
+
+      recentSearchesSection.hidden = historyDisabled || recentSearches.length === 0 || Boolean(filter.value.trim());
+    }
+
+    function clearRecentSearches() {
+      recentSearches = [];
+      writeStorage(STORAGE.recentSearches, JSON.stringify(recentSearches));
+      renderRecentSearches();
+    }
+
+    function disableSearchHistory() {
+      historyDisabled = true;
+      recentSearches = [];
+      writeStorage(STORAGE.recentSearches, JSON.stringify(recentSearches));
+      writeStorage(STORAGE.historyDisabled, "true");
+      renderRecentSearches();
+    }
+
     function readFavorites() {
       try {
         const parsed = JSON.parse(readStorage(STORAGE.favorites, "[]"));
@@ -2137,20 +2461,33 @@ function renderHelpPage(requestUrl) {
       }
     }
 
+    let historyDisabled = readStorage(STORAGE.historyDisabled, "false") === "true";
+    let recentSearches = historyDisabled ? [] : readRecentSearches();
     let favorites = readFavorites();
+    let keyboardSelection = -1;
 
-    function applyTheme(theme) {
-      const nextTheme = ["dark", "light", "amoled"].includes(theme) ? theme : "dark";
-      document.documentElement.dataset.theme = nextTheme;
-      themeSelect.value = nextTheme;
-      writeStorage(STORAGE.theme, nextTheme);
+    function resolveTheme(preference) {
+      if (preference !== "auto") return preference;
+      return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+    }
+
+    function applyTheme(preference) {
+      const nextPreference = ["auto", "dark", "light", "black"].includes(preference) ? preference : "auto";
+      document.documentElement.dataset.theme = resolveTheme(nextPreference);
+      document.documentElement.dataset.themePreference = nextPreference;
+      themeSelect.value = nextPreference;
+      writeStorage(STORAGE.theme, nextPreference);
     }
 
     function applyLayout(layout) {
-      const nextLayout = layout === "compact" ? "compact" : "comfortable";
+      const nextLayout = ["compact", "minimalist"].includes(layout) ? layout : "comfortable";
       document.documentElement.dataset.density = nextLayout;
       layoutSelect.value = nextLayout;
       writeStorage(STORAGE.layout, nextLayout);
+
+      if (nextLayout === "minimalist") {
+        requestAnimationFrame(() => filter.focus());
+      }
     }
 
     function applyHomeEngine(path) {
@@ -2160,7 +2497,7 @@ function renderHelpPage(requestUrl) {
       writeStorage(STORAGE.homeEngine, nextPath);
     }
 
-    applyTheme(readStorage(STORAGE.theme, document.documentElement.dataset.theme || "dark"));
+    applyTheme(readStorage(STORAGE.theme, document.documentElement.dataset.themePreference || "auto"));
     applyLayout(readStorage(STORAGE.layout, "comfortable"));
     applyHomeEngine(readStorage(STORAGE.homeEngine, ""));
     updateSearchPlaceholder();
@@ -2169,8 +2506,23 @@ function renderHelpPage(requestUrl) {
       applyTheme(themeSelect.value);
     });
 
+    const colorSchemeMedia = window.matchMedia("(prefers-color-scheme: light)");
+    const syncAutoTheme = () => {
+      if (themeSelect.value === "auto") applyTheme("auto");
+    };
+    if (colorSchemeMedia.addEventListener) {
+      colorSchemeMedia.addEventListener("change", syncAutoTheme);
+    } else {
+      colorSchemeMedia.addListener(syncAutoTheme);
+    }
+
     layoutSelect.addEventListener("change", () => {
       applyLayout(layoutSelect.value);
+    });
+
+    exitMinimalistButton.addEventListener("click", () => {
+      applyLayout("compact");
+      filter.focus();
     });
 
     homeEngineSelect.addEventListener("change", () => {
@@ -2236,7 +2588,107 @@ function renderHelpPage(requestUrl) {
       groups.forEach((group) => { group.open = open; });
     }
 
+    function parseBangInput(raw) {
+      const value = raw.trim();
+      if (!value) return null;
+
+      let match = value.match(/^([!;:.])([a-zA-Z0-9_-]+)(?:\\s+(.+))?$/);
+      if (match) return { bang: match[2].toLowerCase(), query: match[3] || "" };
+
+      match = value.match(/^([a-zA-Z0-9_-]+)([!;:.])(?:\\s+(.+))?$/);
+      if (match) return { bang: match[1].toLowerCase(), query: match[3] || "" };
+
+      match = value.match(/^(.+?)\\s+([!;:.])([a-zA-Z0-9_-]+)$/);
+      if (match) return { bang: match[3].toLowerCase(), query: match[1] || "" };
+
+      match = value.match(/^(.+?)\\s+([a-zA-Z0-9_-]+)([!;:.])$/);
+      if (match) return { bang: match[2].toLowerCase(), query: match[1] || "" };
+
+      return null;
+    }
+
+    function updateBangPreview() {
+      const shortcut = parseBangInput(filter.value);
+      if (!shortcut) {
+        bangPreview.hidden = true;
+        bangPreview.classList.remove("is-unknown");
+        return;
+      }
+
+      const siteIndex = BANG_DATA.aliases[shortcut.bang];
+      const site = Number.isInteger(siteIndex) ? BANG_DATA.sites[siteIndex] : null;
+      bangPreview.hidden = false;
+
+      if (!site) {
+        bangPreview.classList.add("is-unknown");
+        bangPreviewTitle.textContent = "Unknown bang";
+        bangPreviewText.textContent = "No shortcut named !" + shortcut.bang + ".";
+        return;
+      }
+
+      const [siteName, primaryBang, behavior] = site;
+      bangPreview.classList.remove("is-unknown");
+      bangPreviewTitle.textContent = primaryBang;
+
+      if (!shortcut.query) {
+        bangPreviewText.textContent = behavior === "search"
+          ? "Open " + siteName + " or add a search term."
+          : "Press Enter to open " + siteName + ".";
+      } else if (behavior === "domain") {
+        bangPreviewText.textContent = "Scan " + shortcut.query + " with VirusTotal.";
+      } else if (behavior === "search") {
+        bangPreviewText.textContent = 'Search “' + shortcut.query + '” with ' + siteName + '.';
+      } else {
+        bangPreviewText.textContent = "Open " + siteName + ". This shortcut does not search.";
+      }
+    }
+
+    function clearKeyboardSelection() {
+      sourceCards.forEach((card) => card.classList.remove("is-keyboard-selected"));
+      keyboardSelection = -1;
+    }
+
+    function getKeyboardCards() {
+      return sourceCards.filter((card) => {
+        const group = card.closest(".group");
+        return !card.hidden && !group.hidden && group.open;
+      });
+    }
+
+    function moveKeyboardSelection(direction) {
+      const cards = getKeyboardCards();
+      if (!cards.length) return;
+
+      const nextIndex = keyboardSelection < 0
+        ? (direction > 0 ? 0 : cards.length - 1)
+        : (keyboardSelection + direction + cards.length) % cards.length;
+
+      sourceCards.forEach((card) => card.classList.remove("is-keyboard-selected"));
+      keyboardSelection = nextIndex;
+      const card = cards[keyboardSelection];
+      card.classList.add("is-keyboard-selected");
+      card.closest(".group").open = true;
+      card.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    }
+
+    function useKeyboardSelection() {
+      const cards = getKeyboardCards();
+      const card = cards[keyboardSelection];
+      if (!card) return;
+
+      const isLinkOnly = Boolean(card.querySelector(".type.open"));
+      if (isLinkOnly) {
+        const url = card.querySelector(".site-name")?.href;
+        if (url) window.location.assign(url);
+        return;
+      }
+
+      const bang = card.querySelector("[data-bang]")?.dataset.bang;
+      if (bang) putBangInSearch(bang);
+    }
+
     function applyFilter() {
+      clearKeyboardSelection();
       const query = filter.value
         .trim()
         .toLowerCase()
@@ -2267,6 +2719,8 @@ function renderHelpPage(requestUrl) {
 
       favoritesSection.hidden = favorites.length === 0 || (query.length > 0 && visibleFavorites === 0);
       empty.style.display = visible ? "none" : "block";
+      updateBangPreview();
+      renderRecentSearches();
     }
 
     function putBangInSearch(bang) {
@@ -2274,6 +2728,14 @@ function renderHelpPage(requestUrl) {
       filter.focus();
       filter.setSelectionRange(filter.value.length, filter.value.length);
       applyFilter();
+    }
+
+    function clearSearch() {
+      if (!filter.value) return false;
+      filter.value = "";
+      filter.focus();
+      applyFilter();
+      return true;
     }
 
     function isTypingTarget(target) {
@@ -2285,6 +2747,62 @@ function renderHelpPage(requestUrl) {
 
     filter.addEventListener("input", applyFilter);
 
+    filter.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        if (clearSearch()) event.preventDefault();
+        return;
+      }
+
+      if (!filter.value.trim()) return;
+
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+        moveKeyboardSelection(1);
+      } else if (event.key === "ArrowUp") {
+        event.preventDefault();
+        moveKeyboardSelection(-1);
+      } else if (event.key === "Enter" && keyboardSelection >= 0) {
+        event.preventDefault();
+        useKeyboardSelection();
+      }
+    });
+
+    searchForm.addEventListener("submit", () => {
+      saveRecentSearch(filter.value);
+    });
+
+    clearRecentSearchesButton.addEventListener("click", clearRecentSearches);
+
+    disableHistoryButton.addEventListener("click", () => {
+      disableHistoryDialog.showModal();
+    });
+
+    cancelDisableHistoryButton.addEventListener("click", () => {
+      disableHistoryDialog.close();
+    });
+
+    confirmDisableHistoryButton.addEventListener("click", () => {
+      disableSearchHistory();
+      disableHistoryDialog.close();
+    });
+
+    keyboardShortcutsButton.addEventListener("click", () => {
+      keyboardShortcutsDialog.showModal();
+    });
+
+    document.querySelectorAll("[data-close-dialog]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const dialog = document.getElementById(button.dataset.closeDialog);
+        if (dialog) dialog.close();
+      });
+    });
+
+    [keyboardShortcutsDialog, disableHistoryDialog].forEach((dialog) => {
+      dialog.addEventListener("click", (event) => {
+        if (event.target === dialog) dialog.close();
+      });
+    });
+
     document.getElementById("expand-all").addEventListener("click", () => {
       setAllGroups(true);
     });
@@ -2294,9 +2812,17 @@ function renderHelpPage(requestUrl) {
     });
 
     document.addEventListener("keydown", (event) => {
-      if (event.defaultPrevented || event.ctrlKey || event.metaKey || event.altKey || isTypingTarget(event.target)) {
+      if (keyboardShortcutsDialog.open || disableHistoryDialog.open || event.defaultPrevented || event.ctrlKey || event.metaKey || event.altKey) {
         return;
       }
+
+      if (event.key === "Escape") {
+        if (isTypingTarget(event.target) && event.target !== filter) return;
+        if (clearSearch()) event.preventDefault();
+        return;
+      }
+
+      if (isTypingTarget(event.target)) return;
 
       if (event.key === "/") {
         event.preventDefault();
@@ -2312,6 +2838,13 @@ function renderHelpPage(requestUrl) {
     });
 
     document.addEventListener("click", async (event) => {
+      const recentTarget = event.target.closest("[data-recent-search]");
+      if (recentTarget) {
+        filter.value = recentTarget.dataset.recentSearch;
+        searchForm.requestSubmit();
+        return;
+      }
+
       const favoriteTarget = event.target.closest("[data-favorite]");
       if (favoriteTarget) {
         toggleFavorite(favoriteTarget.dataset.favorite);
@@ -2354,7 +2887,7 @@ function renderHelpPage(requestUrl) {
 
 function renderSiteCard(site) {
   const aliases = site.aliases
-    .map((alias) => `<button class="alias" type="button" data-bang=";${escapeAttribute(alias)}" title="Use ;${escapeAttribute(alias)} in the search box">;${escapeHtml(alias)}</button>`)
+    .map((alias) => `<button class="alias" type="button" data-bang="!${escapeAttribute(alias)}" title="Use !${escapeAttribute(alias)} in the search box">!${escapeHtml(alias)}</button>`)
     .join("");
 
   const type = getSiteType(site);
@@ -2372,7 +2905,7 @@ function renderSiteCard(site) {
     : "";
 
   return `
-    <article class="site-card" data-site-key="${escapeAttribute(site.id)}" data-search="${escapeAttribute(searchText)}">
+    <article class="site-card" data-site-key="${escapeAttribute(site.id)}" data-search="${escapeAttribute(searchText)}"${site.home ? ` title="${escapeAttribute(site.home)}"` : ""}>
       <div class="site-top">
         <a class="site-name" href="${escapeAttribute(link)}" target="_blank" rel="noreferrer">${escapeHtml(site.name)}</a>
         <div class="site-actions">
