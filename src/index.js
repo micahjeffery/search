@@ -290,14 +290,14 @@ const SITE_GROUPS = [
         name: "Wikipedia",
         aliases: ["wiki", "w", "wikipedia"],
         home: "https://en.wikipedia.org/wiki/Main_Page?vectornightmode=1",
-        search: "https://en.wikipedia.org/wiki/Special:Search?search={q}&?vectornightmode=1"
+        search: "https://en.wikipedia.org/wiki/Special:Search?search={q}&vectornightmode=1"
       },
       {
         name: "Wikimedia",
         description: "Open the Wikimedia project directory.",
         aliases: ["wm", "wikimedia"],
         home: "https://commons.wikimedia.org/wiki/Main_Page?vectornightmode=1",
-        search: "https://commons.wikimedia.org/w/index.php?search={q}&?vectornightmode=1"
+        search: "https://commons.wikimedia.org/w/index.php?search={q}&vectornightmode=1"
       },
       {
         name: "Google Scholar",
