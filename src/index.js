@@ -8,7 +8,6 @@ const PROJECT = {
 // -----------------------------------------------------------------------------
 // 1. DEFAULT SEARCH ENGINES 
 // -----------------------------------------------------------------------------
-
 const DEFAULT_ENGINES = [
   {
     name: "DuckDuckGo",
@@ -24,7 +23,7 @@ const DEFAULT_ENGINES = [
   },
   {
     name: "Google",
-    paths: ["google", "g"],
+    paths: ["g", "google"],
     home: "https://www.google.com/",
     search: "https://www.google.com/search?q={q}"
   },
@@ -1138,7 +1137,6 @@ const SITE_GROUPS = [
       },
       {
         name: "VirusTotal Domain Lookup",
-
         description: "Paste a file, URL, or hostname to open its VirusTotal domain report.",
         aliases: ["virus", "vt", "virustotal"],
         home: "https://www.virustotal.com/gui/home/url",
@@ -1378,7 +1376,6 @@ const SITE_GROUPS = [
       },
       {
         name: "Fast.com",
-
         description: "Run a simple internet-speed test.",
         aliases: ["test", "speed", "fast"],
         home: "https://fast.com/"
@@ -1475,7 +1472,6 @@ const SITES = SITE_GROUPS.flatMap((group) =>
 const DEFAULT_ENGINE_BY_PATH = buildDefaultEngineIndex(DEFAULT_ENGINES);
 const { byAlias: BANGS, conflicts: ALIAS_CONFLICTS, invalid: INVALID_ALIASES } =
   buildBangIndex(SITES);
-
 function buildDefaultEngineIndex(engines) {
   const index = new Map();
   for (const engine of engines) {
@@ -1485,21 +1481,17 @@ function buildDefaultEngineIndex(engines) {
   }
   return index;
 }
-
 function buildBangIndex(sites) {
   const byAlias = new Map();
   const conflicts = [];
   const invalid = [];
-
   for (const site of sites) {
     for (const rawAlias of site.aliases) {
       const alias = String(rawAlias).trim().toLowerCase();
-
       if (!/^[a-z0-9_-]+$/.test(alias)) {
         invalid.push({ alias: rawAlias, site: site.name });
         continue;
       }
-
       if (byAlias.has(alias)) {
         conflicts.push({
           alias,
@@ -1508,40 +1500,31 @@ function buildBangIndex(sites) {
         });
         continue;
       }
-
       byAlias.set(alias, site);
     }
   }
-
   return { byAlias, conflicts, invalid };
 }
-
 // -----------------------------------------------------------------------------
 // 4. SPECIAL HANDLERS
 // -----------------------------------------------------------------------------
 function handleVirusTotalLookup(query) {
   const domain = extractDomain(query);
-
   if (!domain) {
     return redirectTo("https://www.virustotal.com/gui/home/url");
   }
-
   return redirectTo(
     `https://www.virustotal.com/gui/domain/${encodeURIComponent(domain)}`
   );
 }
-
 function extractDomain(query) {
   let value = query.trim().replace(/^[\s"'(<\[]+|[\s"')>\],.;]+$/g, "");
   if (!value) return null;
-
   // A pasted URL normally has no spaces. If it does, use the first URL-like token.
   value = value.split(/\s+/)[0];
-
   if (!/^[a-z][a-z0-9+.-]*:\/\//i.test(value)) {
     value = `https://${value}`;
   }
-
   try {
     const hostname = new URL(value).hostname.toLowerCase();
     return hostname.replace(/^www\./, "") || null;
@@ -1549,23 +1532,19 @@ function extractDomain(query) {
     return null;
   }
 }
-
 // -----------------------------------------------------------------------------
 // 5. GENERAL HELPERS
 // -----------------------------------------------------------------------------
 function normalizePath(value) {
   return String(value).replace(/^\/+|\/+$/g, "").toLowerCase();
 }
-
 function getDefaultEngine(pathname) {
   return DEFAULT_ENGINE_BY_PATH.get(normalizePath(pathname)) || DEFAULT_ENGINE_BY_PATH.get("");
 }
-
 function redirectTo(template, query = "") {
   const destination = template.replaceAll("{q}", encodeURIComponent(query.trim()));
   return Response.redirect(destination, 302);
 }
-
 function findShortcut(raw) {
   const symbols = "[!;:.]";
   const name = "[a-zA-Z0-9_-]+";
@@ -1579,33 +1558,25 @@ function findShortcut(raw) {
     // cats yt;
     new RegExp(`^(.+?)\\s+(${name})(${symbols})$`)
   ];
-
   for (let index = 0; index < patterns.length; index += 1) {
     const match = raw.match(patterns[index]);
     if (!match) continue;
-
     if (index === 0) return { bang: match[2].toLowerCase(), query: match[3] || "" };
     if (index === 1) return { bang: match[1].toLowerCase(), query: match[3] || "" };
     if (index === 2) return { bang: match[3].toLowerCase(), query: match[1] || "" };
     if (index === 3) return { bang: match[2].toLowerCase(), query: match[1] || "" };
   }
-
   return null;
 }
-
 function handleSite(site, query, requestUrl) {
-
   if (site.handler === "virustotal") {
     return query ? handleVirusTotalLookup(query) : redirectTo(site.home);
   }
-
   if (query && site.search) {
     return redirectTo(site.search, query);
   }
-
   return redirectTo(site.home);
 }
-
 // -----------------------------------------------------------------------------
 // 6. AUTOMATIC HELP / HOMEPAGE
 // -----------------------------------------------------------------------------
@@ -1614,31 +1585,25 @@ function renderHelpPage(requestUrl) {
   const totalAliases = BANGS.size;
   const totalSites = SITES.length;
   const issues = [...ALIAS_CONFLICTS, ...INVALID_ALIASES];
-
   const engineCards = DEFAULT_ENGINES.map((engine) => {
     const primaryPath = engine.paths[0];
     const searchUrl = primaryPath
       ? `${origin}/${primaryPath}/?q=%s`
       : `${origin}/?q=%s`;
-
     return `
       <button class="engine-card" type="button" data-copy="${escapeAttribute(searchUrl)}">
         <span>${escapeHtml(engine.name)}</span>
         <code>${escapeHtml(searchUrl)}</code>
       </button>`;
   }).join("");
-
   const homeEngineOptions = DEFAULT_ENGINES.map((engine) =>
     `<option value="${escapeAttribute(engine.paths[0])}">${escapeHtml(engine.name)}</option>`
   ).join("");
-
   const homeEnginePaths = DEFAULT_ENGINES.map((engine) => engine.paths[0]);
-
   const supportIcon = `<img src="https://upload.wikimedia.org/wikipedia/commons/8/86/A_perfect_SVG_heart.svg" alt="" width="19" height="19" referrerpolicy="no-referrer">`;
   const supportControl = PROJECT.support
     ? `<a class="icon-button support-link" href="${escapeAttribute(PROJECT.support)}" target="_blank" rel="noreferrer" aria-label="Support" title="Support">${supportIcon}</a>`
     : `<span class="icon-button support" role="img" aria-label="Support" title="Support">${supportIcon}</span>`;
-
   const browserBangSites = SITES.map((site) => [
     site.name,
     `!${site.aliases[0]}`,
@@ -1653,7 +1618,6 @@ function renderHelpPage(requestUrl) {
     sites: browserBangSites,
     aliases: browserBangAliases
   }).replaceAll("<", "\\u003c");
-
   const groups = SITE_GROUPS.map((group) => {
     const cards = group.sites
       .map((site) => renderSiteCard({
@@ -1662,7 +1626,6 @@ function renderHelpPage(requestUrl) {
         category: group.category
       }))
       .join("");
-
     return `
       <details class="group" data-group="${escapeAttribute(group.category.toLowerCase())}" open>
         <summary class="group-title">
@@ -1672,11 +1635,9 @@ function renderHelpPage(requestUrl) {
         <div class="site-grid">${cards}</div>
       </details>`;
   }).join("");
-
   const warning = issues.length
     ? `<section class="warning"><strong>Configuration warning:</strong> ${escapeHtml(formatIssues(issues))}</section>`
     : "";
-
   const html = `<!doctype html>
 <html lang="en">
 <head>
@@ -1688,7 +1649,6 @@ function renderHelpPage(requestUrl) {
     (() => {
       const resolveAutoTheme = () =>
         window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
-
       try {
         const saved = localStorage.getItem("search-help-theme");
         const preference = ["auto", "dark", "light", "black"].includes(saved) ? saved : "auto";
@@ -1721,7 +1681,6 @@ function renderHelpPage(requestUrl) {
       --code: #c9d7ff;
       --shadow: rgba(0, 0, 0, .22);
     }
-
     :root[data-theme="light"] {
       color-scheme: light;
       --bg: #f5f7fb;
@@ -1741,7 +1700,6 @@ function renderHelpPage(requestUrl) {
       --code: #174f9d;
       --shadow: rgba(29, 43, 68, .10);
     }
-
     :root[data-theme="black"] {
       color-scheme: dark;
       --bg: #000000;
@@ -1761,10 +1719,8 @@ function renderHelpPage(requestUrl) {
       --code: #d3e0ff;
       --shadow: rgba(0, 0, 0, .55);
     }
-
     * { box-sizing: border-box; }
     [hidden] { display: none !important; }
-
     body {
       min-width: 320px;
       margin: 0;
@@ -1772,25 +1728,21 @@ function renderHelpPage(requestUrl) {
       color: var(--text);
       font: 16px/1.45 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
-
     main { max-width: 1280px; margin: 0 auto; padding: 36px 20px 64px; }
     header { display: flex; gap: 20px; align-items: flex-start; justify-content: space-between; margin-bottom: 24px; }
     h1 { margin: 0; font-size: clamp(2rem, 5vw, 3rem); line-height: 1.05; letter-spacing: -.03em; }
     h2 { margin: 0; font-size: 1.1rem; }
     p { color: var(--muted); margin: 10px 0 0; }
     a { color: var(--accent); }
-
     .header-actions, .toolbar-actions, .badges, .aliases, .site-actions {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       gap: 8px;
     }
-
     .header-actions { justify-content: flex-end; }
     .badges { margin-top: 14px; }
-
-    .badge, .type {
+    .badge {
       border: 1px solid var(--border);
       border-radius: 999px;
       padding: 4px 9px;
@@ -1798,25 +1750,43 @@ function renderHelpPage(requestUrl) {
       font-size: .78rem;
       white-space: nowrap;
     }
-
-    .type.search { color: var(--good); }
-    .type.open { color: var(--warn); }
-
+    .type {
+      display: grid;
+      flex: 0 0 30px;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+    }
+    .type::before {
+      content: "";
+      width: 15px;
+      height: 15px;
+      background: currentColor;
+      -webkit-mask: var(--type-icon) center / contain no-repeat;
+      mask: var(--type-icon) center / contain no-repeat;
+    }
+    .type.search {
+      --type-icon: url("https://upload.wikimedia.org/wikipedia/commons/9/9a/Magnifying_glass_for_search_ui_Pinhead_icon.svg");
+      color: var(--good);
+    }
+    .type.open {
+      --type-icon: url("https://upload.wikimedia.org/wikipedia/commons/c/c7/Home_%2885250%29_-_The_Noun_Project.svg");
+      color: var(--warn);
+    }
     .toolbar, .defaults, .favorites, .recent-searches, .warning {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 14px;
       box-shadow: 0 8px 24px var(--shadow);
     }
-
     .toolbar { padding: 14px; margin: 20px 0; }
     .search-row { display: flex; gap: 10px; align-items: stretch; }
     .search-row input { flex: 1; }
-
     input, .theme-select, .layout-select, .home-engine-select, .toolbar-button, .engine-card, .alias, .favorite-button, .recent-search, .recent-clear, .history-disable, .dialog-button, .dialog-close, .icon-button, .minimalist-exit {
       font: inherit;
     }
-
     input {
       min-width: 0;
       width: 100%;
@@ -1826,13 +1796,11 @@ function renderHelpPage(requestUrl) {
       background: var(--input);
       color: var(--text);
     }
-
     input:focus, .theme-select:focus, .layout-select:focus, .home-engine-select:focus, .toolbar-button:focus-visible, .engine-card:focus-visible,
     .alias:focus-visible, .favorite-button:focus-visible, .recent-search:focus-visible, .recent-clear:focus-visible, .history-disable:focus-visible, .dialog-button:focus-visible, .dialog-close:focus-visible, .site-name:focus-visible, .github-link:focus-visible, .icon-button:focus-visible, .minimalist-exit:focus-visible {
       outline: 3px solid color-mix(in srgb, var(--accent) 45%, transparent);
       outline-offset: 2px;
     }
-
     .search-button, .toolbar-button, .theme-select, .layout-select, .home-engine-select, .recent-search, .recent-clear, .history-disable, .dialog-button, .dialog-close {
       appearance: none;
       border: 1px solid var(--border);
@@ -1842,7 +1810,6 @@ function renderHelpPage(requestUrl) {
       padding: 8px 10px;
       cursor: pointer;
     }
-
     .search-button {
       border-color: var(--accent);
       background: var(--accent);
@@ -1850,14 +1817,12 @@ function renderHelpPage(requestUrl) {
       padding-inline: 15px;
       font-weight: 700;
     }
-
     .toolbar-actions {
       display: flex;
       align-items: end;
       gap: 8px;
       margin-top: 10px;
     }
-
     .toolbar-actions-right {
       display: flex;
       gap: 8px;
@@ -1866,9 +1831,12 @@ function renderHelpPage(requestUrl) {
     .toolbar-button:hover, .theme-select:hover, .layout-select:hover, .home-engine-select:hover, .engine-card:hover, .alias:hover, .favorite-button:hover, .recent-search:hover, .recent-clear:hover, .history-disable:hover, .dialog-button:hover, .dialog-close:hover, .github-link:hover, .icon-button:hover, .minimalist-exit:hover {
       border-color: var(--accent);
     }
-
-    .theme-select, .layout-select, .home-engine-select { min-height: 36px; }
-
+    .theme-select, .layout-select, .home-engine-select, .toolbar-button {
+      height: 36px;
+      min-height: 0;
+      padding-block: 4px;
+      line-height: 1.2;
+    }
     .control-label {
       display: inline-flex;
       align-items: center;
@@ -1877,7 +1845,6 @@ function renderHelpPage(requestUrl) {
       font-size: .84rem;
       white-space: nowrap;
     }
-
     .github-link, .icon-button, .minimalist-exit {
       display: grid;
       place-items: center;
@@ -1889,7 +1856,6 @@ function renderHelpPage(requestUrl) {
       background: var(--surface-2);
       text-decoration: none;
     }
-
     .icon-button {
       appearance: none;
       padding: 0;
@@ -1897,7 +1863,6 @@ function renderHelpPage(requestUrl) {
       font-size: 1.15rem;
       line-height: 1;
     }
-
     .minimalist-exit {
       display: none;
       position: fixed;
@@ -1908,7 +1873,6 @@ function renderHelpPage(requestUrl) {
       padding: 0;
       cursor: pointer;
     }
-
     .github-link img,
     #keyboard-shortcuts-button img,
     .support-link img,
@@ -1918,14 +1882,12 @@ function renderHelpPage(requestUrl) {
       height: 19px;
       filter: brightness(0) invert(1);
     }
-
     :root[data-theme="light"] .github-link img,
     :root[data-theme="light"] #keyboard-shortcuts-button img,
     :root[data-theme="light"] .support-link img,
     :root[data-theme="light"] .minimalist-exit img {
       filter: brightness(0);
     }
-
     .dialog {
       width: min(460px, calc(100vw - 32px));
       max-height: calc(100vh - 32px);
@@ -1937,7 +1899,6 @@ function renderHelpPage(requestUrl) {
       color: var(--text);
       box-shadow: 0 20px 56px var(--shadow);
     }
-
     .dialog::backdrop { background: rgba(0, 0, 0, .58); }
     .dialog-body { padding: 18px; }
     .dialog-heading, .dialog-actions, .recent-actions {
@@ -1945,12 +1906,10 @@ function renderHelpPage(requestUrl) {
       align-items: center;
       gap: 8px;
     }
-
     .dialog-heading { justify-content: space-between; }
     .dialog-heading h2 { margin: 0; }
     .dialog-actions { justify-content: flex-end; margin-top: 18px; }
     .dialog-button.danger { border-color: var(--danger); color: var(--danger); }
-
     .shortcut-list {
       display: grid;
       gap: 8px;
@@ -1958,7 +1917,6 @@ function renderHelpPage(requestUrl) {
       padding: 0;
       list-style: none;
     }
-
     .shortcut-list li {
       display: flex;
       align-items: center;
@@ -1966,7 +1924,6 @@ function renderHelpPage(requestUrl) {
       gap: 16px;
       color: var(--muted);
     }
-
     kbd {
       min-width: 2.1em;
       padding: 3px 7px;
@@ -1979,7 +1936,6 @@ function renderHelpPage(requestUrl) {
       text-align: center;
       white-space: nowrap;
     }
-
     :root[data-density="compact"] main { padding: 18px 14px 34px; }
     :root[data-density="compact"] header { gap: 12px; margin-bottom: 14px; }
     :root[data-density="compact"] .badges { margin-top: 9px; }
@@ -1994,7 +1950,6 @@ function renderHelpPage(requestUrl) {
     :root[data-density="compact"] .aliases { margin-top: 8px; }
     :root[data-density="compact"] .site-url { display: none; }
     :root[data-density="compact"] .footer { margin-top: 24px; }
-
     :root[data-density="minimalist"] body { min-height: 100vh; }
     :root[data-density="minimalist"] main {
       min-height: 100vh;
@@ -2015,7 +1970,6 @@ function renderHelpPage(requestUrl) {
     :root[data-density="minimalist"] .toolbar-actions,
     :root[data-density="minimalist"] .bang-preview { display: none !important; }
     :root[data-density="minimalist"] .minimalist-exit { display: grid; }
-
     .favorites, .recent-searches { padding: 16px; margin: 20px 0; }
     .section-heading, .recent-heading, .defaults summary {
       display: flex;
@@ -2024,10 +1978,8 @@ function renderHelpPage(requestUrl) {
       margin: 0;
       color: var(--text);
     }
-
     .section-heading, .recent-heading { justify-content: space-between; }
     .favorites-count { color: var(--muted); font-size: .84rem; font-weight: 400; }
-
     .recent-heading h2 { font-size: 1rem; }
     .recent-actions { margin-left: auto; }
     .recent-clear, .history-disable { padding: 5px 8px; font-size: .8rem; }
@@ -2045,7 +1997,6 @@ function renderHelpPage(requestUrl) {
       text-overflow: ellipsis;
       white-space: nowrap;
     }
-
     .bang-preview {
       display: flex;
       flex-wrap: wrap;
@@ -2059,10 +2010,8 @@ function renderHelpPage(requestUrl) {
       color: var(--muted);
       font-size: .88rem;
     }
-
     .bang-preview-title { color: var(--text); font-weight: 700; }
     .bang-preview.is-unknown .bang-preview-title { color: var(--warn); }
-
     .defaults { padding: 0; margin: 20px 0 30px; overflow: clip; }
     .defaults summary {
       cursor: pointer;
@@ -2071,16 +2020,13 @@ function renderHelpPage(requestUrl) {
       font-weight: 700;
       user-select: none;
     }
-
     .defaults summary::-webkit-details-marker { display: none; }
     .defaults summary::before { content: "▾"; color: var(--muted); transition: transform .15s ease; }
     .defaults:not([open]) summary::before { transform: rotate(-90deg); }
     .defaults-body { padding: 0 16px 16px; }
-
     .engine-grid, .site-grid { display: grid; gap: 10px; }
     .engine-grid { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); margin-top: 14px; }
     .site-grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
-
     .engine-card {
       display: flex;
       flex-direction: column;
@@ -2094,13 +2040,11 @@ function renderHelpPage(requestUrl) {
       text-align: left;
       cursor: pointer;
     }
-
     code {
       color: var(--code);
       font: .8rem ui-monospace, SFMono-Regular, Menlo, monospace;
       overflow-wrap: anywhere;
     }
-
     .group { margin: 28px 0; }
     .group-title {
       display: flex;
@@ -2111,19 +2055,16 @@ function renderHelpPage(requestUrl) {
       list-style: none;
       user-select: none;
     }
-
     .group-title::-webkit-details-marker { display: none; }
     .group-title::before { content: "▾"; color: var(--muted); transition: transform .15s ease; }
     .group:not([open]) .group-title::before { transform: rotate(-90deg); }
     .group-title span { color: var(--muted); font-size: .85rem; }
     .group:not([open]) .group-title { margin-bottom: 0; }
-
     .site-card.is-keyboard-selected {
       border-color: var(--accent);
       box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent);
       scroll-margin-block: 16px;
     }
-
     .site-card {
       display: flex;
       flex-direction: column;
@@ -2133,13 +2074,11 @@ function renderHelpPage(requestUrl) {
       border: 1px solid var(--border);
       border-radius: 12px;
     }
-
     .site-top { display: flex; gap: 10px; justify-content: space-between; align-items: flex-start; }
     .site-name { color: var(--text); font-weight: 750; text-decoration: none; }
     .site-actions { justify-content: flex-end; }
     .site-description { min-height: 1.45em; margin: 8px 0 0; font-size: .87rem; }
     .aliases { margin-top: 11px; }
-
     .alias, .favorite-button {
       appearance: none;
       border: 1px solid var(--border);
@@ -2148,12 +2087,10 @@ function renderHelpPage(requestUrl) {
       color: var(--text);
       cursor: pointer;
     }
-
     .alias {
       padding: 4px 7px;
       font: .78rem ui-monospace, SFMono-Regular, Menlo, monospace;
     }
-
     .favorite-button {
       width: 30px;
       height: 30px;
@@ -2161,14 +2098,12 @@ function renderHelpPage(requestUrl) {
       font-size: 1.1rem;
       line-height: 1;
     }
-
     .favorite-button.is-favorite { color: var(--warn); }
     .site-url { display: block; margin-top: 12px; color: var(--muted); font-size: .77rem; overflow-wrap: anywhere; text-decoration: none; }
     .warning { padding: 12px 14px; color: var(--warn); margin-bottom: 20px; }
     .empty { display: none; color: var(--muted); margin: 30px 0; }
     .footer { margin-top: 42px; color: var(--muted); font-size: .9rem; }
     .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
-
     @media (max-width: 700px) {
       .toolbar-actions {
         align-items: flex-start;
@@ -2218,12 +2153,9 @@ function renderHelpPage(requestUrl) {
         </a>
       </div>
     </header>
-
     ${warning}
-
     <form id="search-form" class="toolbar" action="/" method="get">
       <label class="sr-only" for="filter">Search or filter bangs</label>
-
       <div class="search-row">
         <input
           id="filter"
@@ -2237,25 +2169,21 @@ function renderHelpPage(requestUrl) {
         >
         <button class="search-button" type="submit">Search</button>
       </div>
-
       <div id="bang-preview" class="bang-preview" hidden aria-live="polite">
         <span id="bang-preview-title" class="bang-preview-title"></span>
         <span id="bang-preview-text"></span>
       </div>
-
       <div class="toolbar-actions">
         <label class="control-label" for="home-engine-select">
           <span>Default to</span>
           <select id="home-engine-select" class="home-engine-select" aria-label="Home page search engine">${homeEngineOptions}</select>
         </label>
-
         <div class="toolbar-actions-right">
-          <button class="toolbar-button" id="expand-all" type="button" title="Expand all groups (])">Expand</button>
           <button class="toolbar-button" id="collapse-all" type="button" title="Collapse all groups ([)">Collapse</button>
+          <button class="toolbar-button" id="expand-all" type="button" title="Expand all groups (])">Expand</button>
         </div>
       </div>
     </form>
-
     <section class="recent-searches" id="recent-searches" hidden>
       <div class="recent-heading">
         <h2>Recent searches</h2>
@@ -2266,7 +2194,6 @@ function renderHelpPage(requestUrl) {
       </div>
       <div id="recent-search-list" class="recent-list"></div>
     </section>
-
     <dialog class="dialog" id="keyboard-shortcuts" aria-labelledby="keyboard-shortcuts-title">
       <div class="dialog-body">
         <div class="dialog-heading">
@@ -2283,7 +2210,6 @@ function renderHelpPage(requestUrl) {
         </ul>
       </div>
     </dialog>
-
     <dialog class="dialog" id="disable-history-dialog" aria-labelledby="disable-history-title">
       <div class="dialog-body">
         <div class="dialog-heading">
@@ -2298,7 +2224,6 @@ function renderHelpPage(requestUrl) {
         </div>
       </div>
     </dialog>
-
     <section class="favorites" id="favorites" hidden>
       <div class="section-heading">
         <h2>Favorites</h2>
@@ -2306,7 +2231,6 @@ function renderHelpPage(requestUrl) {
       </div>
       <div id="favorites-grid" class="site-grid" style="margin-top: 14px;"></div>
     </section>
-
     <details class="defaults" id="defaults" open>
       <summary>Browser default-search URLs</summary>
       <div class="defaults-body">
@@ -2314,16 +2238,13 @@ function renderHelpPage(requestUrl) {
         <div class="engine-grid">${engineCards}</div>
       </div>
     </details>
-
     <div id="empty" class="empty">No bangs match that filter.</div>
     <div id="groups">${groups}</div>
     <p class="footer">Click a bang to place it in the search box. Click ☆ to save a favorite. Your theme, layout, home search engine, favorites, search history, and default-search selection stay private on this browser.</p>
   </main>
-
   <button class="minimalist-exit" id="exit-minimalist" type="button" aria-label="Return to compact mode" title="Return to compact mode">
     <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Back_Arrow.svg" alt="" width="19" height="19" referrerpolicy="no-referrer">
   </button>
-
   <script>
     const STORAGE = {
       theme: "search-help-theme",
@@ -2334,7 +2255,6 @@ function renderHelpPage(requestUrl) {
       recentSearches: "search-help-recent-searches-v2",
       historyDisabled: "search-help-history-disabled"
     };
-
     const RECENT_SEARCH_LIMIT = 20;
     const HOME_ENGINE_PATHS = ${JSON.stringify(homeEnginePaths)};
     const BANG_DATA = ${browserBangDataJson};
@@ -2354,11 +2274,9 @@ function renderHelpPage(requestUrl) {
     const cancelDisableHistoryButton = document.getElementById("cancel-disable-history");
     const confirmDisableHistoryButton = document.getElementById("confirm-disable-history");
     const exitMinimalistButton = document.getElementById("exit-minimalist");
-
     function updateSearchPlaceholder() {
       const engineName =
         homeEngineSelect.selectedOptions[0]?.textContent.trim() || "DuckDuckGo";
-
       filter.placeholder = "Filter bangs or search " + engineName + "…";
     }
     const defaults = document.getElementById("defaults");
@@ -2371,7 +2289,6 @@ function renderHelpPage(requestUrl) {
     const empty = document.getElementById("empty");
     const themeSelect = document.getElementById("theme-select");
     const layoutSelect = document.getElementById("layout-select");
-
     function readStorage(key, fallback) {
       try {
         const value = localStorage.getItem(key);
@@ -2380,22 +2297,18 @@ function renderHelpPage(requestUrl) {
         return fallback;
       }
     }
-
     function writeStorage(key, value) {
       try {
         localStorage.setItem(key, value);
       } catch {}
     }
-
     function normalizeRecentSearch(value) {
       return String(value).trim().replace(/\\s+/g, " ");
     }
-
     function readRecentSearches() {
       try {
         const parsed = JSON.parse(readStorage(STORAGE.recentSearches, "[]"));
         if (!Array.isArray(parsed)) return [];
-
         return parsed
           .filter((value) => typeof value === "string")
           .map(normalizeRecentSearch)
@@ -2408,23 +2321,18 @@ function renderHelpPage(requestUrl) {
         return [];
       }
     }
-
     function saveRecentSearch(value) {
       if (historyDisabled) return;
       const search = normalizeRecentSearch(value);
       if (!search) return;
-
       recentSearches = [
         search,
         ...recentSearches.filter((item) => item.toLowerCase() !== search.toLowerCase())
       ].slice(0, RECENT_SEARCH_LIMIT);
-
       writeStorage(STORAGE.recentSearches, JSON.stringify(recentSearches));
     }
-
     function renderRecentSearches() {
       recentSearchList.replaceChildren();
-
       recentSearches.forEach((search) => {
         const button = document.createElement("button");
         button.className = "recent-search";
@@ -2434,16 +2342,13 @@ function renderHelpPage(requestUrl) {
         button.title = "Search again: " + search;
         recentSearchList.append(button);
       });
-
       recentSearchesSection.hidden = historyDisabled || recentSearches.length === 0 || Boolean(filter.value.trim());
     }
-
     function clearRecentSearches() {
       recentSearches = [];
       writeStorage(STORAGE.recentSearches, JSON.stringify(recentSearches));
       renderRecentSearches();
     }
-
     function disableSearchHistory() {
       historyDisabled = true;
       recentSearches = [];
@@ -2451,7 +2356,6 @@ function renderHelpPage(requestUrl) {
       writeStorage(STORAGE.historyDisabled, "true");
       renderRecentSearches();
     }
-
     function readFavorites() {
       try {
         const parsed = JSON.parse(readStorage(STORAGE.favorites, "[]"));
@@ -2461,17 +2365,14 @@ function renderHelpPage(requestUrl) {
         return [];
       }
     }
-
     let historyDisabled = readStorage(STORAGE.historyDisabled, "false") === "true";
     let recentSearches = historyDisabled ? [] : readRecentSearches();
     let favorites = readFavorites();
     let keyboardSelection = -1;
-
     function resolveTheme(preference) {
       if (preference !== "auto") return preference;
       return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
     }
-
     function applyTheme(preference) {
       const nextPreference = ["auto", "dark", "light", "black"].includes(preference) ? preference : "auto";
       document.documentElement.dataset.theme = resolveTheme(nextPreference);
@@ -2479,34 +2380,28 @@ function renderHelpPage(requestUrl) {
       themeSelect.value = nextPreference;
       writeStorage(STORAGE.theme, nextPreference);
     }
-
     function applyLayout(layout) {
       const nextLayout = ["compact", "minimalist"].includes(layout) ? layout : "comfortable";
       document.documentElement.dataset.density = nextLayout;
       layoutSelect.value = nextLayout;
       writeStorage(STORAGE.layout, nextLayout);
-
       if (nextLayout === "minimalist") {
         requestAnimationFrame(() => filter.focus());
       }
     }
-
     function applyHomeEngine(path) {
       const nextPath = HOME_ENGINE_PATHS.includes(path) ? path : "";
       homeEngineSelect.value = nextPath;
       searchForm.action = nextPath ? "/" + nextPath + "/" : "/";
       writeStorage(STORAGE.homeEngine, nextPath);
     }
-
     applyTheme(readStorage(STORAGE.theme, document.documentElement.dataset.themePreference || "auto"));
     applyLayout(readStorage(STORAGE.layout, "comfortable"));
     applyHomeEngine(readStorage(STORAGE.homeEngine, ""));
     updateSearchPlaceholder();
-
     themeSelect.addEventListener("change", () => {
       applyTheme(themeSelect.value);
     });
-
     const colorSchemeMedia = window.matchMedia("(prefers-color-scheme: light)");
     const syncAutoTheme = () => {
       if (themeSelect.value === "auto") applyTheme("auto");
@@ -2516,38 +2411,30 @@ function renderHelpPage(requestUrl) {
     } else {
       colorSchemeMedia.addListener(syncAutoTheme);
     }
-
     layoutSelect.addEventListener("change", () => {
       applyLayout(layoutSelect.value);
     });
-
     exitMinimalistButton.addEventListener("click", () => {
       applyLayout("compact");
       filter.focus();
     });
-
     homeEngineSelect.addEventListener("change", () => {
       applyHomeEngine(homeEngineSelect.value);
       updateSearchPlaceholder();
     });
-
     const storedDefaultsOpen = readStorage(STORAGE.defaultsOpen, null);
     if (storedDefaultsOpen !== null) {
       defaults.open = storedDefaultsOpen === "true";
     }
-
     defaults.addEventListener("toggle", () => {
       writeStorage(STORAGE.defaultsOpen, String(defaults.open));
     });
-
     function isFavorite(key) {
       return favorites.includes(key);
     }
-
     function saveFavorites() {
       writeStorage(STORAGE.favorites, JSON.stringify(favorites));
     }
-
     function updateFavoriteButtons() {
       document.querySelectorAll("[data-favorite]").forEach((button) => {
         const favorite = isFavorite(button.dataset.favorite);
@@ -2558,56 +2445,43 @@ function renderHelpPage(requestUrl) {
         button.title = favorite ? "Remove from favorites" : "Add to favorites";
       });
     }
-
     function renderFavorites() {
       favoritesGrid.replaceChildren();
-
       favorites = favorites.filter((key) => sourceCardByKey.has(key));
       favorites.forEach((key) => {
         const card = sourceCardByKey.get(key).cloneNode(true);
         card.hidden = false;
         favoritesGrid.append(card);
       });
-
       favoritesCount.textContent = favorites.length === 1 ? "1 saved site" : String(favorites.length) + " saved sites";
       updateFavoriteButtons();
     }
-
     function toggleFavorite(key) {
       if (isFavorite(key)) {
         favorites = favorites.filter((savedKey) => savedKey !== key);
       } else {
         favorites = [key, ...favorites];
       }
-
       saveFavorites();
       renderFavorites();
       applyFilter();
     }
-
     function setAllGroups(open) {
       groups.forEach((group) => { group.open = open; });
     }
-
     function parseBangInput(raw) {
       const value = raw.trim();
       if (!value) return null;
-
       let match = value.match(/^([!;:.])([a-zA-Z0-9_-]+)(?:\\s+(.+))?$/);
       if (match) return { bang: match[2].toLowerCase(), query: match[3] || "" };
-
       match = value.match(/^([a-zA-Z0-9_-]+)([!;:.])(?:\\s+(.+))?$/);
       if (match) return { bang: match[1].toLowerCase(), query: match[3] || "" };
-
       match = value.match(/^(.+?)\\s+([!;:.])([a-zA-Z0-9_-]+)$/);
       if (match) return { bang: match[3].toLowerCase(), query: match[1] || "" };
-
       match = value.match(/^(.+?)\\s+([a-zA-Z0-9_-]+)([!;:.])$/);
       if (match) return { bang: match[2].toLowerCase(), query: match[1] || "" };
-
       return null;
     }
-
     function updateBangPreview() {
       const shortcut = parseBangInput(filter.value);
       if (!shortcut) {
@@ -2615,22 +2489,18 @@ function renderHelpPage(requestUrl) {
         bangPreview.classList.remove("is-unknown");
         return;
       }
-
       const siteIndex = BANG_DATA.aliases[shortcut.bang];
       const site = Number.isInteger(siteIndex) ? BANG_DATA.sites[siteIndex] : null;
       bangPreview.hidden = false;
-
       if (!site) {
         bangPreview.classList.add("is-unknown");
         bangPreviewTitle.textContent = "Unknown bang";
         bangPreviewText.textContent = "No shortcut named !" + shortcut.bang + ".";
         return;
       }
-
       const [siteName, primaryBang, behavior] = site;
       bangPreview.classList.remove("is-unknown");
       bangPreviewTitle.textContent = primaryBang;
-
       if (!shortcut.query) {
         bangPreviewText.textContent = behavior === "search"
           ? "Open " + siteName + " or add a search term."
@@ -2643,27 +2513,22 @@ function renderHelpPage(requestUrl) {
         bangPreviewText.textContent = "Open " + siteName + ". This shortcut does not search.";
       }
     }
-
     function clearKeyboardSelection() {
       sourceCards.forEach((card) => card.classList.remove("is-keyboard-selected"));
       keyboardSelection = -1;
     }
-
     function getKeyboardCards() {
       return sourceCards.filter((card) => {
         const group = card.closest(".group");
         return !card.hidden && !group.hidden && group.open;
       });
     }
-
     function moveKeyboardSelection(direction) {
       const cards = getKeyboardCards();
       if (!cards.length) return;
-
       const nextIndex = keyboardSelection < 0
         ? (direction > 0 ? 0 : cards.length - 1)
         : (keyboardSelection + direction + cards.length) % cards.length;
-
       sourceCards.forEach((card) => card.classList.remove("is-keyboard-selected"));
       keyboardSelection = nextIndex;
       const card = cards[keyboardSelection];
@@ -2671,45 +2536,37 @@ function renderHelpPage(requestUrl) {
       card.closest(".group").open = true;
       card.scrollIntoView({ block: "nearest", behavior: "smooth" });
     }
-
     function useKeyboardSelection() {
       const cards = getKeyboardCards();
       const card = cards[keyboardSelection];
       if (!card) return;
-
       const isLinkOnly = Boolean(card.querySelector(".type.open"));
       if (isLinkOnly) {
         const url = card.querySelector(".site-name")?.href;
         if (url) window.location.assign(url);
         return;
       }
-
       const bang = card.querySelector("[data-bang]")?.dataset.bang;
       if (bang) putBangInSearch(bang);
     }
-
     function applyFilter() {
       clearKeyboardSelection();
       const query = filter.value
         .trim()
         .toLowerCase()
         .replace(/[!;:.]/g, "");
-
       defaults.hidden = query.length > 0;
-
       let visible = 0;
       sourceCards.forEach((card) => {
         const matches = !query || card.dataset.search.includes(query);
         card.hidden = !matches;
         if (matches) visible += 1;
       });
-
       groups.forEach((group) => {
         const hasVisibleCard = [...group.querySelectorAll(".site-card")].some((card) => !card.hidden);
         group.hidden = !hasVisibleCard;
         if (query && hasVisibleCard) group.open = true;
       });
-
       const favoriteCards = [...favoritesGrid.querySelectorAll(".site-card")];
       let visibleFavorites = 0;
       favoriteCards.forEach((card) => {
@@ -2717,20 +2574,17 @@ function renderHelpPage(requestUrl) {
         card.hidden = !matches;
         if (matches) visibleFavorites += 1;
       });
-
       favoritesSection.hidden = favorites.length === 0 || (query.length > 0 && visibleFavorites === 0);
       empty.style.display = visible ? "none" : "block";
       updateBangPreview();
       renderRecentSearches();
     }
-
     function putBangInSearch(bang) {
       filter.value = bang + " ";
       filter.focus();
       filter.setSelectionRange(filter.value.length, filter.value.length);
       applyFilter();
     }
-
     function clearSearch() {
       if (!filter.value) return false;
       filter.value = "";
@@ -2738,24 +2592,19 @@ function renderHelpPage(requestUrl) {
       applyFilter();
       return true;
     }
-
     function isTypingTarget(target) {
       return target instanceof HTMLInputElement ||
         target instanceof HTMLTextAreaElement ||
         target instanceof HTMLSelectElement ||
         target?.isContentEditable;
     }
-
     filter.addEventListener("input", applyFilter);
-
     filter.addEventListener("keydown", (event) => {
       if (event.key === "Escape") {
         if (clearSearch()) event.preventDefault();
         return;
       }
-
       if (!filter.value.trim()) return;
-
       if (event.key === "ArrowDown") {
         event.preventDefault();
         moveKeyboardSelection(1);
@@ -2767,64 +2616,50 @@ function renderHelpPage(requestUrl) {
         useKeyboardSelection();
       }
     });
-
     searchForm.addEventListener("submit", () => {
       saveRecentSearch(filter.value);
     });
-
     clearRecentSearchesButton.addEventListener("click", clearRecentSearches);
-
     disableHistoryButton.addEventListener("click", () => {
       disableHistoryDialog.showModal();
     });
-
     cancelDisableHistoryButton.addEventListener("click", () => {
       disableHistoryDialog.close();
     });
-
     confirmDisableHistoryButton.addEventListener("click", () => {
       disableSearchHistory();
       disableHistoryDialog.close();
     });
-
     keyboardShortcutsButton.addEventListener("click", () => {
       keyboardShortcutsDialog.showModal();
     });
-
     document.querySelectorAll("[data-close-dialog]").forEach((button) => {
       button.addEventListener("click", () => {
         const dialog = document.getElementById(button.dataset.closeDialog);
         if (dialog) dialog.close();
       });
     });
-
     [keyboardShortcutsDialog, disableHistoryDialog].forEach((dialog) => {
       dialog.addEventListener("click", (event) => {
         if (event.target === dialog) dialog.close();
       });
     });
-
     document.getElementById("expand-all").addEventListener("click", () => {
       setAllGroups(true);
     });
-
     document.getElementById("collapse-all").addEventListener("click", () => {
       setAllGroups(false);
     });
-
     document.addEventListener("keydown", (event) => {
       if (keyboardShortcutsDialog.open || disableHistoryDialog.open || event.defaultPrevented || event.ctrlKey || event.metaKey || event.altKey) {
         return;
       }
-
       if (event.key === "Escape") {
         if (isTypingTarget(event.target) && event.target !== filter) return;
         if (clearSearch()) event.preventDefault();
         return;
       }
-
       if (isTypingTarget(event.target)) return;
-
       if (event.key === "/") {
         event.preventDefault();
         filter.focus();
@@ -2837,7 +2672,6 @@ function renderHelpPage(requestUrl) {
         setAllGroups(true);
       }
     });
-
     document.addEventListener("click", async (event) => {
       const recentTarget = event.target.closest("[data-recent-search]");
       if (recentTarget) {
@@ -2845,22 +2679,18 @@ function renderHelpPage(requestUrl) {
         searchForm.requestSubmit();
         return;
       }
-
       const favoriteTarget = event.target.closest("[data-favorite]");
       if (favoriteTarget) {
         toggleFavorite(favoriteTarget.dataset.favorite);
         return;
       }
-
       const bangTarget = event.target.closest("[data-bang]");
       if (bangTarget) {
         putBangInSearch(bangTarget.dataset.bang);
         return;
       }
-
       const copyTarget = event.target.closest("[data-copy]");
       if (!copyTarget) return;
-
       const text = copyTarget.dataset.copy;
       try {
         await navigator.clipboard.writeText(text);
@@ -2871,13 +2701,11 @@ function renderHelpPage(requestUrl) {
         window.prompt("Copy this:", text);
       }
     });
-
     renderFavorites();
     applyFilter();
   </script>
 </body>
 </html>`;
-
   return new Response(html, {
     headers: {
       "content-type": "text/html; charset=utf-8",
@@ -2885,12 +2713,10 @@ function renderHelpPage(requestUrl) {
     }
   });
 }
-
 function renderSiteCard(site) {
   const aliases = site.aliases
     .map((alias) => `<button class="alias" type="button" data-bang="!${escapeAttribute(alias)}" title="Use !${escapeAttribute(alias)} in the search box">!${escapeHtml(alias)}</button>`)
     .join("");
-
   const type = getSiteType(site);
   const searchText = [
     site.name,
@@ -2899,18 +2725,16 @@ function renderSiteCard(site) {
     ...site.aliases,
     site.home || ""
   ].join(" ").toLowerCase();
-
   const link = site.home || "#";
   const description = site.description
     ? `<p class="site-description">${escapeHtml(site.description)}</p>`
     : "";
-
   return `
     <article class="site-card" data-site-key="${escapeAttribute(site.id)}" data-search="${escapeAttribute(searchText)}"${site.home ? ` title="${escapeAttribute(site.home)}"` : ""}>
       <div class="site-top">
         <a class="site-name" href="${escapeAttribute(link)}" target="_blank" rel="noreferrer">${escapeHtml(site.name)}</a>
         <div class="site-actions">
-          <span class="type ${type.className}">${type.label}</span>
+          <span class="type ${type.className}" role="img" aria-label="${escapeAttribute(type.label)}" title="${escapeAttribute(type.label)}"></span>
           <button class="favorite-button" type="button" data-favorite="${escapeAttribute(site.id)}" aria-label="Add to favorites" aria-pressed="false" title="Add to favorites">☆</button>
         </div>
       </div>
@@ -2919,14 +2743,12 @@ function renderSiteCard(site) {
       ${site.home ? `<a class="site-url" href="${escapeAttribute(site.home)}" target="_blank" rel="noreferrer">${escapeHtml(site.home)}</a>` : ""}
     </article>`;
 }
-
 function getSiteType(site) {
   if (site.handler === "virustotal" || site.search) {
     return { label: "Search", className: "search" };
   }
   return { label: "Link", className: "open" };
 }
-
 function formatIssues(issues) {
   return issues
     .map((issue) => {
@@ -2935,7 +2757,6 @@ function formatIssues(issues) {
     })
     .join("; ");
 }
-
 function escapeHtml(value) {
   return String(value)
     .replaceAll("&", "&amp;")
@@ -2944,14 +2765,11 @@ function escapeHtml(value) {
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
 }
-
 function escapeAttribute(value) {
   return escapeHtml(value);
 }
-
 function renderFavicon() {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#101114"/><circle cx="28" cy="28" r="15" fill="none" stroke="#8ab4ff" stroke-width="7"/><path d="M39 39 54 54" fill="none" stroke="#8ab4ff" stroke-width="7" stroke-linecap="round"/><path d="M28 19v12" stroke="#eef0f4" stroke-width="5" stroke-linecap="round"/><circle cx="28" cy="38" r="3" fill="#eef0f4"/></svg>`;
-
   return new Response(svg, {
     headers: {
       "content-type": "image/svg+xml; charset=utf-8",
@@ -2959,7 +2777,6 @@ function renderFavicon() {
     }
   });
 }
-
 // -----------------------------------------------------------------------------
 // 7. WORKER ENTRY POINT
 // -----------------------------------------------------------------------------
@@ -2968,28 +2785,22 @@ export default {
     const url = new URL(request.url);
     const route = normalizePath(url.pathname);
     const raw = (url.searchParams.get("q") || "").trim();
-
     if (route === "favicon.svg" || route === "favicon.ico") {
       return renderFavicon();
     }
-
     // Root is the landing/help page. Search-engine URLs always include ?q=%s,
     // so this does not interfere with normal address-bar searching.
     if ((route === "" && !raw) || route === "help" || route === "bangs") {
       return renderHelpPage(url);
     }
-
     const defaultEngine = getDefaultEngine(url.pathname);
-
     if (!raw) {
       return redirectTo(defaultEngine.home);
     }
-
     // A bare shortcut symbol is a quick way to open the Help page.
     if (["!", ";", ":", "."].includes(raw)) {
       return renderHelpPage(url);
     }
-
     const shortcut = findShortcut(raw);
     if (shortcut) {
       const site = BANGS.get(shortcut.bang);
@@ -2997,7 +2808,6 @@ export default {
         return handleSite(site, shortcut.query, url);
       }
     }
-
     return redirectTo(defaultEngine.search, raw);
   }
 };
