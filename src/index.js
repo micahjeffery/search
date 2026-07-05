@@ -1209,10 +1209,10 @@ const SITE_GROUPS = [
     sites: [
       {
         name: "Calculator",
-        description: "Calculate simple expressions locally in the bang preview.",
-        aliases: ["math", "calc"],
-        home: "https://www.google.com/search?q=calculator",
-        search: "https://www.google.com/search?q={q}",
+        description: "Use WolframAlpha for math calculations.",
+        aliases: ["wa", "math", "calc", "wolf"],
+        home: "https://www.wolframalpha.com/",
+        search: "https://www.wolframalpha.com/input?i={q}",
         handler: "math"
       },
       {
@@ -2708,7 +2708,46 @@ function renderHelpPage(requestUrl) {
         useKeyboardSelection();
       }
     });
-    searchForm.addEventListener("submit", () => {
+    async function copyTextToClipboard(text) {
+      if (navigator.clipboard?.writeText && window.isSecureContext) {
+        try {
+          await navigator.clipboard.writeText(text);
+          return true;
+        } catch {}
+      }
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.append(textarea);
+      textarea.select();
+      const copied = document.execCommand("copy");
+      textarea.remove();
+      return copied;
+    }
+    function showMathCopyStatus(result, copied) {
+      bangPreview.hidden = false;
+      bangPreview.classList.remove("is-unknown");
+      bangPreviewTitle.textContent = copied ? "Copied" : "Copy failed";
+      bangPreviewText.textContent = copied
+        ? result + " copied to the clipboard."
+        : result + " could not be copied automatically.";
+      window.setTimeout(() => {
+        if (!filter.value.trim()) updateBangPreview();
+      }, 1600);
+    }
+    searchForm.addEventListener("submit", async (event) => {
+      const raw = filter.value.trim();
+      const mathResult = parseBangInput(raw) ? null : evaluateMathExpression(raw);
+      if (mathResult !== null) {
+        event.preventDefault();
+        const copied = await copyTextToClipboard(mathResult);
+        filter.value = "";
+        applyFilter();
+        showMathCopyStatus(mathResult, copied);
+        return;
+      }
       saveRecentSearch(filter.value);
     });
     clearRecentSearchesButton.addEventListener("click", clearRecentSearches);
