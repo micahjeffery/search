@@ -299,6 +299,27 @@ const SITE_GROUPS = [
         search: "https://commons.wikimedia.org/w/index.php?search={q}"
       },
       {
+        name: "Wikiversity",
+        description: "Search free learning resources and educational projects.",
+        aliases: ["wv", "wikiversity"],
+        home: "https://en.wikiversity.org/wiki/",
+        search: "https://en.wikiversity.org/w/index.php?search={q}"
+      },
+      {
+        name: "Wikibooks",
+        description: "Search free textbooks and manuals.",
+        aliases: ["wbk", "wikibooks"],
+        home: "https://www.wikibooks.org/",
+        search: "https://en.wikibooks.org/w/index.php?search={q}"
+      },
+      {
+        name: "Wikidata",
+        description: "Search Wikimedia’s structured knowledge base.",
+        aliases: ["wd", "wikidata"],
+        home: "https://www.wikidata.org/wiki/Wikidata:Main_Page",
+        search: "https://www.wikidata.org/w/index.php?search={q}"
+      },
+      {
         name: "Google Scholar",
         aliases: ["gsch", "sch", "scholar", "gscholar"],
         home: "https://scholar.google.com/",
@@ -1187,6 +1208,14 @@ const SITE_GROUPS = [
     category: "Creative & Utilities",
     sites: [
       {
+        name: "Calculator",
+        description: "Calculate simple expressions locally in the bang preview.",
+        aliases: ["math", "calc"],
+        home: "https://www.google.com/search?q=calculator",
+        search: "https://www.google.com/search?q={q}",
+        handler: "math"
+      },
+      {
         name: "Micah Jeffery",
         description: "Open Micah Jeffery’s site.",
         aliases: ["mj", "micah"],
@@ -1607,7 +1636,7 @@ function renderHelpPage(requestUrl) {
   const browserBangSites = SITES.map((site) => [
     site.name,
     `!${site.aliases[0]}`,
-    site.handler === "virustotal" ? "domain" : site.search ? "search" : "link"
+    site.handler === "virustotal" ? "domain" : site.handler === "math" ? "math" : site.search ? "search" : "link"
   ]);
   const browserBangAliases = Object.fromEntries(
     SITES.flatMap((site, index) =>
@@ -1647,19 +1676,34 @@ function renderHelpPage(requestUrl) {
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <script>
     (() => {
+      const root = document.documentElement;
       const resolveAutoTheme = () =>
         window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+      const revealFallback = () => { root.dataset.preferencesReady = "true"; };
+
       try {
-        const saved = localStorage.getItem("search-help-theme");
-        const preference = ["auto", "dark", "light", "black"].includes(saved) ? saved : "auto";
-        document.documentElement.dataset.theme = preference === "auto" ? resolveAutoTheme() : preference;
-        document.documentElement.dataset.themePreference = preference;
+        const savedTheme = localStorage.getItem("search-help-theme");
+        const themePreference = ["auto", "dark", "light", "black"].includes(savedTheme) ? savedTheme : "auto";
+        const savedLayout = localStorage.getItem("search-help-layout");
+        const layout = ["compact", "minimalist"].includes(savedLayout) ? savedLayout : "comfortable";
+        const savedDefaultsOpen = localStorage.getItem("search-help-defaults-open");
+
+        root.dataset.theme = themePreference === "auto" ? resolveAutoTheme() : themePreference;
+        root.dataset.themePreference = themePreference;
+        root.dataset.density = layout;
+        root.dataset.defaultsOpen = savedDefaultsOpen === "false" ? "false" : "true";
       } catch {
-        document.documentElement.dataset.theme = resolveAutoTheme();
-        document.documentElement.dataset.themePreference = "auto";
+        root.dataset.theme = resolveAutoTheme();
+        root.dataset.themePreference = "auto";
+        root.dataset.density = "comfortable";
+        root.dataset.defaultsOpen = "true";
       }
+
+      // The main script removes this fallback after it has restored every control.
+      window.setTimeout(revealFallback, 1200);
     })();
   </script>
+  <noscript><style>html:not([data-preferences-ready="true"]) body { visibility: visible; }</style></noscript>
   <style>
     :root,
     :root[data-theme="dark"] {
@@ -1721,6 +1765,10 @@ function renderHelpPage(requestUrl) {
     }
     * { box-sizing: border-box; }
     [hidden] { display: none !important; }
+    html { background: var(--bg); }
+    html:not([data-preferences-ready="true"]) body { visibility: hidden; }
+    :root[data-defaults-open="false"] .defaults-body { display: none; }
+    :root[data-defaults-open="false"] .defaults summary::before { transform: rotate(-90deg); }
     body {
       min-width: 320px;
       margin: 0;
@@ -2426,8 +2474,10 @@ function renderHelpPage(requestUrl) {
     if (storedDefaultsOpen !== null) {
       defaults.open = storedDefaultsOpen === "true";
     }
+    document.documentElement.dataset.defaultsOpen = String(defaults.open);
     defaults.addEventListener("toggle", () => {
       writeStorage(STORAGE.defaultsOpen, String(defaults.open));
+      document.documentElement.dataset.defaultsOpen = String(defaults.open);
     });
     function isFavorite(key) {
       return favorites.includes(key);
@@ -2482,11 +2532,44 @@ function renderHelpPage(requestUrl) {
       if (match) return { bang: match[2].toLowerCase(), query: match[1] || "" };
       return null;
     }
+    function evaluateMathExpression(value) {
+      const expression = String(value).trim();
+      if (
+        !expression ||
+        expression.length > 120 ||
+        !/[+*/%^-]/.test(expression) ||
+        !/^[0-9+*/%^().\\s-]+$/.test(expression)
+      ) {
+        return null;
+      }
+
+      try {
+        const result = Function('"use strict"; return (' + expression.replaceAll("^", "**") + ");")();
+        if (typeof result !== "number" || !Number.isFinite(result)) return null;
+        const normalized = Object.is(result, -0) ? 0 : Number(result.toPrecision(12));
+        return String(normalized);
+      } catch {
+        return null;
+      }
+    }
+
+    function showMathPreview(expression, title = "Calculator") {
+      const result = evaluateMathExpression(expression);
+      if (result === null) return false;
+      bangPreview.hidden = false;
+      bangPreview.classList.remove("is-unknown");
+      bangPreviewTitle.textContent = title;
+      bangPreviewText.textContent = expression.trim() + " = " + result;
+      return true;
+    }
+
     function updateBangPreview() {
       const shortcut = parseBangInput(filter.value);
       if (!shortcut) {
-        bangPreview.hidden = true;
-        bangPreview.classList.remove("is-unknown");
+        if (!showMathPreview(filter.value)) {
+          bangPreview.hidden = true;
+          bangPreview.classList.remove("is-unknown");
+        }
         return;
       }
       const siteIndex = BANG_DATA.aliases[shortcut.bang];
@@ -2501,6 +2584,15 @@ function renderHelpPage(requestUrl) {
       const [siteName, primaryBang, behavior] = site;
       bangPreview.classList.remove("is-unknown");
       bangPreviewTitle.textContent = primaryBang;
+      if (behavior === "math") {
+        if (!shortcut.query) {
+          bangPreviewText.textContent = "Enter a simple expression, such as !math 45/6.";
+        } else if (!showMathPreview(shortcut.query, primaryBang)) {
+          bangPreviewTitle.textContent = primaryBang;
+          bangPreviewText.textContent = "Use numbers, parentheses, and + - * / % ^.";
+        }
+        return;
+      }
       if (!shortcut.query) {
         bangPreviewText.textContent = behavior === "search"
           ? "Open " + siteName + " or add a search term."
@@ -2703,6 +2795,7 @@ function renderHelpPage(requestUrl) {
     });
     renderFavorites();
     applyFilter();
+    document.documentElement.dataset.preferencesReady = "true";
   </script>
 </body>
 </html>`;
