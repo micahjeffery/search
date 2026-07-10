@@ -103,7 +103,7 @@ const SITE_GROUPS = [
     ]
   },
   {
-    category: "Search Engines & AI",
+    category: "Search Engines",
     sites: [
       {
         name: "Google",
@@ -172,6 +172,18 @@ const SITE_GROUPS = [
         search: "https://duckduckgo.com/?q={q}&iaxm=maps"
       },
       {
+        name: "OpenStreetMap",
+        aliases: ["osm", "openstreetmap"],
+        home: "https://www.openstreetmap.org/",
+        search: "https://www.openstreetmap.org/search?query={q}"
+      },
+      {
+        name: "Apple Maps",
+        aliases: ["amaps", "applemaps"],
+        home: "https://maps.apple.com/",
+        search: "https://maps.apple.com/?q={q}"
+      },
+      {
         name: "DuckDuckGo No AI",
         aliases: ["noai", "noaiddg", "naiddg"],
         home: "https://noai.duckduckgo.com/",
@@ -183,12 +195,6 @@ const SITE_GROUPS = [
         aliases: ["db", "ddgb", "ddgbangs"],
         home: "https://duckduckgo.com/bangs",
         search: "https://duckduckgo.com/bangs?q={q}"
-      },
-      {
-        name: "Duck.ai",
-        description: "Open DuckDuckGo’s AI chat.",
-        aliases: ["ai", "dai", "duckai"],
-        home: "https://duck.ai/"
       },
       {
         name: "Brave Search",
@@ -279,6 +285,91 @@ const SITE_GROUPS = [
         aliases: ["ys", "yshop", "yshopping"],
         home: "https://shopping.yahoo.com/",
         search: "https://shopping.yahoo.com/search?p={q}"
+      }
+    ]
+  },
+  {
+    category: "AI",
+    sites: [
+      {
+        name: "Duck.ai",
+        description: "Open DuckDuckGo’s private AI chat.",
+        aliases: ["ai", "dai", "duckai"],
+        home: "https://duck.ai/"
+      },
+      {
+        name: "Lumo AI",
+        description: "Open Proton’s privacy-first AI assistant.",
+        aliases: ["lumo", "lumoai"],
+        home: "https://lumo.proton.me/"
+      },
+      {
+        name: "ChatGPT",
+        description: "Open ChatGPT.",
+        aliases: ["chatgpt", "gpt", "openai"],
+        home: "https://chatgpt.com/"
+      },
+      {
+        name: "Claude",
+        description: "Open Anthropic Claude.",
+        aliases: ["claude", "anthropic"],
+        home: "https://claude.com/"
+      },
+      {
+        name: "Gemini",
+        description: "Open Google Gemini.",
+        aliases: ["gemini", "bard"],
+        home: "https://gemini.google.com/"
+      },
+      {
+        name: "Perplexity",
+        description: "Open Perplexity answer engine.",
+        aliases: ["perplexity", "pplx"],
+        home: "https://www.perplexity.ai/"
+      },
+      {
+        name: "Poe",
+        description: "Open Poe’s multi-model AI chat platform.",
+        aliases: ["poe"],
+        home: "https://poe.com/"
+      },
+      {
+        name: "Mistral Vibe",
+        description: "Open Mistral’s AI chat and agent product, formerly Le Chat.",
+        aliases: ["mistral", "vibe", "lechat"],
+        home: "https://chat.mistral.ai/"
+      },
+      {
+        name: "Microsoft Copilot",
+        description: "Open Microsoft Copilot.",
+        aliases: ["copilot", "mscopilot"],
+        home: "https://copilot.microsoft.com/"
+      },
+      {
+        name: "You.com",
+        description: "Search You.com’s AI search engine.",
+        aliases: ["you", "youai", "youdotcom"],
+        home: "https://you.com/",
+        search: "https://you.com/search?q={q}"
+      },
+      {
+        name: "Phind",
+        description: "Search Phind for developer-focused AI answers.",
+        aliases: ["phind"],
+        home: "https://www.phind.com/",
+        search: "https://www.phind.com/search?q={q}"
+      },
+      {
+        name: "HuggingChat",
+        description: "Open Hugging Face’s open AI chat.",
+        aliases: ["huggingchat", "hfchat"],
+        home: "https://huggingface.co/chat/"
+      },
+      {
+        name: "DeepSeek",
+        description: "Open DeepSeek chat.",
+        aliases: ["deepseek", "ds"],
+        home: "https://chat.deepseek.com/"
       }
     ]
   },
@@ -674,7 +765,7 @@ const SITE_GROUPS = [
       },
       {
         name: "X",
-        aliases: ["x", "twitter"],
+        aliases: ["twitter", "tw", "xcom"],
         home: "https://x.com/",
         search: "https://x.com/search?q={q}"
       },
@@ -811,6 +902,20 @@ const SITE_GROUPS = [
         aliases: ["cults", "cults3d"],
         home: "https://cults3d.com/en",
         search: "https://cults3d.com/en/search?q={q}"
+      },
+      {
+        name: "Thangs",
+        description: "Search printable 3D models on Thangs.",
+        aliases: ["thangs", "thang"],
+        home: "https://thangs.com/",
+        search: "https://thangs.com/search/{q}?scope=thangs&view=list"
+      },
+      {
+        name: "Yeggi",
+        description: "Search indexed printable 3D models across model sites.",
+        aliases: ["yeggi", "yg"],
+        home: "https://www.yeggi.com/",
+        search: "https://www.yeggi.com/q/{q}/"
       },
       {
         name: "BumpMesh",
@@ -1209,8 +1314,8 @@ const SITE_GROUPS = [
     sites: [
       {
         name: "Calculator",
-        description: "Use WolframAlpha for math calculations.",
-        aliases: ["wa", "math", "calc", "wolf"],
+        description: "Preview simple expressions locally, or search Wolfram|Alpha with a bang.",
+        aliases: ["math", "calc"],
         home: "https://www.wolframalpha.com/",
         search: "https://www.wolframalpha.com/input?i={q}",
         handler: "math"
@@ -1311,6 +1416,19 @@ const SITE_GROUPS = [
         description: "Browser-based Photoshop alternative image editor.",
         aliases: ["photo", "ps"],
         home: "https://www.photopea.com/"
+      },
+      {
+        name: "SVG Repo",
+        description: "Search free open-licensed SVG vectors and icons.",
+        aliases: ["svgrepo", "svg", "icons"],
+        home: "https://www.svgrepo.com/",
+        search: "https://www.svgrepo.com/vectors/{q}/"
+      },
+      {
+        name: "VectorMaker",
+        description: "Convert PNG or JPG images into SVG vectors.",
+        aliases: ["vectormaker", "vector", "vectorize"],
+        home: "https://vectormaker.co/"
       },
       {
         name: "Image Backgroud Remover",
@@ -1498,9 +1616,171 @@ const SITES = SITE_GROUPS.flatMap((group) =>
     category: group.category
   }))
 );
+const MULTI_SEARCHES = [
+  {
+    id: "x",
+    name: "Web Search Multisearch",
+    description: "Search the same term across the main web search engines.",
+    aliases: ["x", "xsearch", "xweb"],
+    targets: [
+      { type: "engine", key: "" },
+      { type: "engine", key: "g" },
+      { type: "engine", key: "brave" },
+      { type: "engine", key: "startpage" },
+      { type: "engine", key: "bing" },
+      { type: "engine", key: "yahoo" }
+    ]
+  },
+  {
+    id: "xv",
+    name: "Video Multisearch",
+    description: "Search video platforms and video-search engines at the same time.",
+    aliases: ["xv", "xvideo", "xvid"],
+    targets: [
+      { type: "site", key: "yt" },
+      { type: "site", key: "gv" },
+      { type: "site", key: "dv" },
+      { type: "site", key: "bv" },
+      { type: "site", key: "spv" },
+      { type: "site", key: "yv" },
+      { type: "site", key: "tt" }
+    ]
+  },
+  {
+    id: "xi",
+    name: "Image Multisearch",
+    description: "Search image engines and visual discovery sites at the same time.",
+    aliases: ["xi", "ximage", "ximages", "ximg"],
+    targets: [
+      { type: "site", key: "gi" },
+      { type: "site", key: "di" },
+      { type: "site", key: "bi" },
+      { type: "site", key: "spi" },
+      { type: "site", key: "yi" },
+      { type: "site", key: "pin" },
+      { type: "site", key: "wm" }
+    ]
+  },
+  {
+    id: "xn",
+    name: "News Multisearch",
+    description: "Search news tabs across the main search engines.",
+    aliases: ["xn", "xnews"],
+    targets: [
+      { type: "site", key: "gn" },
+      { type: "site", key: "dn" },
+      { type: "site", key: "bn" },
+      { type: "site", key: "spn" },
+      { type: "site", key: "yn" }
+    ]
+  },
+  {
+    id: "xg",
+    name: "Games Multisearch",
+    description: "Search game stores, deal trackers, compatibility tools, and game info sites.",
+    aliases: ["xg", "xgame", "xgames"],
+    targets: [
+      { type: "site", key: "steam" },
+      { type: "site", key: "gog" },
+      { type: "site", key: "itad" },
+      { type: "site", key: "eneba" },
+      { type: "site", key: "steamdb" },
+      { type: "site", key: "protondb" },
+      { type: "site", key: "hltb" },
+      { type: "site", key: "beforeiplay" }
+    ]
+  },
+  {
+    id: "xs",
+    name: "Shopping Multisearch",
+    description: "Search shopping sites, marketplaces, and shopping search engines.",
+    aliases: ["xs", "xshop", "xshopping"],
+    targets: [
+      { type: "site", key: "gs" },
+      { type: "site", key: "pcpp" },
+      { type: "site", key: "amazon" },
+      { type: "site", key: "ebay" },
+      { type: "site", key: "walmart" },
+      { type: "site", key: "costco" },
+      { type: "site", key: "fbm" },
+      { type: "site", key: "ys" },
+      { type: "site", key: "camel" },
+      { type: "site", key: "homedepot" }
+    ]
+  },
+  {
+    id: "x3d",
+    name: "3D Model Multisearch",
+    description: "Search printable model sites at the same time.",
+    aliases: ["x3d", "xmodels", "xprint", "3dall", "models"],
+    targets: [
+      { type: "site", key: "printables" },
+      { type: "site", key: "maker" },
+      { type: "site", key: "thing" },
+      { type: "site", key: "cults" },
+      { type: "site", key: "thangs" },
+      { type: "site", key: "yeggi" }
+    ]
+  },
+  {
+    id: "xai",
+    name: "AI Multisearch",
+    description: "Open privacy-friendly AI assistants and AI tools. Tools without prompt-prefill support open to their home page.",
+    aliases: ["xai"],
+    targets: [
+      { type: "site", key: "duckai" },
+      { type: "site", key: "lumo" },
+      { type: "site", key: "chatgpt" },
+      { type: "site", key: "claude" },
+      { type: "site", key: "gemini" },
+      { type: "site", key: "perplexity" },
+      { type: "site", key: "poe" },
+      { type: "site", key: "mistral" },
+      { type: "site", key: "copilot" },
+      { type: "site", key: "you" },
+      { type: "site", key: "phind" },
+      { type: "site", key: "huggingchat" },
+      { type: "site", key: "deepseek" }
+    ]
+  },
+  {
+    id: "xeng",
+    name: "English Translation Multisearch",
+    description: "Translate English text into the configured destination languages at the same time.",
+    aliases: ["xeng", "xtrans", "xtranslate"],
+    targets: [
+      { type: "site", key: "enes" },
+      { type: "site", key: "enfr" },
+      { type: "site", key: "ende" },
+      { type: "site", key: "enit" },
+      { type: "site", key: "enpt" },
+      { type: "site", key: "enja" },
+      { type: "site", key: "enzh" },
+      { type: "site", key: "enko" }
+    ]
+  },
+  {
+    id: "xmap",
+    name: "Maps / Local Multisearch",
+    description: "Search maps and local-discovery tools at the same time.",
+    aliases: ["xmap", "xmaps", "xlocal"],
+    targets: [
+      { type: "site", key: "gm" },
+      { type: "site", key: "dm" },
+      { type: "site", key: "osm" },
+      { type: "site", key: "amaps" }
+    ]
+  }
+]
 const DEFAULT_ENGINE_BY_PATH = buildDefaultEngineIndex(DEFAULT_ENGINES);
 const { byAlias: BANGS, conflicts: ALIAS_CONFLICTS, invalid: INVALID_ALIASES } =
   buildBangIndex(SITES);
+const {
+  byAlias: MULTI_SEARCH_BY_ALIAS,
+  byId: MULTI_SEARCH_BY_ID,
+  conflicts: MULTI_SEARCH_CONFLICTS,
+  invalid: INVALID_MULTI_SEARCH_ALIASES
+} = buildMultiSearchIndex(MULTI_SEARCHES);
 function buildDefaultEngineIndex(engines) {
   const index = new Map();
   for (const engine of engines) {
@@ -1533,6 +1813,37 @@ function buildBangIndex(sites) {
     }
   }
   return { byAlias, conflicts, invalid };
+}
+function buildMultiSearchIndex(multis) {
+  const byAlias = new Map();
+  const byId = new Map();
+  const conflicts = [];
+  const invalid = [];
+  for (const multi of multis) {
+    const normalizedId = String(multi.id).trim().toLowerCase();
+    if (!/^[a-z0-9_-]+$/.test(normalizedId)) {
+      invalid.push({ alias: multi.id, site: multi.name });
+      continue;
+    }
+    byId.set(normalizedId, multi);
+    for (const rawAlias of multi.aliases) {
+      const alias = String(rawAlias).trim().toLowerCase();
+      if (!/^[a-z0-9_-]+$/.test(alias)) {
+        invalid.push({ alias: rawAlias, site: multi.name });
+        continue;
+      }
+      if (byAlias.has(alias)) {
+        conflicts.push({
+          alias,
+          first: byAlias.get(alias).name,
+          second: multi.name
+        });
+        continue;
+      }
+      byAlias.set(alias, multi);
+    }
+  }
+  return { byAlias, byId, conflicts, invalid };
 }
 // -----------------------------------------------------------------------------
 // 4. SPECIAL HANDLERS
@@ -1597,6 +1908,53 @@ function findShortcut(raw) {
   }
   return null;
 }
+const RESERVED_BARE_QUERY_HINTS = new Map([
+  ["xvideos", { safe: ";xv", label: "Video Multisearch" }]
+]);
+function getReservedBareQueryHint(raw) {
+  const firstWord = String(raw).trim().toLowerCase().split(/\s+/)[0];
+  return RESERVED_BARE_QUERY_HINTS.get(firstWord) || null;
+}
+function renderReservedBareQueryPage(raw, hint, requestUrl) {
+  const query = String(raw).trim().replace(/^\S+\s*/, "");
+  const suggested = query ? `${hint.safe} ${query}` : hint.safe;
+  const html = `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shortcut hint · ${escapeHtml(PROJECT.name)}</title>
+  <style>
+    :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #101114; color: #eef0f4; }
+    body { min-height: 100vh; margin: 0; display: grid; place-items: center; padding: 24px; }
+    main { width: min(620px, 100%); border: 1px solid rgba(255,255,255,.14); border-radius: 22px; padding: 28px; background: #181a20; box-shadow: 0 24px 80px rgba(0,0,0,.35); }
+    h1 { margin: 0 0 10px; font-size: clamp(1.7rem, 5vw, 2.35rem); }
+    p { color: #b8beca; line-height: 1.55; }
+    code { color: #8ab4ff; font: 1rem ui-monospace, SFMono-Regular, Menlo, monospace; }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+    a, button { border: 1px solid rgba(255,255,255,.16); border-radius: 999px; padding: 10px 14px; background: #222631; color: #eef0f4; text-decoration: none; cursor: pointer; font: inherit; }
+    .primary { background: #8ab4ff; color: #101114; border-color: #8ab4ff; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Use the bang for that one</h1>
+    <p><code>${escapeHtml(String(raw).trim())}</code> was not sent to your default search engine. Did you mean <strong>${escapeHtml(hint.label)}</strong>?</p>
+    <p>Try <code>${escapeHtml(suggested)}</code>.</p>
+    <div class="actions">
+      <a class="primary" href="/?q=${encodeURIComponent(suggested)}">Open ${escapeHtml(hint.label)}</a>
+      <a href="/">Back to shortcuts</a>
+    </div>
+  </main>
+</body>
+</html>`;
+  return new Response(html, {
+    headers: {
+      "content-type": "text/html; charset=utf-8",
+      "cache-control": "no-store"
+    }
+  });
+}
 function handleSite(site, query, requestUrl) {
   if (site.handler === "virustotal") {
     return query ? handleVirusTotalLookup(query) : redirectTo(site.home);
@@ -1609,11 +1967,27 @@ function handleSite(site, query, requestUrl) {
 // -----------------------------------------------------------------------------
 // 6. AUTOMATIC HELP / HOMEPAGE
 // -----------------------------------------------------------------------------
+function buildMultiSearchCardSearchTerms(multi) {
+  const resolvedTargets = resolveMultiSearchTargets(multi);
+  return [
+    multi.name,
+    multi.description || "",
+    "Multisearch",
+    ...multi.aliases,
+    ...resolvedTargets.flatMap((target) => [
+      target.name,
+      target.detail,
+      target.home,
+      target.search || "",
+      ...(target.aliases || [])
+    ])
+  ].join(" ");
+}
 function renderHelpPage(requestUrl) {
   const origin = requestUrl.origin;
   const totalAliases = BANGS.size;
   const totalSites = SITES.length;
-  const issues = [...ALIAS_CONFLICTS, ...INVALID_ALIASES];
+  const issues = [...ALIAS_CONFLICTS, ...INVALID_ALIASES, ...MULTI_SEARCH_CONFLICTS, ...INVALID_MULTI_SEARCH_ALIASES];
   const engineCards = DEFAULT_ENGINES.map((engine) => {
     const primaryPath = engine.paths[0];
     const searchUrl = primaryPath
@@ -1633,26 +2007,50 @@ function renderHelpPage(requestUrl) {
   const supportControl = PROJECT.support
     ? `<a class="icon-button support-link" href="${escapeAttribute(PROJECT.support)}" target="_blank" rel="noreferrer" aria-label="Support" title="Support">${supportIcon}</a>`
     : `<span class="icon-button support" role="img" aria-label="Support" title="Support">${supportIcon}</span>`;
-  const browserBangSites = SITES.map((site) => [
-    site.name,
-    `!${site.aliases[0]}`,
-    site.handler === "virustotal" ? "domain" : site.handler === "math" ? "math" : site.search ? "search" : "link"
-  ]);
-  const browserBangAliases = Object.fromEntries(
-    SITES.flatMap((site, index) =>
+  const browserBangSites = [
+    ...SITES.map((site) => [
+      site.name,
+      `!${site.aliases[0]}`,
+      site.handler === "virustotal" ? "domain" : site.handler === "math" ? "math" : site.search ? "search" : "link"
+    ]),
+    ...MULTI_SEARCHES.map((multi) => [
+      multi.name,
+      `!${multi.aliases[0]}`,
+      "multi"
+    ])
+  ];
+  const browserBangAliases = Object.fromEntries([
+    ...SITES.flatMap((site, index) =>
       site.aliases.map((alias) => [alias.toLowerCase(), index])
+    ),
+    ...MULTI_SEARCHES.flatMap((multi, index) =>
+      multi.aliases.map((alias) => [alias.toLowerCase(), SITES.length + index])
     )
-  );
+  ]);
   const browserBangDataJson = JSON.stringify({
     sites: browserBangSites,
     aliases: browserBangAliases
   }).replaceAll("<", "\\u003c");
-  const groups = SITE_GROUPS.map((group) => {
+  const multiSearchDisplayGroup = {
+    category: "Multisearch",
+    sites: MULTI_SEARCHES.map((multi) => ({
+      name: multi.name,
+      description: multi.description,
+      aliases: multi.aliases,
+      home: `/multi/${multi.id}/`,
+      handler: "multi",
+      id: `multi:${multi.id}`,
+      category: "Multisearch",
+      searchTerms: buildMultiSearchCardSearchTerms(multi)
+    }))
+  };
+  const displayGroups = [multiSearchDisplayGroup, ...SITE_GROUPS];
+  const groups = displayGroups.map((group) => {
     const cards = group.sites
       .map((site) => renderSiteCard({
         ...site,
-        id: String(site.aliases[0]).toLowerCase(),
-        category: group.category
+        id: site.id || String(site.aliases[0]).toLowerCase(),
+        category: site.category || group.category
       }))
       .join("");
     return `
@@ -1822,6 +2220,10 @@ function renderHelpPage(requestUrl) {
     .type.open {
       --type-icon: url("https://upload.wikimedia.org/wikipedia/commons/c/c7/Home_%2885250%29_-_The_Noun_Project.svg");
       color: var(--warn);
+    }
+    .type.multi {
+      --type-icon: url("https://upload.wikimedia.org/wikipedia/commons/8/8a/X_Pinhead_icon.svg");
+      color: var(--accent);
     }
     .toolbar, .defaults, .favorites, .recent-searches, .warning {
       background: var(--surface);
@@ -2250,7 +2652,11 @@ function renderHelpPage(requestUrl) {
         </div>
         <ul class="shortcut-list">
           <li><span>Focus or select the search box</span><kbd>/</kbd></li>
-          <li><span>Clear the search box</span><kbd>Esc</kbd></li>
+          <li><span>Open this shortcuts popup</span><kbd>?</kbd></li>
+          <li><span>Clear the search box; blur it when empty</span><kbd>Esc</kbd></li>
+          <li><span>Comfortable mode</span><kbd>1</kbd></li>
+          <li><span>Compact mode</span><kbd>2</kbd></li>
+          <li><span>Minimalist mode</span><kbd>3</kbd></li>
           <li><span>Collapse all categories</span><kbd>[</kbd></li>
           <li><span>Expand all categories</span><kbd>]</kbd></li>
           <li><span>Move through filtered cards</span><span><kbd>↑</kbd> <kbd>↓</kbd></span></li>
@@ -2322,6 +2728,9 @@ function renderHelpPage(requestUrl) {
     const cancelDisableHistoryButton = document.getElementById("cancel-disable-history");
     const confirmDisableHistoryButton = document.getElementById("confirm-disable-history");
     const exitMinimalistButton = document.getElementById("exit-minimalist");
+    const pageParams = new URLSearchParams(window.location.search);
+    const requestedAction = pageParams.get("action") || "";
+    const requestedMode = pageParams.get("mode") || "";
     function updateSearchPlaceholder() {
       const engineName =
         homeEngineSelect.selectedOptions[0]?.textContent.trim() || "DuckDuckGo";
@@ -2445,6 +2854,9 @@ function renderHelpPage(requestUrl) {
     }
     applyTheme(readStorage(STORAGE.theme, document.documentElement.dataset.themePreference || "auto"));
     applyLayout(readStorage(STORAGE.layout, "comfortable"));
+    if (["comfortable", "compact", "minimalist"].includes(requestedMode)) {
+      applyLayout(requestedMode);
+    }
     applyHomeEngine(readStorage(STORAGE.homeEngine, ""));
     updateSearchPlaceholder();
     themeSelect.addEventListener("change", () => {
@@ -2593,6 +3005,12 @@ function renderHelpPage(requestUrl) {
         }
         return;
       }
+      if (behavior === "multi") {
+        bangPreviewText.textContent = shortcut.query
+          ? 'Open the multisearch page for “' + shortcut.query + '”.'
+          : "Open this multisearch page.";
+        return;
+      }
       if (!shortcut.query) {
         bangPreviewText.textContent = behavior === "search"
           ? "Open " + siteName + " or add a search term."
@@ -2693,7 +3111,12 @@ function renderHelpPage(requestUrl) {
     filter.addEventListener("input", applyFilter);
     filter.addEventListener("keydown", (event) => {
       if (event.key === "Escape") {
-        if (clearSearch()) event.preventDefault();
+        if (clearSearch()) {
+          event.preventDefault();
+        } else if (!filter.value.trim()) {
+          filter.blur();
+          event.preventDefault();
+        }
         return;
       }
       if (!filter.value.trim()) return;
@@ -2764,6 +3187,9 @@ function renderHelpPage(requestUrl) {
     keyboardShortcutsButton.addEventListener("click", () => {
       keyboardShortcutsDialog.showModal();
     });
+    if (requestedAction === "shortcuts") {
+      window.setTimeout(() => keyboardShortcutsDialog.showModal(), 0);
+    }
     document.querySelectorAll("[data-close-dialog]").forEach((button) => {
       button.addEventListener("click", () => {
         const dialog = document.getElementById(button.dataset.closeDialog);
@@ -2787,7 +3213,12 @@ function renderHelpPage(requestUrl) {
       }
       if (event.key === "Escape") {
         if (isTypingTarget(event.target) && event.target !== filter) return;
-        if (clearSearch()) event.preventDefault();
+        if (clearSearch()) {
+          event.preventDefault();
+        } else if (event.target === filter || document.activeElement === filter) {
+          filter.blur();
+          event.preventDefault();
+        }
         return;
       }
       if (isTypingTarget(event.target)) return;
@@ -2795,6 +3226,18 @@ function renderHelpPage(requestUrl) {
         event.preventDefault();
         filter.focus();
         filter.select();
+      } else if (event.key === "?") {
+        event.preventDefault();
+        keyboardShortcutsDialog.showModal();
+      } else if (event.key === "1") {
+        event.preventDefault();
+        applyLayout("comfortable");
+      } else if (event.key === "2") {
+        event.preventDefault();
+        applyLayout("compact");
+      } else if (event.key === "3") {
+        event.preventDefault();
+        applyLayout("minimalist");
       } else if (event.key === "[") {
         event.preventDefault();
         setAllGroups(false);
@@ -2845,6 +3288,395 @@ function renderHelpPage(requestUrl) {
     }
   });
 }
+function resolveMultiSearchTargets(multi) {
+  return multi.targets
+    .map((target) => resolveMultiSearchTarget(target))
+    .filter(Boolean);
+}
+function resolveMultiSearchTarget(target) {
+  const key = normalizePath(target.key);
+  if (target.type === "engine") {
+    const engine = DEFAULT_ENGINE_BY_PATH.get(key);
+    if (!engine?.search || !engine.home) return null;
+    const primaryPath = engine.paths[0] || "";
+    return {
+      id: `engine:${primaryPath || "root"}`,
+      name: engine.name,
+      detail: "Default search engine",
+      home: engine.home,
+      search: engine.search,
+      aliases: engine.paths
+    };
+  }
+  if (target.type === "site") {
+    const site = BANGS.get(key) || SITES.find((candidate) => candidate.id === key);
+    if (!site?.home) return null;
+    return {
+      id: `site:${site.id}`,
+      name: site.name,
+      detail: `${site.category} · !${site.aliases[0]}`,
+      home: site.home,
+      search: site.search || "",
+      aliases: site.aliases
+    };
+  }
+  return null;
+}
+function buildMultiTargetUrl(target, query) {
+  const trimmed = query.trim();
+  if (trimmed && target.search) {
+    return target.search.replaceAll("{q}", encodeURIComponent(trimmed));
+  }
+  return target.home;
+}
+function jsonForInlineScript(value) {
+  return JSON.stringify(value).replaceAll("<", "\\u003c");
+}
+function renderMultiSearchPage(multi, query, requestUrl) {
+  const targets = resolveMultiSearchTargets(multi);
+  const trimmedQuery = query.trim();
+  const origin = requestUrl.origin;
+  const primaryAlias = multi.aliases[0];
+  const directUrl = `${origin}/multi/${encodeURIComponent(multi.id)}?q=${encodeURIComponent(trimmedQuery)}`;
+  const targetRows = targets.map((target, index) => {
+    const href = buildMultiTargetUrl(target, trimmedQuery);
+    return `
+      <label class="target-row" data-target-row data-target-id="${escapeAttribute(target.id)}">
+        <input class="target-check" type="checkbox" data-target-check="${index}" checked>
+        <span class="target-copy">
+          <strong>${escapeHtml(target.name)}</strong>
+          <span>${escapeHtml(target.detail)}</span>
+        </span>
+        <a class="target-open" href="${escapeAttribute(href)}" target="_blank" rel="noreferrer" data-target-link="${index}">Open</a>
+      </label>`;
+  }).join("");
+  const targetDataJson = jsonForInlineScript(targets);
+  const html = `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>${escapeHtml(multi.name)} · ${escapeHtml(PROJECT.name)}</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script>
+    (() => {
+      const allowed = ["auto", "dark", "light", "black"];
+      let preference = "auto";
+      try {
+        const saved = localStorage.getItem("search-help-theme");
+        if (allowed.includes(saved)) preference = saved;
+      } catch {}
+      const resolveAuto = () => window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+      document.documentElement.dataset.theme = preference === "auto" ? resolveAuto() : preference;
+      document.documentElement.dataset.themePreference = preference;
+    })();
+  </script>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #101114;
+      --surface: #191b20;
+      --surface-2: #22252c;
+      --input: #13151a;
+      --border: #323640;
+      --border-strong: #4a5160;
+      --text: #eef0f4;
+      --muted: #a7adb9;
+      --accent: #8ab4ff;
+      --accent-contrast: #091525;
+      --good: #83d49b;
+      --warn: #ffca70;
+      --danger: #ff9b9b;
+      --shadow: rgba(0, 0, 0, .22);
+    }
+    :root[data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #101114;
+      --surface: #191b20;
+      --surface-2: #22252c;
+      --input: #13151a;
+      --border: #323640;
+      --border-strong: #4a5160;
+      --text: #eef0f4;
+      --muted: #a7adb9;
+      --accent: #8ab4ff;
+      --accent-contrast: #091525;
+      --good: #83d49b;
+      --warn: #ffca70;
+      --danger: #ff9b9b;
+      --shadow: rgba(0, 0, 0, .22);
+    }
+    :root[data-theme="light"] {
+      color-scheme: light;
+      --bg: #f5f7fb;
+      --surface: #ffffff;
+      --surface-2: #eef2f8;
+      --input: #ffffff;
+      --border: #cdd4e0;
+      --border-strong: #9eabbc;
+      --text: #171a20;
+      --muted: #576274;
+      --accent: #185bc4;
+      --accent-contrast: #ffffff;
+      --good: #137a3d;
+      --warn: #8a5200;
+      --danger: #b42318;
+      --shadow: rgba(29, 43, 68, .10);
+    }
+    :root[data-theme="black"] {
+      color-scheme: dark;
+      --bg: #000000;
+      --surface: #050505;
+      --surface-2: #0d0d0d;
+      --input: #000000;
+      --border: rgba(255,255,255,.16);
+      --border-strong: rgba(255,255,255,.28);
+      --text: #f7f7f7;
+      --muted: #b6b6b6;
+      --accent: #9ec5ff;
+      --accent-contrast: #000000;
+      --good: #83d49b;
+      --warn: #ffca70;
+      --danger: #ff9b9b;
+      --shadow: rgba(0, 0, 0, .60);
+    }
+    * { box-sizing: border-box; }
+    body {
+      min-width: 320px;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 16px/1.45 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    main { max-width: 860px; margin: 0 auto; padding: 36px 20px 64px; }
+    a { color: var(--accent); }
+    h1 { margin: 0; font-size: clamp(2rem, 5vw, 3rem); line-height: 1.05; letter-spacing: -.03em; }
+    p { color: var(--muted); margin: 10px 0 0; }
+    .top { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; margin-bottom: 24px; }
+    .back { border: 1px solid var(--border); border-radius: 999px; padding: 8px 11px; text-decoration: none; color: var(--text); background: var(--surface-2); white-space: nowrap; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 8px 24px var(--shadow); padding: 16px; margin-top: 16px; }
+    .search-row { display: flex; gap: 10px; align-items: stretch; }
+    input[type="search"] { flex: 1; min-width: 0; width: 100%; padding: 13px 14px; border: 1px solid var(--border); border-radius: 10px; background: var(--input); color: var(--text); font: inherit; }
+    button, .target-open, input[type="search"] { font: inherit; }
+    button, .target-open { appearance: none; border: 1px solid var(--border); border-radius: 9px; background: var(--surface-2); color: var(--text); padding: 8px 10px; cursor: pointer; text-decoration: none; }
+    button:hover, .target-open:hover, .back:hover { border-color: var(--accent); }
+    button.primary { border-color: var(--accent); background: var(--accent); color: var(--accent-contrast); font-weight: 700; }
+    button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid color-mix(in srgb, var(--accent) 45%, transparent); outline-offset: 2px; }
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .hint { font-size: .92rem; }
+    .status { min-height: 1.4em; margin-top: 10px; color: var(--muted); }
+    .status.good { color: var(--good); }
+    .status.warn { color: var(--warn); }
+    .status.danger { color: var(--danger); }
+    .target-list { display: grid; gap: 8px; margin-top: 14px; }
+    .target-row { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; padding: 12px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-2); }
+    .target-row:has(input:not(:checked)) { opacity: .62; }
+    .target-check { width: 20px; height: 20px; accent-color: var(--accent); }
+    .target-copy { display: grid; gap: 2px; min-width: 0; }
+    .target-copy span { color: var(--muted); font-size: .86rem; overflow-wrap: anywhere; }
+    .small { color: var(--muted); font-size: .86rem; }
+    code { color: var(--accent); }
+    @media (max-width: 620px) {
+      .top, .search-row { display: block; }
+      .back { display: inline-block; margin-top: 14px; }
+      .search-row button { width: 100%; margin-top: 10px; }
+      .target-row { grid-template-columns: auto 1fr; }
+      .target-open { grid-column: 1 / -1; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="top">
+      <div>
+        <h1>${escapeHtml(multi.name)}</h1>
+        <p>${escapeHtml(multi.description || "Choose targets, then open them together.")}</p>
+        <p class="small">Shortcut: <code>;${escapeHtml(primaryAlias)} ${escapeHtml(trimmedQuery || "your search")}</code></p>
+      </div>
+      <a class="back" href="/">All bangs</a>
+    </div>
+
+    <section class="card">
+      <form id="multi-form" action="javascript:void(0)" autocomplete="off">
+        <div class="search-row">
+          <input id="multi-query" type="search" autocomplete="off" spellcheck="false" value="${escapeAttribute(trimmedQuery)}" placeholder="Search term">
+          <button class="primary" id="search-all" type="button">Search all selected</button>
+        </div>
+      </form>
+      <div class="actions">
+        <button type="button" id="open-next">Open next</button>
+        <button type="button" id="select-all">Select all</button>
+        <button type="button" id="select-none">Select none</button>
+        <button type="button" id="copy-links">Copy selected links</button>
+      </div>
+      <p id="status" class="status" aria-live="polite"></p>
+      <p class="hint">Your checked sites are remembered in this browser. If Search all is blocked, allow popups for this site and try again, or use Open next.</p>
+    </section>
+
+    <section class="card">
+      <div class="target-list" id="target-list">
+        ${targetRows || `<p>No valid multisearch targets are configured.</p>`}
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const MULTI_ID = ${JSON.stringify(multi.id)};
+    const TARGETS = ${targetDataJson};
+    const themeMedia = window.matchMedia ? window.matchMedia("(prefers-color-scheme: light)") : null;
+    function syncAutoTheme() {
+      if (document.documentElement.dataset.themePreference === "auto") {
+        document.documentElement.dataset.theme = themeMedia && themeMedia.matches ? "light" : "dark";
+      }
+    }
+    if (themeMedia) {
+      if (themeMedia.addEventListener) themeMedia.addEventListener("change", syncAutoTheme);
+      else if (themeMedia.addListener) themeMedia.addListener(syncAutoTheme);
+    }
+    const STORAGE_KEY = "search-multisearch-selected:" + MULTI_ID;
+    const form = document.getElementById("multi-form");
+    const searchAllButton = document.getElementById("search-all");
+    const queryInput = document.getElementById("multi-query");
+    const status = document.getElementById("status");
+    const checks = [...document.querySelectorAll("[data-target-check]")];
+    const links = [...document.querySelectorAll("[data-target-link]")];
+    let nextCursor = 0;
+
+    function setStatus(message, type = "") {
+      status.textContent = message;
+      status.className = "status" + (type ? " " + type : "");
+    }
+    function checkedTargets() {
+      return checks
+        .filter((check) => check.checked)
+        .map((check) => TARGETS[Number(check.dataset.targetCheck)])
+        .filter(Boolean);
+    }
+    function saveSelection() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(checkedTargets().map((target) => target.id)));
+      } catch {}
+    }
+    function restoreSelection() {
+      let saved = null;
+      try {
+        const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
+        if (Array.isArray(parsed)) saved = new Set(parsed);
+      } catch {}
+      if (!saved) return;
+      checks.forEach((check) => {
+        const target = TARGETS[Number(check.dataset.targetCheck)];
+        check.checked = Boolean(target && saved.has(target.id));
+      });
+    }
+    function urlFor(target) {
+      const query = queryInput.value.trim();
+      if (query && target.search) {
+        return target.search.replaceAll("{q}", encodeURIComponent(query));
+      }
+      return target.home;
+    }
+    function updateLinks() {
+      links.forEach((link) => {
+        const target = TARGETS[Number(link.dataset.targetLink)];
+        if (target) link.href = urlFor(target);
+      });
+    }
+    function openPopup(url) {
+      const opened = window.open(url, "_blank");
+      if (opened) {
+        opened.opener = null;
+        return true;
+      }
+      return false;
+    }
+    function openTargets(targets) {
+      if (!targets.length) {
+        setStatus("Choose at least one search target first.", "warn");
+        return;
+      }
+      let blocked = 0;
+      for (const target of targets) {
+        if (!openPopup(urlFor(target))) blocked += 1;
+      }
+      if (blocked) {
+        setStatus(blocked + " tab" + (blocked === 1 ? " was" : "s were") + " blocked. Allow popups for this site, then try again.", "danger");
+      } else {
+        setStatus("Opened " + targets.length + " selected search" + (targets.length === 1 ? "" : "es") + ".", "good");
+      }
+    }
+    function openNext() {
+      const selected = checkedTargets();
+      if (!selected.length) {
+        setStatus("Choose at least one search target first.", "warn");
+        return;
+      }
+      const target = selected[nextCursor % selected.length];
+      nextCursor = (nextCursor + 1) % selected.length;
+      if (openPopup(urlFor(target))) {
+        setStatus("Opened " + target.name + ".", "good");
+      } else {
+        setStatus("That tab was blocked. Allow popups for this site, then try again.", "danger");
+      }
+    }
+    async function copyLinks() {
+      const urls = checkedTargets().map((target) => urlFor(target));
+      if (!urls.length) {
+        setStatus("Choose at least one search target first.", "warn");
+        return;
+      }
+      const text = urls.join("\\n");
+      try {
+        await navigator.clipboard.writeText(text);
+        setStatus("Copied " + urls.length + " link" + (urls.length === 1 ? "" : "s") + ".", "good");
+      } catch {
+        window.prompt("Copy these links:", text);
+      }
+    }
+    function searchAllSelected(event) {
+      if (event) event.preventDefault();
+      updateLinks();
+      saveSelection();
+      openTargets(checkedTargets());
+    }
+    form.addEventListener("submit", searchAllSelected);
+    searchAllButton.addEventListener("click", searchAllSelected);
+    queryInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") searchAllSelected(event);
+    });
+    queryInput.addEventListener("input", updateLinks);
+    checks.forEach((check) => check.addEventListener("change", () => {
+      nextCursor = 0;
+      saveSelection();
+    }));
+    document.getElementById("open-next").addEventListener("click", openNext);
+    document.getElementById("select-all").addEventListener("click", () => {
+      checks.forEach((check) => { check.checked = true; });
+      nextCursor = 0;
+      saveSelection();
+      setStatus("Selected all targets.", "good");
+    });
+    document.getElementById("select-none").addEventListener("click", () => {
+      checks.forEach((check) => { check.checked = false; });
+      nextCursor = 0;
+      saveSelection();
+      setStatus("Deselected all targets.", "warn");
+    });
+    document.getElementById("copy-links").addEventListener("click", copyLinks);
+    restoreSelection();
+    updateLinks();
+    queryInput.focus();
+    queryInput.setSelectionRange(queryInput.value.length, queryInput.value.length);
+  </script>
+</body>
+</html>`;
+  return new Response(html, {
+    headers: {
+      "content-type": "text/html; charset=utf-8",
+      "cache-control": "no-store"
+    }
+  });
+}
 function renderSiteCard(site) {
   const aliases = site.aliases
     .map((alias) => `<button class="alias" type="button" data-bang="!${escapeAttribute(alias)}" title="Use !${escapeAttribute(alias)} in the search box">!${escapeHtml(alias)}</button>`)
@@ -2854,6 +3686,7 @@ function renderSiteCard(site) {
     site.name,
     site.description || "",
     site.category || "",
+    site.searchTerms || "",
     ...site.aliases,
     site.home || ""
   ].join(" ").toLowerCase();
@@ -2876,6 +3709,9 @@ function renderSiteCard(site) {
     </article>`;
 }
 function getSiteType(site) {
+  if (site.handler === "multi") {
+    return { label: "Multisearch", className: "multi" };
+  }
   if (site.handler === "virustotal" || site.search) {
     return { label: "Search", className: "search" };
   }
@@ -2920,6 +3756,13 @@ export default {
     if (route === "favicon.svg" || route === "favicon.ico") {
       return renderFavicon();
     }
+    if (route.startsWith("multi/")) {
+      const multiId = normalizePath(route.slice("multi/".length));
+      const multi = MULTI_SEARCH_BY_ID.get(multiId) || MULTI_SEARCH_BY_ALIAS.get(multiId);
+      if (multi) {
+        return renderMultiSearchPage(multi, raw, url);
+      }
+    }
     // Root is the landing/help page. Search-engine URLs always include ?q=%s,
     // so this does not interfere with normal address-bar searching.
     if ((route === "" && !raw) || route === "help" || route === "bangs") {
@@ -2934,10 +3777,24 @@ export default {
       return renderHelpPage(url);
     }
     const shortcut = findShortcut(raw);
+    if (!shortcut) {
+      const reservedHint = getReservedBareQueryHint(raw);
+      if (reservedHint) {
+        return renderReservedBareQueryPage(raw, reservedHint, url);
+      }
+    }
     if (shortcut) {
+      const multi = MULTI_SEARCH_BY_ALIAS.get(shortcut.bang);
+      if (multi) {
+        return renderMultiSearchPage(multi, shortcut.query, url);
+      }
       const site = BANGS.get(shortcut.bang);
       if (site) {
         return handleSite(site, shortcut.query, url);
+      }
+      const reservedHint = RESERVED_BARE_QUERY_HINTS.get(shortcut.bang);
+      if (reservedHint) {
+        return renderReservedBareQueryPage(raw, reservedHint, url);
       }
     }
     return redirectTo(defaultEngine.search, raw);
