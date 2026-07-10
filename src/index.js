@@ -1619,8 +1619,8 @@ const SITES = SITE_GROUPS.flatMap((group) =>
 const MULTI_SEARCHES = [
   {
     id: "x",
-    name: "Web Search Multisearch",
-    description: "Search the same term across the main web search engines.",
+    name: "Web Multisearch",
+    description: "Search the same term across multiple search engines.",
     aliases: ["x", "xsearch", "xweb"],
     targets: [
       { type: "engine", key: "" },
@@ -1634,8 +1634,8 @@ const MULTI_SEARCHES = [
   {
     id: "xv",
     name: "Video Multisearch",
-    description: "Search video platforms and video-search engines at the same time.",
-    aliases: ["xv", "xvideo", "xvid"],
+    description: "Search multiple video platforms.",
+    aliases: ["xv", "vx", "xvideo", "xvid"],
     targets: [
       { type: "site", key: "yt" },
       { type: "site", key: "gv" },
@@ -1649,8 +1649,8 @@ const MULTI_SEARCHES = [
   {
     id: "xi",
     name: "Image Multisearch",
-    description: "Search image engines and visual discovery sites at the same time.",
-    aliases: ["xi", "ximage", "ximages", "ximg"],
+    description: "Search multiple image engines.",
+    aliases: ["xi", "ix", "ximage", "ximages", "ximg"],
     targets: [
       { type: "site", key: "gi" },
       { type: "site", key: "di" },
@@ -1664,8 +1664,8 @@ const MULTI_SEARCHES = [
   {
     id: "xn",
     name: "News Multisearch",
-    description: "Search news tabs across the main search engines.",
-    aliases: ["xn", "xnews"],
+    description: "Search news tabs across multiple search engines.",
+    aliases: ["xn", "nx", "xnews"],
     targets: [
       { type: "site", key: "gn" },
       { type: "site", key: "dn" },
@@ -1677,8 +1677,8 @@ const MULTI_SEARCHES = [
   {
     id: "xg",
     name: "Games Multisearch",
-    description: "Search game stores, deal trackers, compatibility tools, and game info sites.",
-    aliases: ["xg", "xgame", "xgames"],
+    description: "Search a game across multiple sites.",
+    aliases: ["xg", "gx", "xgame", "xgames"],
     targets: [
       { type: "site", key: "steam" },
       { type: "site", key: "gog" },
@@ -1693,7 +1693,7 @@ const MULTI_SEARCHES = [
   {
     id: "xs",
     name: "Shopping Multisearch",
-    description: "Search shopping sites, marketplaces, and shopping search engines.",
+    description: "Search multiple shopping sites.",
     aliases: ["xs", "xshop", "xshopping"],
     targets: [
       { type: "site", key: "gs" },
@@ -1712,7 +1712,7 @@ const MULTI_SEARCHES = [
     id: "x3d",
     name: "3D Model Multisearch",
     description: "Search printable model sites at the same time.",
-    aliases: ["x3d", "xmodels", "xprint", "3dall", "models"],
+    aliases: ["x3d", "xmodels", "xprint", "3dx"],
     targets: [
       { type: "site", key: "printables" },
       { type: "site", key: "maker" },
@@ -1725,7 +1725,7 @@ const MULTI_SEARCHES = [
   {
     id: "xai",
     name: "AI Multisearch",
-    description: "Open privacy-friendly AI assistants and AI tools. Tools without prompt-prefill support open to their home page.",
+    description: "Open multiple AI assistants and AI tools.",
     aliases: ["xai"],
     targets: [
       { type: "site", key: "duckai" },
@@ -1745,9 +1745,9 @@ const MULTI_SEARCHES = [
   },
   {
     id: "xeng",
-    name: "English Translation Multisearch",
-    description: "Translate English text into the configured destination languages at the same time.",
-    aliases: ["xeng", "xtrans", "xtranslate"],
+    name: "Translation Multisearch",
+    description: "Translate English text into multiple languages.",
+    aliases: ["xeng", "xtrans", "enex", "engex"],
     targets: [
       { type: "site", key: "enes" },
       { type: "site", key: "enfr" },
@@ -1761,9 +1761,9 @@ const MULTI_SEARCHES = [
   },
   {
     id: "xmap",
-    name: "Maps / Local Multisearch",
-    description: "Search maps and local-discovery tools at the same time.",
-    aliases: ["xmap", "xmaps", "xlocal"],
+    name: "Maps Multisearch",
+    description: "Open multiple maps at the same time.",
+    aliases: ["xmap", "xmaps"],
     targets: [
       { type: "site", key: "gm" },
       { type: "site", key: "dm" },
