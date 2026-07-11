@@ -31,7 +31,8 @@ const DEFAULT_ENGINES = [
     name: "Brave Search",
     paths: ["brave", "b"],
     home: "https://search.brave.com/",
-    search: "https://search.brave.com/search?q={q}"
+    search: "https://search.brave.com/search?q={q}",
+    icon: "https://cdn.search.brave.com/serp/v3/_app/immutable/assets/brave-logo-small.Bdzj7Bzm.svg"
   },
   {
     name: "Startpage",
@@ -67,6 +68,7 @@ const DEFAULT_ENGINES = [
 //   aliases:     Bang words.
 //   home:        Destination for a bang with no query.
 //   search:      Optional destination for a bang with a query.
+//   icon:        Optional favicon override. Otherwise /favicon.ico is derived from home.
 //   handler:     Optional special behavior.
 const SITE_GROUPS = [
   {
@@ -133,7 +135,8 @@ const SITE_GROUPS = [
         name: "Google News",
         aliases: ["gn", "gnews", "news"],
         home: "https://news.google.com/",
-        search: "https://www.google.com/search?tbm=nws&q={q}"
+        search: "https://www.google.com/search?tbm=nws&q={q}",
+        icon: "https://upload.wikimedia.org/wikipedia/commons/d/da/Google_News_icon.svg"
       },
       {
         name: "Google Maps",
@@ -200,25 +203,30 @@ const SITE_GROUPS = [
         name: "Brave Search",
         aliases: ["b", "brave", "brv"],
         home: "https://search.brave.com/",
-        search: "https://search.brave.com/search?q={q}"
+        search: "https://search.brave.com/search?q={q}",
+        icon: "https://cdn.search.brave.com/serp/v3/_app/immutable/assets/brave-logo-small.Bdzj7Bzm.svg"
+
       },
       {
         name: "Brave Images",
         aliases: ["bi", "bimg", "bimage", "bimages"],
         home: "https://search.brave.com/images",
-        search: "https://search.brave.com/images?q={q}"
+        search: "https://search.brave.com/images?q={q}",
+        icon: "https://cdn.search.brave.com/serp/v3/_app/immutable/assets/brave-logo-small.Bdzj7Bzm.svg"
       },
       {
         name: "Brave News",
         aliases: ["bn", "bnews"],
         home: "https://search.brave.com/news",
-        search: "https://search.brave.com/news?q={q}"
+        search: "https://search.brave.com/news?q={q}",
+        icon: "https://cdn.search.brave.com/serp/v3/_app/immutable/assets/brave-logo-small.Bdzj7Bzm.svg"
       },
       {
         name: "Brave Videos",
         aliases: ["bv", "bvideo", "bvideos"],
         home: "https://search.brave.com/videos",
-        search: "https://search.brave.com/videos?q={q}"
+        search: "https://search.brave.com/videos?q={q}",
+        icon: "https://cdn.search.brave.com/serp/v3/_app/immutable/assets/brave-logo-small.Bdzj7Bzm.svg"
       },
       {
         name: "Startpage",
@@ -301,7 +309,8 @@ const SITE_GROUPS = [
         name: "Lumo AI",
         description: "Open Proton’s privacy-first AI assistant.",
         aliases: ["lumo", "lumoai"],
-        home: "https://lumo.proton.me/"
+        home: "https://lumo.proton.me/",
+        icon: "https://i.logos-download.com/114204/30925-s1280-a85ed5fa7ad1cb185c800527723f847f.avif/Lumo_Logo_2025_Mascot-s1280.avif"
       },
       {
         name: "ChatGPT",
@@ -319,13 +328,15 @@ const SITE_GROUPS = [
         name: "Gemini",
         description: "Open Google Gemini.",
         aliases: ["gemini", "bard"],
-        home: "https://gemini.google.com/"
+        home: "https://gemini.google.com/",
+        icon: "https://upload.wikimedia.org/wikipedia/commons/1/1d/Google_Gemini_icon_2025.svg"
       },
       {
         name: "Perplexity",
         description: "Open Perplexity answer engine.",
         aliases: ["perplexity", "pplx"],
-        home: "https://www.perplexity.ai/"
+        home: "https://www.perplexity.ai/",
+        icon: "https://upload.wikimedia.org/wikipedia/commons/b/b5/Perplexity_AI_Turquoise_on_White.png"
       },
       {
         name: "Poe",
@@ -344,20 +355,6 @@ const SITE_GROUPS = [
         description: "Open Microsoft Copilot.",
         aliases: ["copilot", "mscopilot"],
         home: "https://copilot.microsoft.com/"
-      },
-      {
-        name: "You.com",
-        description: "Search You.com’s AI search engine.",
-        aliases: ["you", "youai", "youdotcom"],
-        home: "https://you.com/",
-        search: "https://you.com/search?q={q}"
-      },
-      {
-        name: "Phind",
-        description: "Search Phind for developer-focused AI answers.",
-        aliases: ["phind"],
-        home: "https://www.phind.com/",
-        search: "https://www.phind.com/search?q={q}"
       },
       {
         name: "HuggingChat",
@@ -387,7 +384,7 @@ const SITE_GROUPS = [
         description: "Open the Wikimedia project directory.",
         aliases: ["wm", "wikimedia"],
         home: "https://commons.wikimedia.org/wiki/Main_Page?vectornightmode=1",
-        search: "https://commons.wikimedia.org/w/index.php?search={q}"
+        search: "https://commons.wikimedia.org/w/index.php?search={q}&title=Special%3AMediaSearch&type=image"
       },
       {
         name: "Wikiversity",
@@ -470,7 +467,8 @@ const SITE_GROUPS = [
         description: "Read plain-language summaries and grades for terms of service.",
         aliases: ["tosdr", "tos"],
         home: "https://tosdr.org/en",
-        search: "https://tosdr.org/en/search/{q}"
+        search: "https://tosdr.org/en/search/{q}",
+        icon: "https://assets.tosdr.org/branding/tosdr-icon-32.svg"
       },
       {
         name: "23andMe Surname Discovery tool",
@@ -568,7 +566,8 @@ const SITE_GROUPS = [
       {
         name: "Google Finance",
         aliases: ["gf", "gfinance", "googlefinance"],
-        home: "https://www.google.com/finance/"
+        home: "https://www.google.com/finance/",
+        icon: "https://upload.wikimedia.org/wikipedia/commons/9/9f/Google_Finance_icon_%282020%29.svg"
       },
       {
         name: "Yahoo Finance",
@@ -965,7 +964,8 @@ const SITE_GROUPS = [
         description: "Search Blue Letter Bible using the English Standard Version.",
         aliases: ["blb", "bible", "blbesv", "esv"],
         home: "https://www.blueletterbible.org/esv/jhn/1/1/",
-        search: "https://www.blb.org/search/preSearch.cfm?plugin=yes&Criteria={q}&t=ESV"
+        search: "https://www.blb.org/search/preSearch.cfm?plugin=yes&Criteria={q}&t=ESV",
+        icon: ""
       },
       {
         name: "Blue Letter Bible — LSB",
@@ -1168,7 +1168,8 @@ const SITE_GROUPS = [
         description: "Private encrypted Gmail alternative.",
         aliases: ["pm", "protonmail"],
         home: "https://mail.proton.me/",
-        search: "https://mail.proton.me/u/0/almost-all-mail#keyword={q}"
+        search: "https://mail.proton.me/u/0/almost-all-mail#keyword={q}",
+        icon: "https://upload.wikimedia.org/wikipedia/commons/0/0c/ProtonMail_icon.svg"
       },
       {
         name: "Proton Drive",
@@ -1228,7 +1229,8 @@ const SITE_GROUPS = [
         name: "Brave Talk",
         description: "Open Brave’s browser-based video calling service.",
         aliases: ["talk", "btalk", "bravetalk"],
-        home: "https://talk.brave.com/"
+        home: "https://talk.brave.com/",
+        icon: "https://brave.com/talk/images/logo-brave-talk.svg"
       },
       {
         name: "Bitwarden",
@@ -1616,6 +1618,7 @@ const SITES = SITE_GROUPS.flatMap((group) =>
     category: group.category
   }))
 );
+const SITE_BY_ID = new Map(SITES.map((site) => [site.id, site]));
 const MULTI_SEARCHES = [
   {
     id: "x",
@@ -1781,6 +1784,17 @@ const {
   conflicts: MULTI_SEARCH_CONFLICTS,
   invalid: INVALID_MULTI_SEARCH_ALIASES
 } = buildMultiSearchIndex(MULTI_SEARCHES);
+const CROSS_ALIAS_CONFLICTS = [...MULTI_SEARCH_BY_ALIAS.entries()].flatMap(([alias, multi]) => {
+  const site = BANGS.get(alias);
+  return site ? [{ alias, first: site.name, second: multi.name }] : [];
+});
+const RESOLVED_MULTI_SEARCH_TARGETS = new Map(
+  MULTI_SEARCHES.map((multi) => [multi.id, resolveMultiSearchTargets(multi)])
+);
+const MULTI_SEARCH_CARD_TERMS = new Map(
+  MULTI_SEARCHES.map((multi) => [multi.id, buildMultiSearchCardSearchTerms(multi)])
+);
+const HELP_PAGE_HTML_CACHE = new Map();
 function buildDefaultEngineIndex(engines) {
   const index = new Map();
   for (const engine of engines) {
@@ -1878,6 +1892,29 @@ function extractDomain(query) {
 function normalizePath(value) {
   return String(value).replace(/^\/+|\/+$/g, "").toLowerCase();
 }
+function htmlResponse(html, cacheControl = "no-store") {
+  return new Response(html, {
+    headers: {
+      "content-type": "text/html; charset=utf-8",
+      "cache-control": cacheControl,
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "no-referrer"
+    }
+  });
+}
+function getFaviconUrl(site) {
+  const explicit = String(site?.icon || "").trim();
+  if (explicit) return explicit;
+  const home = String(site?.home || "").trim();
+  if (!home || home.startsWith("/")) return "";
+  try {
+    const url = new URL(home);
+    if (url.protocol !== "https:" && url.protocol !== "http:") return "";
+    return `${url.origin}/favicon.ico`;
+  } catch {
+    return "";
+  }
+}
 function getDefaultEngine(pathname) {
   return DEFAULT_ENGINE_BY_PATH.get(normalizePath(pathname)) || DEFAULT_ENGINE_BY_PATH.get("");
 }
@@ -1948,12 +1985,7 @@ function renderReservedBareQueryPage(raw, hint, requestUrl) {
   </main>
 </body>
 </html>`;
-  return new Response(html, {
-    headers: {
-      "content-type": "text/html; charset=utf-8",
-      "cache-control": "no-store"
-    }
-  });
+  return htmlResponse(html);
 }
 function handleSite(site, query, requestUrl) {
   if (site.handler === "virustotal") {
@@ -1968,7 +2000,7 @@ function handleSite(site, query, requestUrl) {
 // 6. AUTOMATIC HELP / HOMEPAGE
 // -----------------------------------------------------------------------------
 function buildMultiSearchCardSearchTerms(multi) {
-  const resolvedTargets = resolveMultiSearchTargets(multi);
+  const resolvedTargets = RESOLVED_MULTI_SEARCH_TARGETS?.get(multi.id) || resolveMultiSearchTargets(multi);
   return [
     multi.name,
     multi.description || "",
@@ -1985,9 +2017,17 @@ function buildMultiSearchCardSearchTerms(multi) {
 }
 function renderHelpPage(requestUrl) {
   const origin = requestUrl.origin;
-  const totalAliases = BANGS.size;
-  const totalSites = SITES.length;
-  const issues = [...ALIAS_CONFLICTS, ...INVALID_ALIASES, ...MULTI_SEARCH_CONFLICTS, ...INVALID_MULTI_SEARCH_ALIASES];
+  const cachedHtml = HELP_PAGE_HTML_CACHE.get(origin);
+  if (cachedHtml) return htmlResponse(cachedHtml);
+  const totalAliases = BANGS.size + MULTI_SEARCH_BY_ALIAS.size;
+  const totalSites = SITES.length + MULTI_SEARCHES.length;
+  const issues = [
+    ...ALIAS_CONFLICTS,
+    ...INVALID_ALIASES,
+    ...MULTI_SEARCH_CONFLICTS,
+    ...INVALID_MULTI_SEARCH_ALIASES,
+    ...CROSS_ALIAS_CONFLICTS
+  ];
   const engineCards = DEFAULT_ENGINES.map((engine) => {
     const primaryPath = engine.paths[0];
     const searchUrl = primaryPath
@@ -2041,7 +2081,7 @@ function renderHelpPage(requestUrl) {
       handler: "multi",
       id: `multi:${multi.id}`,
       category: "Multisearch",
-      searchTerms: buildMultiSearchCardSearchTerms(multi)
+      searchTerms: MULTI_SEARCH_CARD_TERMS.get(multi.id) || ""
     }))
   };
   const displayGroups = [multiSearchDisplayGroup, ...SITE_GROUPS];
@@ -2525,7 +2565,16 @@ function renderHelpPage(requestUrl) {
       border-radius: 12px;
     }
     .site-top { display: flex; gap: 10px; justify-content: space-between; align-items: flex-start; }
-    .site-name { color: var(--text); font-weight: 750; text-decoration: none; }
+    .site-heading { display: flex; align-items: center; gap: 9px; min-width: 0; }
+    .site-favicon {
+      width: 20px;
+      height: 20px;
+      flex: 0 0 20px;
+      object-fit: contain;
+      border-radius: 4px;
+    }
+    .site-favicon[hidden] { display: none; }
+    .site-name { min-width: 0; color: var(--text); font-weight: 750; text-decoration: none; overflow-wrap: anywhere; }
     .site-actions { justify-content: flex-end; }
     .site-description { min-height: 1.45em; margin: 8px 0 0; font-size: .87rem; }
     .aliases { margin-top: 11px; }
@@ -2739,7 +2788,16 @@ function renderHelpPage(requestUrl) {
     const defaults = document.getElementById("defaults");
     const groups = [...document.querySelectorAll("#groups .group")];
     const sourceCards = [...document.querySelectorAll("#groups .site-card")];
+    const cardsByGroup = new Map(
+      groups.map((group) => [group, [...group.querySelectorAll(".site-card")]])
+    );
     const sourceCardByKey = new Map(sourceCards.map((card) => [card.dataset.siteKey, card]));
+    document.addEventListener("error", (event) => {
+      const image = event.target;
+      if (image instanceof HTMLImageElement && image.matches("[data-site-favicon]")) {
+        image.hidden = true;
+      }
+    }, true);
     const favoritesSection = document.getElementById("favorites");
     const favoritesGrid = document.getElementById("favorites-grid");
     const favoritesCount = document.getElementById("favorites-count");
@@ -3065,26 +3123,29 @@ function renderHelpPage(requestUrl) {
         .trim()
         .toLowerCase()
         .replace(/[!;:.]/g, "");
-      defaults.hidden = query.length > 0;
+      const queryTokens = query.split(/\s+/).filter(Boolean);
+      const cardMatches = (card) =>
+        queryTokens.length === 0 || queryTokens.every((token) => card.dataset.search.includes(token));
+      defaults.hidden = queryTokens.length > 0;
       let visible = 0;
       sourceCards.forEach((card) => {
-        const matches = !query || card.dataset.search.includes(query);
+        const matches = cardMatches(card);
         card.hidden = !matches;
         if (matches) visible += 1;
       });
       groups.forEach((group) => {
-        const hasVisibleCard = [...group.querySelectorAll(".site-card")].some((card) => !card.hidden);
+        const hasVisibleCard = (cardsByGroup.get(group) || []).some((card) => !card.hidden);
         group.hidden = !hasVisibleCard;
-        if (query && hasVisibleCard) group.open = true;
+        if (queryTokens.length && hasVisibleCard) group.open = true;
       });
       const favoriteCards = [...favoritesGrid.querySelectorAll(".site-card")];
       let visibleFavorites = 0;
       favoriteCards.forEach((card) => {
-        const matches = !query || card.dataset.search.includes(query);
+        const matches = cardMatches(card);
         card.hidden = !matches;
         if (matches) visibleFavorites += 1;
       });
-      favoritesSection.hidden = favorites.length === 0 || (query.length > 0 && visibleFavorites === 0);
+      favoritesSection.hidden = favorites.length === 0 || (queryTokens.length > 0 && visibleFavorites === 0);
       empty.style.display = visible ? "none" : "block";
       updateBangPreview();
       renderRecentSearches();
@@ -3108,7 +3169,15 @@ function renderHelpPage(requestUrl) {
         target instanceof HTMLSelectElement ||
         target?.isContentEditable;
     }
-    filter.addEventListener("input", applyFilter);
+    let filterFrame = 0;
+    function scheduleFilter() {
+      if (filterFrame) return;
+      filterFrame = window.requestAnimationFrame(() => {
+        filterFrame = 0;
+        applyFilter();
+      });
+    }
+    filter.addEventListener("input", scheduleFilter);
     filter.addEventListener("keydown", (event) => {
       if (event.key === "Escape") {
         if (clearSearch()) {
@@ -3281,12 +3350,11 @@ function renderHelpPage(requestUrl) {
   </script>
 </body>
 </html>`;
-  return new Response(html, {
-    headers: {
-      "content-type": "text/html; charset=utf-8",
-      "cache-control": "no-store"
-    }
-  });
+  if (!HELP_PAGE_HTML_CACHE.has(origin) && HELP_PAGE_HTML_CACHE.size >= 4) {
+    HELP_PAGE_HTML_CACHE.clear();
+  }
+  HELP_PAGE_HTML_CACHE.set(origin, html);
+  return htmlResponse(html);
 }
 function resolveMultiSearchTargets(multi) {
   return multi.targets
@@ -3305,11 +3373,12 @@ function resolveMultiSearchTarget(target) {
       detail: "Default search engine",
       home: engine.home,
       search: engine.search,
+      icon: getFaviconUrl(engine),
       aliases: engine.paths
     };
   }
   if (target.type === "site") {
-    const site = BANGS.get(key) || SITES.find((candidate) => candidate.id === key);
+    const site = BANGS.get(key) || SITE_BY_ID.get(key);
     if (!site?.home) return null;
     return {
       id: `site:${site.id}`,
@@ -3317,6 +3386,7 @@ function resolveMultiSearchTarget(target) {
       detail: `${site.category} · !${site.aliases[0]}`,
       home: site.home,
       search: site.search || "",
+      icon: getFaviconUrl(site),
       aliases: site.aliases
     };
   }
@@ -3333,19 +3403,20 @@ function jsonForInlineScript(value) {
   return JSON.stringify(value).replaceAll("<", "\\u003c");
 }
 function renderMultiSearchPage(multi, query, requestUrl) {
-  const targets = resolveMultiSearchTargets(multi);
+  const targets = RESOLVED_MULTI_SEARCH_TARGETS.get(multi.id) || resolveMultiSearchTargets(multi);
   const trimmedQuery = query.trim();
-  const origin = requestUrl.origin;
   const primaryAlias = multi.aliases[0];
-  const directUrl = `${origin}/multi/${encodeURIComponent(multi.id)}?q=${encodeURIComponent(trimmedQuery)}`;
   const targetRows = targets.map((target, index) => {
     const href = buildMultiTargetUrl(target, trimmedQuery);
     return `
       <label class="target-row" data-target-row data-target-id="${escapeAttribute(target.id)}">
         <input class="target-check" type="checkbox" data-target-check="${index}" checked>
-        <span class="target-copy">
-          <strong>${escapeHtml(target.name)}</strong>
-          <span>${escapeHtml(target.detail)}</span>
+        <span class="target-main">
+          ${target.icon ? `<img class="target-favicon" src="${escapeAttribute(target.icon)}" alt="" width="22" height="22" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer" data-site-favicon>` : ""}
+          <span class="target-copy">
+            <strong>${escapeHtml(target.name)}</strong>
+            <span>${escapeHtml(target.detail)}</span>
+          </span>
         </span>
         <a class="target-open" href="${escapeAttribute(href)}" target="_blank" rel="noreferrer" data-target-link="${index}">Open</a>
       </label>`;
@@ -3472,6 +3543,9 @@ function renderMultiSearchPage(multi, query, requestUrl) {
     .target-row { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; padding: 12px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-2); }
     .target-row:has(input:not(:checked)) { opacity: .62; }
     .target-check { width: 20px; height: 20px; accent-color: var(--accent); }
+    .target-main { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .target-favicon { width: 22px; height: 22px; flex: 0 0 22px; object-fit: contain; border-radius: 4px; }
+    .target-favicon[hidden] { display: none; }
     .target-copy { display: grid; gap: 2px; min-width: 0; }
     .target-copy span { color: var(--muted); font-size: .86rem; overflow-wrap: anywhere; }
     .small { color: var(--muted); font-size: .86rem; }
@@ -3541,6 +3615,12 @@ function renderMultiSearchPage(multi, query, requestUrl) {
     const checks = [...document.querySelectorAll("[data-target-check]")];
     const links = [...document.querySelectorAll("[data-target-link]")];
     let nextCursor = 0;
+    document.addEventListener("error", (event) => {
+      const image = event.target;
+      if (image instanceof HTMLImageElement && image.matches("[data-site-favicon]")) {
+        image.hidden = true;
+      }
+    }, true);
 
     function setStatus(message, type = "") {
       status.textContent = message;
@@ -3575,6 +3655,21 @@ function renderMultiSearchPage(multi, query, requestUrl) {
         return target.search.replaceAll("{q}", encodeURIComponent(query));
       }
       return target.home;
+    }
+    function updateSearchAllLabel() {
+      const count = checkedTargets().length;
+      searchAllButton.textContent = count
+        ? "Search all selected (" + count + ")"
+        : "Search all selected";
+    }
+    function updateAddressBar() {
+      try {
+        const url = new URL(window.location.href);
+        const query = queryInput.value.trim();
+        if (query) url.searchParams.set("q", query);
+        else url.searchParams.delete("q");
+        window.history.replaceState(null, "", url);
+      } catch {}
     }
     function updateLinks() {
       links.forEach((link) => {
@@ -3642,40 +3737,53 @@ function renderMultiSearchPage(multi, query, requestUrl) {
     form.addEventListener("submit", searchAllSelected);
     searchAllButton.addEventListener("click", searchAllSelected);
     queryInput.addEventListener("keydown", (event) => {
-      if (event.key === "Enter") searchAllSelected(event);
+      if (event.key === "Enter") {
+        searchAllSelected(event);
+      } else if (event.key === "Escape") {
+        if (queryInput.value) {
+          queryInput.value = "";
+          updateLinks();
+          updateAddressBar();
+        } else {
+          queryInput.blur();
+        }
+        event.preventDefault();
+      }
     });
-    queryInput.addEventListener("input", updateLinks);
+    queryInput.addEventListener("input", () => {
+      updateLinks();
+      updateAddressBar();
+    });
     checks.forEach((check) => check.addEventListener("change", () => {
       nextCursor = 0;
       saveSelection();
+      updateSearchAllLabel();
     }));
     document.getElementById("open-next").addEventListener("click", openNext);
     document.getElementById("select-all").addEventListener("click", () => {
       checks.forEach((check) => { check.checked = true; });
       nextCursor = 0;
       saveSelection();
+      updateSearchAllLabel();
       setStatus("Selected all targets.", "good");
     });
     document.getElementById("select-none").addEventListener("click", () => {
       checks.forEach((check) => { check.checked = false; });
       nextCursor = 0;
       saveSelection();
+      updateSearchAllLabel();
       setStatus("Deselected all targets.", "warn");
     });
     document.getElementById("copy-links").addEventListener("click", copyLinks);
     restoreSelection();
     updateLinks();
+    updateSearchAllLabel();
     queryInput.focus();
     queryInput.setSelectionRange(queryInput.value.length, queryInput.value.length);
   </script>
 </body>
 </html>`;
-  return new Response(html, {
-    headers: {
-      "content-type": "text/html; charset=utf-8",
-      "cache-control": "no-store"
-    }
-  });
+  return htmlResponse(html);
 }
 function renderSiteCard(site) {
   const aliases = site.aliases
@@ -3691,13 +3799,20 @@ function renderSiteCard(site) {
     site.home || ""
   ].join(" ").toLowerCase();
   const link = site.home || "#";
+  const faviconUrl = getFaviconUrl(site);
+  const favicon = faviconUrl
+    ? `<img class="site-favicon" src="${escapeAttribute(faviconUrl)}" alt="" width="20" height="20" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer" data-site-favicon>`
+    : "";
   const description = site.description
     ? `<p class="site-description">${escapeHtml(site.description)}</p>`
     : "";
   return `
     <article class="site-card" data-site-key="${escapeAttribute(site.id)}" data-search="${escapeAttribute(searchText)}"${site.home ? ` title="${escapeAttribute(site.home)}"` : ""}>
       <div class="site-top">
-        <a class="site-name" href="${escapeAttribute(link)}" target="_blank" rel="noreferrer">${escapeHtml(site.name)}</a>
+        <div class="site-heading">
+          ${favicon}
+          <a class="site-name" href="${escapeAttribute(link)}" target="_blank" rel="noreferrer">${escapeHtml(site.name)}</a>
+        </div>
         <div class="site-actions">
           <span class="type ${type.className}" role="img" aria-label="${escapeAttribute(type.label)}" title="${escapeAttribute(type.label)}"></span>
           <button class="favorite-button" type="button" data-favorite="${escapeAttribute(site.id)}" aria-label="Add to favorites" aria-pressed="false" title="Add to favorites">☆</button>
