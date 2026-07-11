@@ -1176,40 +1176,46 @@ const SITE_GROUPS = [
         description: "Private Google Drive alternative.",
         aliases: ["pd", "protondrive"],
         home: "https://drive.proton.me/",
-        search: "https://drive.proton.me/u/0/search#q={q}"
+        search: "https://drive.proton.me/u/0/search#q={q}",
+        icon: "https://drive.proton.me/assets/static/favicon.24596a467a6707483736.svgg"
       },
       {
         name: "Proton Pass",
         description: "Open Proton Pass or search your password manager.",
         aliases: ["pp", "pass", "password"],
         home: "https://pass.proton.me/u/19",
-        search: "https://pass.proton.me/u/19/search#q={q}"
+        search: "https://pass.proton.me/u/19/search#q={q}",
+        icon: "https://pass.proton.me/assets/static/favicon.e8c1f23f352f3571d1a0.svg"
       },
       {
         name: "Proton Calendar",
         description: "Open Proton Calendar or search calendar items.",
         aliases: ["pc", "cal", "calendar"],
         home: "https://calendar.proton.me/",
-        search: "https://calendar.proton.me/u/0/search#q={q}"
+        search: "https://calendar.proton.me/u/0/search#q={q}",
+        icon: "https://calendar.proton.me/assets/static/favicon-calendar-dynamic-10.24df27be5355f022c1cb.svg"
       },
       {
         name: "Proton Docs",
         description: "Open Proton Docs or search your documents.",
         aliases: ["pdoc", "pdocs", "protondocs"],
         home: "https://docs.proton.me/",
-        search: "https://docs.proton.me/u/0/search#q={q}"
+        search: "https://docs.proton.me/u/0/search#q={q}",
+        icon: "https://docs.proton.me/assets/static/favicon.40633466c4eb6e41d336.svg"
       },
       {
         name: "Proton",
         description: "Proton referral link.",
         aliases: ["p", "proton"],
-        home: "https://micahjeffery.com/proton/"
+        home: "https://micahjeffery.com/proton/",
+        icon: "https://upload.wikimedia.org/wikipedia/commons/f/f3/Proton_AG_Logo_01.svg"
       },
       {
         name: "Proton Meet",
         description: "Open Proton’s browser-based meeting app.",
         aliases: ["meet", "pmeet", "protonmeet"],
-        home: "https://meet.proton.me/"
+        home: "https://meet.proton.me/",
+        icon: "https://meet.proton.me/assets/static/brand-dual-colors.8df93b2d4c98c9be4f01.svg"
       },
       {
         name: "GrapheneOS",
