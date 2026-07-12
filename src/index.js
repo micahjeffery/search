@@ -127,9 +127,10 @@ const SITE_GROUPS = [
       },
       {
         name: "Google Shopping",
-        aliases: ["gs", "gshop", "shopping"],
+        aliases: ["gs","gshop","shopping"],
         home: "https://shopping.google.com/",
-        search: "https://www.google.com/search?tbm=shop&q={q}"
+        search: "https://www.google.com/search?tbm=shop&q={q}",
+        icon: "https://www.gstatic.com/shopping/shoppingpage/casa/android/1x/home_60dp.png"
       },
       {
         name: "Google News",
@@ -388,20 +389,6 @@ const SITE_GROUPS = [
         search: "https://commons.wikimedia.org/w/index.php?search={q}&title=Special%3AMediaSearch&type=image"
       },
       {
-        name: "Wikiversity",
-        description: "Search free learning resources and educational projects.",
-        aliases: ["wv", "wikiversity"],
-        home: "https://en.wikiversity.org/wiki/",
-        search: "https://en.wikiversity.org/w/index.php?search={q}"
-      },
-      {
-        name: "Wikibooks",
-        description: "Search free textbooks and manuals.",
-        aliases: ["wbk", "wikibooks"],
-        home: "https://www.wikibooks.org/",
-        search: "https://en.wikibooks.org/w/index.php?search={q}"
-      },
-      {
         name: "Wikidata",
         description: "Search Wikimedia’s structured knowledge base.",
         aliases: ["wd", "wikidata"],
@@ -475,9 +462,10 @@ const SITE_GROUPS = [
       {
         name: "23andMe Surname Discovery tool",
         description: "Explore public surname-distribution results.",
-        aliases: ["23", "surname", "sur", "dna"],
+        aliases: ["23","surname","sur","dna"],
         home: "https://discover.23andme.com/",
-        search: "https://discover.23andme.com/last-name/{q}"
+        search: "https://discover.23andme.com/last-name/{q}",
+        icon: "https://icons.duckduckgo.com/ip3/23andme.org.ico"
       }
     ]
   },
@@ -612,9 +600,10 @@ const SITE_GROUPS = [
       {
         name: "Monument Metals",
         description: "Shop bullion and precious-metals products.",
-        aliases: ["monument", "monumentmetals", "mm"],
+        aliases: ["monument","monumentmetals","mm"],
         home: "https://monumentmetals.com/",
-        search: "https://monumentmetals.com/search.html?query={q}"
+        search: "https://monumentmetals.com/search.html?query={q}",
+        icon: "https://monumentmetals.com/static-assets/icons/favicon.png"
       },
       {
         name: "APMEX & Spot Prices",
@@ -703,9 +692,10 @@ const SITE_GROUPS = [
       {
         name: "YouTube Studio",
         description: "Open YouTube Studio or search YouTube’s official blog.",
-        aliases: ["yts", "studio", "youtubestudio"],
+        aliases: ["yts","studio","youtubestudio"],
         home: "https://studio.youtube.com/",
-        search: "https://blog.youtube/search/?domain=youtube&query={q}&order=relevance"
+        search: "https://blog.youtube/search/?domain=youtube&query={q}&order=relevance",
+        icon: "https://static.wikia.nocookie.net/logopedia/images/b/b3/YouTube_Studio_gradient.svg/revision/latest?cb=20241015005737"
       },
       {
         name: "Spotify",
@@ -760,10 +750,10 @@ const SITE_GROUPS = [
     sites: [
       {
         name: "LinkedIn",
-        aliases: ["l", "li", "linkedin"],
+        aliases: ["l","li","linkedin"],
         home: "https://www.linkedin.com/",
         search: "https://www.linkedin.com/search/results/all/?keywords={q}",
-        icon: "https://static.licdn.com/aero-v1/sc/h/akt4ae504epesldzj74dzred8"
+        icon: "https://icons.duckduckgo.com/ip3/linkedin.com.ico"
       },
       {
         name: "X",
@@ -773,9 +763,10 @@ const SITE_GROUPS = [
       },
       {
         name: "Instagram",
-        aliases: ["ig", "insta", "instagram"],
+        aliases: ["ig","insta","instagram"],
         home: "https://www.instagram.com/",
-        search: "https://www.instagram.com/explore/search/keyword/?q={q}"
+        search: "https://www.instagram.com/explore/search/keyword/?q={q}",
+        icon: "https://static.cdninstagram.com/rsrc.php/y4/r/QaBlI0OZiks.ico"
       },
       {
         name: "Facebook",
@@ -803,8 +794,10 @@ const SITE_GROUPS = [
       },
       {
         name: "Discord",
-        aliases: ["dc", "disc", "discord"],
-        home: "https://discord.com/channels/@me"
+        description: "Messaging and encrypted VoIP platform.",
+        aliases: ["dc","disc","discord"],
+        home: "https://discord.com/channels/@me",
+        icon: "https://icons.duckduckgo.com/ip3/discord.com.ico"
       }
     ]
   },
@@ -923,8 +916,9 @@ const SITE_GROUPS = [
       {
         name: "BumpMesh",
         description: "Apply textures to 3D objects.",
-        aliases: ["bump", "bumpmesh", "3dtexture"],
-        home: "https://bumpmesh.com/"      
+        aliases: ["bump","bumpmesh","3dtexture"],
+        home: "https://bumpmesh.com/",
+        icon: "https://bumpmesh.com/logo.png"
       },
       {
         name: "Texturelabs",
@@ -966,30 +960,34 @@ const SITE_GROUPS = [
       {
         name: "Blue Letter Bible — ESV",
         description: "Search Blue Letter Bible using the English Standard Version.",
-        aliases: ["blb", "bible", "blbesv", "esv"],
+        aliases: ["blb","bible","blbesv","esv"],
         home: "https://www.blueletterbible.org/esv/jhn/1/1/",
-        search: "https://www.blb.org/search/preSearch.cfm?plugin=yes&Criteria={q}&t=ESV"
+        search: "https://www.blb.org/search/preSearch.cfm?plugin=yes&Criteria={q}&t=ESV",
+        icon: "https://www.blueletterbible.org/assets/images/favicon/apple-touch-icon-114x114.png"
       },
       {
         name: "Blue Letter Bible — LSB",
         description: "Search Blue Letter Bible using the Legacy Standard Bible.",
         aliases: ["lsb", "blblsb"],
         home: "https://www.blueletterbible.org/lsb/jhn/1/1/",
-        search: "https://www.blb.org/search/preSearch.cfm?plugin=yes&Criteria={q}&t=LSB"
+        search: "https://www.blb.org/search/preSearch.cfm?plugin=yes&Criteria={q}&t=LSB",
+        icon: "https://www.blueletterbible.org/assets/images/favicon/apple-touch-icon-114x114.png"
       },
       {
         name: "Blue Letter Bible — NIV",
         description: "Search Blue Letter Bible using the New International Version.",
         aliases: ["niv", "blbniv"],
         home: "https://www.blueletterbible.org/niv/jhn/1/1/",
-        search: "https://www.blb.org/search/preSearch.cfm?plugin=yes&Criteria={q}&t=NIV"
+        search: "https://www.blb.org/search/preSearch.cfm?plugin=yes&Criteria={q}&t=NIV",
+        icon: "https://www.blueletterbible.org/assets/images/favicon/apple-touch-icon-114x114.png"
       },
       {
         name: "Blue Letter Bible — KJV",
         description: "Search Blue Letter Bible using the King James Version.",
         aliases: ["kjv", "blbkjv"],
         home: "https://www.blueletterbible.org/kjv/jhn/1/1/",
-        search: "https://www.blb.org/search/preSearch.cfm?plugin=yes&Criteria={q}&t=KJV"
+        search: "https://www.blb.org/search/preSearch.cfm?plugin=yes&Criteria={q}&t=KJV",
+        icon: "https://www.blueletterbible.org/assets/images/favicon/apple-touch-icon-114x114.png"
       }
     ]
   },
@@ -1005,117 +1003,136 @@ const SITE_GROUPS = [
       {
         name: "DeepL — Auto to English",
         description: "Translate detected text into English with DeepL.",
-        aliases: ["deepl", "dl", "trans", "translate"],
+        aliases: ["deepl","dl","trans","translate"],
         home: "https://www.deepl.com/translator",
-        search: "https://www.deepl.com/translator#xx/en/{q}"
+        search: "https://www.deepl.com/translator#xx/en/{q}",
+        icon: "https://static.deepl.com/img/logo/deepl-logo-blue.svg"
       },
       {
         name: "DeepL — English to Spanish",
         aliases: ["enes", "ensp"],
         home: "https://www.deepl.com/translator#en/es",
-        search: "https://www.deepl.com/translator#en/es/{q}"
+        search: "https://www.deepl.com/translator#en/es/{q}",
+        icon: "https://static.deepl.com/img/logo/deepl-logo-blue.svg"
       },
       {
         name: "DeepL — Spanish to English",
         aliases: ["esen", "spen"],
         home: "https://www.deepl.com/translator#es/en",
-        search: "https://www.deepl.com/translator#es/en/{q}"
+        search: "https://www.deepl.com/translator#es/en/{q}",
+        icon: "https://static.deepl.com/img/logo/deepl-logo-blue.svg"
       },
       {
         name: "DeepL — English to French",
         aliases: ["enfr"],
         home: "https://www.deepl.com/translator#en/fr",
-        search: "https://www.deepl.com/translator#en/fr/{q}"
+        search: "https://www.deepl.com/translator#en/fr/{q}",
+        icon: "https://static.deepl.com/img/logo/deepl-logo-blue.svg"
       },
       {
         name: "DeepL — French to English",
         aliases: ["fren"],
         home: "https://www.deepl.com/translator#fr/en",
-        search: "https://www.deepl.com/translator#fr/en/{q}"
+        search: "https://www.deepl.com/translator#fr/en/{q}",
+        icon: "https://static.deepl.com/img/logo/deepl-logo-blue.svg"
       },
       {
         name: "DeepL — Spanish to French",
         aliases: ["esfr", "spfr"],
         home: "https://www.deepl.com/translator#es/fr",
-        search: "https://www.deepl.com/translator#es/fr/{q}"
+        search: "https://www.deepl.com/translator#es/fr/{q}",
+        icon: "https://static.deepl.com/img/logo/deepl-logo-blue.svg"
       },
       {
         name: "DeepL — French to Spanish",
         aliases: ["fres", "frsp"],
         home: "https://www.deepl.com/translator#fr/es",
-        search: "https://www.deepl.com/translator#fr/es/{q}"
+        search: "https://www.deepl.com/translator#fr/es/{q}",
+        icon: "https://static.deepl.com/img/logo/deepl-logo-blue.svg"
       },
       {
         name: "DeepL — English to German",
         aliases: ["ende"],
         home: "https://www.deepl.com/translator#en/de",
-        search: "https://www.deepl.com/translator#en/de/{q}"
+        search: "https://www.deepl.com/translator#en/de/{q}",
+        icon: "https://static.deepl.com/img/logo/deepl-logo-blue.svg"
       },
       {
         name: "DeepL — German to English",
         aliases: ["deen"],
         home: "https://www.deepl.com/translator#de/en",
-        search: "https://www.deepl.com/translator#de/en/{q}"
+        search: "https://www.deepl.com/translator#de/en/{q}",
+        icon: "https://static.deepl.com/img/logo/deepl-logo-blue.svg"
       },
       {
         name: "DeepL — English to Italian",
         aliases: ["enit"],
         home: "https://www.deepl.com/translator#en/it",
-        search: "https://www.deepl.com/translator#en/it/{q}"
+        search: "https://www.deepl.com/translator#en/it/{q}",
+        icon: "https://static.deepl.com/img/logo/deepl-logo-blue.svg"
       },
       {
         name: "DeepL — Italian to English",
         aliases: ["iten"],
         home: "https://www.deepl.com/translator#it/en",
-        search: "https://www.deepl.com/translator#it/en/{q}"
+        search: "https://www.deepl.com/translator#it/en/{q}",
+        icon: "https://static.deepl.com/img/logo/deepl-logo-blue.svg"
       },
       {
         name: "DeepL — English to Portuguese",
         aliases: ["enpt"],
         home: "https://www.deepl.com/translator#en/pt",
-        search: "https://www.deepl.com/translator#en/pt/{q}"
+        search: "https://www.deepl.com/translator#en/pt/{q}",
+        icon: "https://static.deepl.com/img/logo/deepl-logo-blue.svg"
       },
       {
         name: "DeepL — Portuguese to English",
         aliases: ["pten"],
         home: "https://www.deepl.com/translator#pt/en",
-        search: "https://www.deepl.com/translator#pt/en/{q}"
+        search: "https://www.deepl.com/translator#pt/en/{q}",
+        icon: "https://static.deepl.com/img/logo/deepl-logo-blue.svg"
       },
       {
         name: "DeepL — English to Japanese",
         aliases: ["enja"],
         home: "https://www.deepl.com/translator#en/ja",
-        search: "https://www.deepl.com/translator#en/ja/{q}"
+        search: "https://www.deepl.com/translator#en/ja/{q}",
+        icon: "https://static.deepl.com/img/logo/deepl-logo-blue.svg"
       },
       {
         name: "DeepL — Japanese to English",
         aliases: ["jaen"],
         home: "https://www.deepl.com/translator#ja/en",
-        search: "https://www.deepl.com/translator#ja/en/{q}"
+        search: "https://www.deepl.com/translator#ja/en/{q}",
+        icon: "https://static.deepl.com/img/logo/deepl-logo-blue.svg"
       },
       {
         name: "DeepL — English to Chinese",
         aliases: ["enzh"],
         home: "https://www.deepl.com/translator#en/zh",
-        search: "https://www.deepl.com/translator#en/zh/{q}"
+        search: "https://www.deepl.com/translator#en/zh/{q}",
+        icon: "https://static.deepl.com/img/logo/deepl-logo-blue.svg"
       },
       {
         name: "DeepL — Chinese to English",
         aliases: ["zhen"],
         home: "https://www.deepl.com/translator#zh/en",
-        search: "https://www.deepl.com/translator#zh/en/{q}"
+        search: "https://www.deepl.com/translator#zh/en/{q}",
+        icon: "https://static.deepl.com/img/logo/deepl-logo-blue.svg"
       },
       {
         name: "DeepL — English to Korean",
         aliases: ["enko"],
         home: "https://www.deepl.com/translator#en/ko",
-        search: "https://www.deepl.com/translator#en/ko/{q}"
+        search: "https://www.deepl.com/translator#en/ko/{q}",
+        icon: "https://static.deepl.com/img/logo/deepl-logo-blue.svg"
       },
       {
         name: "DeepL — Korean to English",
         aliases: ["koen"],
         home: "https://www.deepl.com/translator#ko/en",
-        search: "https://www.deepl.com/translator#ko/en/{q}"
+        search: "https://www.deepl.com/translator#ko/en/{q}",
+        icon: "https://static.deepl.com/img/logo/deepl-logo-blue.svg"
       }
     ]
   },
@@ -1124,7 +1141,7 @@ const SITE_GROUPS = [
     sites: [
       {
         name: "Gmail",
-        aliases: ["go", "gma", "gmail", "mail"],
+        aliases: ["go","gma","gmail","mail"],
         home: "https://mail.google.com/",
         search: "https://mail.google.com/mail/u/0/#search/{q}"
       },
@@ -1138,14 +1155,16 @@ const SITE_GROUPS = [
         name: "Google Docs",
         aliases: ["gd", "docs", "gdoc", "gdocs"],
         home: "https://docs.google.com/document/u/0/",
-        search: "https://docs.google.com/document/u/0/?q={q}"
+        search: "https://docs.google.com/document/u/0/?q={q}",
+        icon: "https://www.gstatic.com/images/branding/productlogos/docs_2026/v2/web/192px.svg"
       },
       {
         name: "Google Voice",
         description: "Open Google Voice or search your messages.",
-        aliases: ["voice", "gvo", "gvoice", "gvmail"],
+        aliases: ["voice","gvo","gvoice","gvmail"],
         home: "https://voice.google.com/u/1/",
-        search: "https://voice.google.com/u/1/search?from=%5B%5D&q=%5B%22{q}%22%5D"
+        search: "https://voice.google.com/u/1/search?from=%5B%5D&q=%5B%22{q}%22%5D",
+        icon: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Google_Voice_Logo_05.2026.svg/1280px-Google_Voice_Logo_05.2026.svg.png"
       },
       {
         name: "OneDrive",
@@ -1177,10 +1196,10 @@ const SITE_GROUPS = [
       {
         name: "Proton Drive",
         description: "Private Google Drive alternative.",
-        aliases: ["pd", "protondrive"],
+        aliases: ["pd","protondrive"],
         home: "https://drive.proton.me/",
         search: "https://drive.proton.me/u/0/search#q={q}",
-        icon: "https://drive.proton.me/assets/static/favicon.24596a467a6707483736.svgg"
+        icon: "https://drive.proton.me/assets/android-chrome-192x192.png"
       },
       {
         name: "Proton Pass",
@@ -1193,10 +1212,10 @@ const SITE_GROUPS = [
       {
         name: "Proton Calendar",
         description: "Open Proton Calendar or search calendar items.",
-        aliases: ["pc", "cal", "calendar"],
+        aliases: ["pc","cal","calendar"],
         home: "https://calendar.proton.me/",
         search: "https://calendar.proton.me/u/0/search#q={q}",
-        icon: "https://calendar.proton.me/assets/static/favicon-calendar-dynamic-10.24df27be5355f022c1cb.svg"
+        icon: "https://calendar.proton.me/assets/android-chrome-192x192.png"
       },
       {
         name: "Proton Docs",
@@ -1216,9 +1235,9 @@ const SITE_GROUPS = [
       {
         name: "Proton Meet",
         description: "Open Proton’s browser-based meeting app.",
-        aliases: ["meet", "pmeet", "protonmeet"],
+        aliases: ["meet","pmeet","protonmeet"],
         home: "https://meet.proton.me/",
-        icon: "https://meet.proton.me/assets/static/brand-dual-colors.8df93b2d4c98c9be4f01.svg"
+        icon: "https://meet.proton.me/assets/static/favicon.0df442ee78b4350582c6.svg"
       },
       {
         name: "GrapheneOS",
@@ -1256,15 +1275,17 @@ const SITE_GROUPS = [
       },
       {
         name: "Signal",
-        description: "Private encrypted messaging app",
+        description: "Private encrypted messaging app.",
         aliases: ["signal"],
-        home: "https://signal.org/download/"
+        home: "https://signal.org/download/",
+        icon: "https://signal.org/assets/images/favicon/favicon-32x32.png"
       },
       {
         name: "Ente Auth",
         description: "Open Ente’s 2FA authentication app.",
-        aliases: ["ente", "ea", "auth"],
-        home: "https://auth.ente.com/auth"
+        aliases: ["ente","ea","auth"],
+        home: "https://auth.ente.com/auth",
+        icon: "https://auth.ente.com/images/favicon.png"
       },
       {
         name: "Privacy.com",
@@ -1277,6 +1298,7 @@ const SITE_GROUPS = [
         description: "Paste a file, URL, or hostname to open its VirusTotal domain report.",
         aliases: ["virus", "vt", "virustotal"],
         home: "https://www.virustotal.com/gui/home/url",
+        icon: "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://www.virustotal.com&size=128",
         handler: "virustotal"
       },
       {
@@ -1309,8 +1331,9 @@ const SITE_GROUPS = [
       {
         name: "Tuta Mail",
         description: "Private encrypted Gmail alternative.",
-        aliases: ["tuta", "tm", "tutamail"],
-        home: "https://mail.tutanota.com/"
+        aliases: ["tuta","tm","tutamail"],
+        home: "https://mail.tutanota.com/",
+        icon: "https://mail.tutanota.com/images/logo-favicon.svg"
       },
       {
         name: "Guerrilla Mail",
@@ -1329,44 +1352,51 @@ const SITE_GROUPS = [
         aliases: ["math", "calc"],
         home: "https://www.wolframalpha.com/",
         search: "https://www.wolframalpha.com/input?i={q}",
+        icon: "https://icons.duckduckgo.com/ip3/wolframalpha.com.ico",
         handler: "math"
       },
       {
         name: "Micah Jeffery",
         description: "Open Micah Jeffery’s site.",
-        aliases: ["mj", "micah"],
-        home: "https://www.micahjeffery.com",
-        search: "https://www.micahjeffery.com/_/search?query={q}"
+        aliases: ["mj","micah"],
+        home: "https://www.micahjeffery.com/",
+        search: "https://www.micahjeffery.com/_/search?query={q}",
+        icon: "https://icons.duckduckgo.com/ip3/micahjeffery.com.ico"
       },
       {
         name: "Micah Jeffery > apps",
         description: "Open the applications links page.",
         aliases: ["apps", "mja"],
-        home: "https://www.micahjeffery.com/links/applications"
+        home: "https://www.micahjeffery.com/links/applications",
+        icon: "https://icons.duckduckgo.com/ip3/micahjeffery.com.ico"
       },
       {
         name: "Micah Jeffery > extensions",
         description: "Open the browser-extensions links page.",
         aliases: ["mje", "extensions"],
-        home: "https://www.micahjeffery.com/links/extensions"
+        home: "https://www.micahjeffery.com/links/extensions",
+        icon: "https://icons.duckduckgo.com/ip3/micahjeffery.com.ico"
       },
       {
         name: "Micah Jeffery > hysa",
         description: "Open the high-yield savings-account page.",
         aliases: ["mjs", "mjh", "hysa", "hysas", "apy", "savings"],
-        home: "https://www.micahjeffery.com/financial/hysas"
+        home: "https://www.micahjeffery.com/financial/hysas",
+        icon: "https://icons.duckduckgo.com/ip3/micahjeffery.com.ico"
       },
       {
         name: "Micah Jeffery > referrals",
         description: "Open the referral and savings links page.",
         aliases: ["refer", "mjr", "referral", "referrals"],
-        home: "https://www.micahjeffery.com/financial/hysas"
+        home: "https://www.micahjeffery.com/financial/hysas",
+        icon: "https://icons.duckduckgo.com/ip3/micahjeffery.com.ico"
       },
       {
         name: "Caption Ninja",
         description: "Open browser-based captioning tools.",
         aliases: ["caption", "cap"],
-        home: "https://caption.ninja/"
+        home: "https://caption.ninja/",
+        icon: "https://caption.ninja/favicon.svg"
       },
       {
         name: "Case Converter",
@@ -1377,8 +1407,9 @@ const SITE_GROUPS = [
       {
         name: "Coolors",
         description: "Open a color-palette generator.",
-        aliases: ["color", "coolors"],
-        home: "https://coolors.co/?home"
+        aliases: ["color","coolors"],
+        home: "https://coolors.co/?home",
+        icon: "https://coolors.co/assets/img/favicon.png"
       },
       {
         name: "Cursors",
@@ -1389,8 +1420,9 @@ const SITE_GROUPS = [
       {
         name: "Cobalt Downloader",
         description: "Download media from X, Facebook, Instagram, Pinterest, Reddit, Snapchat, Soundcloud, Tiktok, Twitch, etc.",
-        aliases: ["download", "cobalt"],
-        home: "https://cobalt.tools/"
+        aliases: ["download","cobalt"],
+        home: "https://cobalt.tools/",
+        icon: "https://cobalt.tools/icons/apple-touch-icon.png"
       },
       {
         name: "Excalidraw",
@@ -1425,15 +1457,17 @@ const SITE_GROUPS = [
       {
         name: "Photopea",
         description: "Browser-based Photoshop alternative image editor.",
-        aliases: ["photo", "ps"],
-        home: "https://www.photopea.com/"
+        aliases: ["photo","ps"],
+        home: "https://www.photopea.com/",
+        icon: "https://www.photopea.com/promo/icon512.png"
       },
       {
         name: "SVG Repo",
         description: "Search free open-licensed SVG vectors and icons.",
-        aliases: ["svgrepo", "svg", "icons"],
+        aliases: ["svgrepo","svg","icons"],
         home: "https://www.svgrepo.com/",
-        search: "https://www.svgrepo.com/vectors/{q}/"
+        search: "https://www.svgrepo.com/vectors/{q}/",
+        icon: "https://www.svgrepo.com/android-chrome-192x192.png"
       },
       {
         name: "VectorMaker",
@@ -1454,8 +1488,9 @@ const SITE_GROUPS = [
       {
         name: "JPEG Optimizer",
         description: "Compress and optimize JPEG images.",
-        aliases: ["jpeg", "compress"],
-        home: "https://jpeg-optimizer.com/"
+        aliases: ["jpeg","compress"],
+        home: "https://jpeg-optimizer.com/",
+        icon: "https://jpeg-optimizer.com/favicons/favicon.ico"
       },
       {
         name: "Image Extractor",
@@ -1472,26 +1507,30 @@ const SITE_GROUPS = [
       {
         name: "Unicode Faces",
         description: "Browse text faces and Unicode emoticons.",
-        aliases: ["face", "unicode"],
-        home: "https://textfac.es/"
+        aliases: ["face","unicode"],
+        home: "https://textfac.es/",
+        icon: "https://textfac.es/static/ico/favicon.png"
       },
       {
         name: "Wormhole File Transfer",
         description: "Send files directly with Wormhole.",
-        aliases: ["file", "wh", "worm", "transfer", "transf", "wormhole"],
-        home: "https://wormhole.app/"
+        aliases: ["file","wh","worm","transfer","transf","wormhole"],
+        home: "https://wormhole.app/",
+        icon: "https://icons.duckduckgo.com/ip3/wormhole.app.ico"
       },
       {
         name: "WhatFontIs",
         description: "Identify fonts from an image.",
-        aliases: ["font", "whatfont"],
-        home: "https://www.whatfontis.com/"
+        aliases: ["font","whatfont"],
+        home: "https://www.whatfontis.com/",
+        icon: "https://d1ly52g9wjvbd2.cloudfront.net/favicon.ico"
       },
       {
         name: "VDO.Ninja",
         description: "Bring live video from any phone or computer into OBS.",
-        aliases: ["vdo", "obs"],
-        home: "https://vdo.ninja/"
+        aliases: ["vdo","obs"],
+        home: "https://vdo.ninja/",
+        icon: "https://vdo.ninja/media/favicon-32x32.png"
       },
       {
         name: "OnlineOCR",
@@ -1503,14 +1542,16 @@ const SITE_GROUPS = [
         name: "TinyWow PDF Tools",
         description: "Open browser-based PDF tools.",
         aliases: ["pdf"],
-        home: "https://tinywow.com/tools/pdf"
+        home: "https://tinywow.com/tools/pdf",
+        icon: "https://tinywow.com/v3/img/favicon-tinywow.svg"
       },
       {
         name: "QuickChart QR Generator",
         description: "Generate a QR code from text or a URL.",
-        aliases: ["qr", "qrcode"],
+        aliases: ["qr","qrcode"],
         home: "https://quickchart.io/qr-code-api/",
-        search: "https://quickchart.io/qr?text={q}"
+        search: "https://quickchart.io/qr?text={q}",
+        icon: "https://quickchart.io/favicon-32x32.png"
       },
       {
         name: "ZXing QR Decoder",
@@ -1522,9 +1563,10 @@ const SITE_GROUPS = [
       {
         name: "Wayback Machine",
         description: "Open archived versions of websites.",
-        aliases: ["wb", "wbm", "archive", "wayback"],
+        aliases: ["wb","wbm","archive","wayback"],
         home: "https://web.archive.org/",
-        search: "https://web.archive.org/web/*/{q}"
+        search: "https://web.archive.org/web/*/{q}",
+        icon: "https://web-static.archive.org/_static/images/archive.ico"
       },
       {
         name: "Receive SMS",
@@ -1535,8 +1577,9 @@ const SITE_GROUPS = [
       {
         name: "Fast.com",
         description: "Run a simple internet-speed test.",
-        aliases: ["test", "speed", "fast"],
-        home: "https://fast.com/"
+        aliases: ["test","speed","fast"],
+        home: "https://fast.com/",
+        icon: "https://fast.com/assets/favicons/apple-icon-180x180.png"
       },
       {
         name: "Text Statistics",
@@ -1548,7 +1591,8 @@ const SITE_GROUPS = [
         name: "Upscale.media",
         description: "Open an image-upscaling tool.",
         aliases: ["upscale"],
-        home: "https://www.upscale.media/upload"
+        home: "https://www.upscale.media/upload",
+        icon: "https://cdn.pixelbin.io/v2/dummy-cloudname/original/upscalemedia_assets/logo/upscale_light_favicon.png?f_auto=true"
       },
       {
         name: "Wallhaven",
@@ -1564,9 +1608,10 @@ const SITE_GROUPS = [
     sites: [
       {
         name: "Monkeytype",
-        description: "Practice typing with customizable tests.",
-        aliases: ["type", "mt", "monkey"],
-        home: "https://monkeytype.com/"
+        description: "Practice typing.",
+        aliases: ["type","mt","monkey"],
+        home: "https://monkeytype.com/",
+        icon: "https://monkeytype.com/images/favicon/favicon.ico"
       },
       {
         name: "Agile Fingers",
@@ -1583,9 +1628,10 @@ const SITE_GROUPS = [
       {
         name: "AnkiWeb",
         description: "Browse or search shared Anki flashcard decks.",
-        aliases: ["anki", "flashcards"],
+        aliases: ["anki","flashcards"],
         home: "https://ankiweb.net/decks",
-        search: "https://ankiweb.net/shared/decks?search={q}"
+        search: "https://ankiweb.net/shared/decks?search={q}",
+        icon: "https://ankiweb.net/logo.png"
       },
       {
         name: "Language Squad",
@@ -1596,8 +1642,9 @@ const SITE_GROUPS = [
       {
         name: "EthnoGuessr",
         description: "Open the EthnoGuessr game.",
-        aliases: ["ethno", "race", "ethnicity", "ethnogussr", "hbd"],
-        home: "https://hbd.gg/"
+        aliases: ["ethno","race","ethnicity","ethnogussr","hbd"],
+        home: "https://hbd.gg/",
+        icon: "https://hbd.gg/static/ethnoguessr/icons/apple-touch-icon.png"
       },
       {
         name: "Justin Guitar",
@@ -1612,7 +1659,21 @@ const SITE_GROUPS = [
         aliases: ["mit", "ocw"],
         home: "https://ocw.mit.edu/",
         search: "https://ocw.mit.edu/search/?q={q}"
-       }
+      },
+      {
+        name: "Wikiversity",
+        description: "Search free learning resources and educational projects.",
+        aliases: ["wv", "wikiversity"],
+        home: "https://en.wikiversity.org/wiki/",
+        search: "https://en.wikiversity.org/w/index.php?search={q}"
+       },
+       {
+        name: "Wikibooks",
+        description: "Search free textbooks and manuals.",
+        aliases: ["wbk", "wikibooks"],
+        home: "https://www.wikibooks.org/",
+        search: "https://en.wikibooks.org/w/index.php?search={q}"
+      }
     ]
   }
 ];
