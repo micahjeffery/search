@@ -143,7 +143,8 @@ const SITE_GROUPS = [
         name: "Google Maps",
         aliases: ["m", "gm", "gmap", "gmaps", "maps"],
         home: "https://www.google.com/maps",
-        search: "https://www.google.com/maps/search/{q}"
+        search: "https://www.google.com/maps/search/{q}",
+        icon: "https://upload.wikimedia.org/wikipedia/commons/a/a3/Google_Maps_icon_%282026%29.svg"
       },
       {
         name: "DuckDuckGo",
@@ -348,8 +349,9 @@ const SITE_GROUPS = [
       {
         name: "Mistral Vibe",
         description: "Open Mistral’s AI chat and agent product, formerly Le Chat.",
-        aliases: ["mistral", "vibe", "lechat"],
-        home: "https://chat.mistral.ai/"
+        aliases: ["mistral","vibe","lechat"],
+        home: "https://chat.mistral.ai/",
+        icon: "https://icons.duckduckgo.com/ip3/chat.mistral.ai.ico"
       },
       {
         name: "Microsoft Copilot",
@@ -776,9 +778,10 @@ const SITE_GROUPS = [
       },
       {
         name: "Pinterest",
-        aliases: ["pin", "pinterest"],
+        aliases: ["pin","pinterest"],
         home: "https://www.pinterest.com/",
-        search: "https://www.pinterest.com/search/pins/?q={q}"
+        search: "https://www.pinterest.com/search/pins/?q={q}",
+        icon: "https://s.pinimg.com/webapp/logo_transparent_144x144-3da7a67b.png"
       },
       {
         name: "Reddit",
@@ -1143,7 +1146,8 @@ const SITE_GROUPS = [
         name: "Gmail",
         aliases: ["go","gma","gmail","mail"],
         home: "https://mail.google.com/",
-        search: "https://mail.google.com/mail/u/0/#search/{q}"
+        search: "https://mail.google.com/mail/u/0/#search/{q}",
+        icon: "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://mail.google.com&size=128"
       },
       {
         name: "Google Drive",
