@@ -366,7 +366,8 @@ const SITE_GROUPS = [
         name: "DeepSeek",
         description: "Open DeepSeek chat.",
         aliases: ["deepseek", "ds"],
-        home: "https://chat.deepseek.com/"
+        home: "https://chat.deepseek.com/",
+        icon: "https://fe-static.deepseek.com/chat/favicon.svg"
       }
     ]
   },
@@ -460,7 +461,8 @@ const SITE_GROUPS = [
         description: "Estimate reading time for books and articles.",
         aliases: ["hltr", "howlongtoread", "readtime"],
         home: "https://howlongtoread.com/",
-        search: "https://howlongtoread.com/results/{q}"
+        search: "https://howlongtoread.com/results/{q}",
+        icon: "https://howlongtoread.com/img/hltr-logo.png"
       },
       {
         name: "ToS;DR",
@@ -760,7 +762,8 @@ const SITE_GROUPS = [
         name: "LinkedIn",
         aliases: ["l", "li", "linkedin"],
         home: "https://www.linkedin.com/",
-        search: "https://www.linkedin.com/search/results/all/?keywords={q}"
+        search: "https://www.linkedin.com/search/results/all/?keywords={q}",
+        icon: "https://static.licdn.com/aero-v1/sc/h/akt4ae504epesldzj74dzred8"
       },
       {
         name: "X",
@@ -820,7 +823,8 @@ const SITE_GROUPS = [
         description: "Compare PC-game store prices and track sale history.",
         aliases: ["itad", "isthereanydeal", "deal"],
         home: "https://isthereanydeal.com/",
-        search: "https://isthereanydeal.com/search/?q={q}"
+        search: "https://isthereanydeal.com/search/?q={q}",
+        icon: "https://isthereanydeal.com/public/icons/favicon-b6ae0302.svg"
       },
       {
         name: "Before I Play",
@@ -964,8 +968,7 @@ const SITE_GROUPS = [
         description: "Search Blue Letter Bible using the English Standard Version.",
         aliases: ["blb", "bible", "blbesv", "esv"],
         home: "https://www.blueletterbible.org/esv/jhn/1/1/",
-        search: "https://www.blb.org/search/preSearch.cfm?plugin=yes&Criteria={q}&t=ESV",
-        icon: ""
+        search: "https://www.blb.org/search/preSearch.cfm?plugin=yes&Criteria={q}&t=ESV"
       },
       {
         name: "Blue Letter Bible — LSB",
@@ -1616,7 +1619,7 @@ const SITE_GROUPS = [
 // -----------------------------------------------------------------------------
 // 3. CONFIGURATION INDEXES AND VALIDATION
 // -----------------------------------------------------------------------------
-// Display metadata such as `description` is intentionally separate from routing.
+
 const SITES = SITE_GROUPS.flatMap((group) =>
   group.sites.map((site) => ({
     ...site,
@@ -1625,11 +1628,26 @@ const SITES = SITE_GROUPS.flatMap((group) =>
   }))
 );
 const SITE_BY_ID = new Map(SITES.map((site) => [site.id, site]));
+// Multisearch icons can use either `icon` (an external URL) or `iconSvg`
+// `icon` takes precedence when both are present.
+const MULTI_ICON_SVGS = {
+  web: `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21 21l-5.2-5.2M18 10.5a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  video: `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3" stroke="currentColor" stroke-width="2"/><path d="m10 9 5 3-5 3V9Z" fill="currentColor"/></svg>`,
+  image: `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3" stroke="currentColor" stroke-width="2"/><circle cx="8.5" cy="9" r="1.5" fill="currentColor"/><path d="m5 18 5-5 3 3 2-2 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  news: `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 4h12a2 2 0 0 1 2 2v13H7a2 2 0 0 1-2-2V4Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M19 8h2v9a2 2 0 0 1-2 2M8 8h6M8 12h8M8 16h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
+  games: `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8.2 8h7.6a5 5 0 0 1 4.75 6.56l-.68 2.08a2.7 2.7 0 0 1-4.48 1.08L13.7 16h-3.4l-1.69 1.72a2.7 2.7 0 0 1-4.48-1.08l-.68-2.08A5 5 0 0 1 8.2 8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8 11v4M6 13h4M16.5 12h.01M18 14h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
+  shopping: `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 4h2l2.2 10.2a2 2 0 0 0 1.95 1.58h7.98a2 2 0 0 0 1.94-1.5L21 7H6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="20" r="1.25" fill="currentColor"/><circle cx="18" cy="20" r="1.25" fill="currentColor"/></svg>`,
+  model3d: `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="m4.5 7.8 7.5 4.3 7.5-4.3M12 12v8.5" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>`,
+  ai: `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2.8c.65 4.65 2.9 6.9 7.55 7.55-4.65.65-6.9 2.9-7.55 7.55-.65-4.65-2.9-6.9-7.55-7.55C9.1 9.7 11.35 7.45 12 2.8Z" fill="currentColor"/><path d="M19 15.5c.25 1.8 1.2 2.75 3 3-1.8.25-2.75 1.2-3 3-.25-1.8-1.2-2.75-3-3 1.8-.25 2.75-1.2 3-3Z" fill="currentColor" opacity=".75"/></svg>`,
+  translate: `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 5h9M8.5 3v2M6 9c1.7 2.5 4 4.4 7 5.5M11 7c-1.1 3.2-3.5 5.8-7 7.5M14 20l3.3-8h1.4l3.3 8M15.2 17h5.6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  maps: `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 22s7-6.1 7-13A7 7 0 1 0 5 9c0 6.9 7 13 7 13Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="9" r="2.5" fill="currentColor"/></svg>`
+};
 const MULTI_SEARCHES = [
   {
     id: "x",
     name: "Web Multisearch",
     description: "Search the same term across multiple search engines.",
+    iconSvg: MULTI_ICON_SVGS.web,
     aliases: ["x", "xsearch", "xweb"],
     targets: [
       { type: "engine", key: "" },
@@ -1644,6 +1662,7 @@ const MULTI_SEARCHES = [
     id: "xv",
     name: "Video Multisearch",
     description: "Search multiple video platforms.",
+    iconSvg: MULTI_ICON_SVGS.video,
     aliases: ["xv", "vx", "xvideo", "xvid"],
     targets: [
       { type: "site", key: "yt" },
@@ -1659,6 +1678,7 @@ const MULTI_SEARCHES = [
     id: "xi",
     name: "Image Multisearch",
     description: "Search multiple image engines.",
+    iconSvg: MULTI_ICON_SVGS.image,
     aliases: ["xi", "ix", "ximage", "ximages", "ximg"],
     targets: [
       { type: "site", key: "gi" },
@@ -1674,6 +1694,7 @@ const MULTI_SEARCHES = [
     id: "xn",
     name: "News Multisearch",
     description: "Search news tabs across multiple search engines.",
+    iconSvg: MULTI_ICON_SVGS.news,
     aliases: ["xn", "nx", "xnews"],
     targets: [
       { type: "site", key: "gn" },
@@ -1687,6 +1708,7 @@ const MULTI_SEARCHES = [
     id: "xg",
     name: "Games Multisearch",
     description: "Search a game across multiple sites.",
+    iconSvg: MULTI_ICON_SVGS.games,
     aliases: ["xg", "gx", "xgame", "xgames"],
     targets: [
       { type: "site", key: "steam" },
@@ -1703,6 +1725,7 @@ const MULTI_SEARCHES = [
     id: "xs",
     name: "Shopping Multisearch",
     description: "Search multiple shopping sites.",
+    iconSvg: MULTI_ICON_SVGS.shopping,
     aliases: ["xs", "xshop", "xshopping"],
     targets: [
       { type: "site", key: "gs" },
@@ -1721,6 +1744,7 @@ const MULTI_SEARCHES = [
     id: "x3d",
     name: "3D Model Multisearch",
     description: "Search printable model sites at the same time.",
+    iconSvg: MULTI_ICON_SVGS.model3d,
     aliases: ["x3d", "xmodels", "xprint", "3dx"],
     targets: [
       { type: "site", key: "printables" },
@@ -1735,6 +1759,7 @@ const MULTI_SEARCHES = [
     id: "xai",
     name: "AI Multisearch",
     description: "Open multiple AI assistants and AI tools.",
+    iconSvg: MULTI_ICON_SVGS.ai,
     aliases: ["xai"],
     targets: [
       { type: "site", key: "duckai" },
@@ -1746,8 +1771,6 @@ const MULTI_SEARCHES = [
       { type: "site", key: "poe" },
       { type: "site", key: "mistral" },
       { type: "site", key: "copilot" },
-      { type: "site", key: "you" },
-      { type: "site", key: "phind" },
       { type: "site", key: "huggingchat" },
       { type: "site", key: "deepseek" }
     ]
@@ -1756,6 +1779,7 @@ const MULTI_SEARCHES = [
     id: "xeng",
     name: "Translation Multisearch",
     description: "Translate English text into multiple languages.",
+    iconSvg: MULTI_ICON_SVGS.translate,
     aliases: ["xeng", "xtrans", "enex", "engex"],
     targets: [
       { type: "site", key: "enes" },
@@ -1772,6 +1796,7 @@ const MULTI_SEARCHES = [
     id: "xmap",
     name: "Maps Multisearch",
     description: "Open multiple maps at the same time.",
+    iconSvg: MULTI_ICON_SVGS.maps,
     aliases: ["xmap", "xmaps"],
     targets: [
       { type: "site", key: "gm" },
@@ -1908,6 +1933,488 @@ function htmlResponse(html, cacheControl = "no-store") {
     }
   });
 }
+
+function jsonResponse(data, status = 200) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "no-store",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "no-referrer"
+    }
+  });
+}
+const FAVICON_DISCOVERY_CACHE = new Map();
+const FAVICON_DISCOVERY_CACHE_TTL = 10 * 60 * 1000;
+const FAVICON_DISCOVERY_CACHE_LIMIT = 100;
+function getCachedFaviconDiscovery(key) {
+  const cached = FAVICON_DISCOVERY_CACHE.get(key);
+  if (!cached) return null;
+  if (cached.expiresAt <= Date.now()) {
+    FAVICON_DISCOVERY_CACHE.delete(key);
+    return null;
+  }
+  return cached.value;
+}
+function setCachedFaviconDiscovery(key, value) {
+  if (FAVICON_DISCOVERY_CACHE.size >= FAVICON_DISCOVERY_CACHE_LIMIT) {
+    const firstKey = FAVICON_DISCOVERY_CACHE.keys().next().value;
+    if (firstKey !== undefined) FAVICON_DISCOVERY_CACHE.delete(firstKey);
+  }
+  FAVICON_DISCOVERY_CACHE.set(key, {
+    value,
+    expiresAt: Date.now() + FAVICON_DISCOVERY_CACHE_TTL
+  });
+}
+function normalizeDiscoveryUrl(value) {
+  let raw = String(value || "").trim();
+  if (!raw) throw new Error("Enter a home URL first.");
+  if (!/^[a-z][a-z0-9+.-]*:\/\//i.test(raw)) raw = `https://${raw}`;
+  const url = new URL(raw);
+  if (url.protocol !== "https:" && url.protocol !== "http:") {
+    throw new Error("Only HTTP and HTTPS URLs are supported.");
+  }
+  assertPublicDiscoveryUrl(url);
+  url.hash = "";
+  return url;
+}
+function assertPublicDiscoveryUrl(url) {
+  const hostname = String(url.hostname || "").replace(/^\[|\]$/g, "").toLowerCase();
+  if (!hostname) throw new Error("The URL needs a valid hostname.");
+  if (
+    hostname === "localhost" ||
+    hostname.endsWith(".localhost") ||
+    hostname.endsWith(".local") ||
+    hostname.endsWith(".internal")
+  ) {
+    throw new Error("Local and private-network addresses are not allowed.");
+  }
+  if (isBlockedIpv4(hostname) || isBlockedIpv6(hostname)) {
+    throw new Error("Local, reserved, and private-network addresses are not allowed.");
+  }
+}
+function isBlockedIpv4(hostname) {
+  if (!/^\d{1,3}(?:\.\d{1,3}){3}$/.test(hostname)) return false;
+  const parts = hostname.split(".").map(Number);
+  if (parts.some((part) => part < 0 || part > 255)) return true;
+  const [a, b, c] = parts;
+  return (
+    a === 0 ||
+    a === 10 ||
+    a === 127 ||
+    a >= 224 ||
+    (a === 100 && b >= 64 && b <= 127) ||
+    (a === 169 && b === 254) ||
+    (a === 172 && b >= 16 && b <= 31) ||
+    (a === 192 && b === 0) ||
+    (a === 192 && b === 168) ||
+    (a === 192 && b === 0 && c === 2) ||
+    (a === 198 && (b === 18 || b === 19 || b === 51)) ||
+    (a === 203 && b === 0 && c === 113)
+  );
+}
+function isBlockedIpv6(hostname) {
+  if (!hostname.includes(":")) return false;
+  const value = hostname.toLowerCase();
+  if (value === "::" || value === "::1") return true;
+  if (value.startsWith("fc") || value.startsWith("fd")) return true;
+  if (/^fe[89ab]/.test(value)) return true;
+  const mapped = value.match(/::ffff:(\d{1,3}(?:\.\d{1,3}){3})$/);
+  return mapped ? isBlockedIpv4(mapped[1]) : false;
+}
+async function fetchDiscoveryResource(input, init = {}, maxRedirects = 4) {
+  let current = input instanceof URL ? new URL(input.href) : normalizeDiscoveryUrl(input);
+  for (let redirectCount = 0; redirectCount <= maxRedirects; redirectCount += 1) {
+    assertPublicDiscoveryUrl(current);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
+    let response;
+    try {
+      response = await fetch(current.href, {
+        ...init,
+        redirect: "manual",
+        signal: controller.signal,
+        headers: {
+          "user-agent": "Micah-Search-Bang-Builder/1.0",
+          ...(init.headers || {})
+        }
+      });
+    } finally {
+      clearTimeout(timeout);
+    }
+    if (![301, 302, 303, 307, 308].includes(response.status)) {
+      return { response, finalUrl: current };
+    }
+    const location = response.headers.get("location");
+    if (!location) return { response, finalUrl: current };
+    if (response.body) response.body.cancel().catch(() => {});
+    current = new URL(location, current);
+    if (current.protocol !== "https:" && current.protocol !== "http:") {
+      throw new Error("The site redirected to an unsupported URL.");
+    }
+  }
+  throw new Error("The site redirected too many times.");
+}
+async function readTextLimited(response, maxBytes) {
+  const contentLength = Number(response.headers.get("content-length") || 0);
+  if (contentLength && contentLength > maxBytes) {
+    throw new Error("The site response is too large to inspect safely.");
+  }
+  if (!response.body) return "";
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let total = 0;
+  let result = "";
+  try {
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      total += value.byteLength;
+      if (total > maxBytes) {
+        await reader.cancel();
+        throw new Error("The site response is too large to inspect safely.");
+      }
+      result += decoder.decode(value, { stream: true });
+    }
+    result += decoder.decode();
+    return result;
+  } finally {
+    reader.releaseLock();
+  }
+}
+function parseHtmlAttributes(tag) {
+  const attributes = {};
+  const attributePattern = /([^\s=/>]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+)))?/g;
+  let match;
+  while ((match = attributePattern.exec(tag))) {
+    const name = String(match[1] || "").toLowerCase();
+    if (name === "link" || name === "meta") continue;
+    attributes[name] = match[2] ?? match[3] ?? match[4] ?? "";
+  }
+  return attributes;
+}
+function resolveHttpCandidate(value, baseUrl) {
+  const raw = String(value || "").trim();
+  if (!raw || raw.startsWith("data:")) return "";
+  try {
+    const url = new URL(raw, baseUrl);
+    if (url.protocol !== "https:" && url.protocol !== "http:") return "";
+    assertPublicDiscoveryUrl(url);
+    url.hash = "";
+    return url.href;
+  } catch {
+    return "";
+  }
+}
+const HTML_ENTITY_NAMES = {
+  amp: "&", quot: '"', apos: "'", lt: "<", gt: ">", nbsp: " ",
+  ndash: "–", mdash: "—", hellip: "…", lsquo: "‘", rsquo: "’",
+  ldquo: "“", rdquo: "”", copy: "©", reg: "®", trade: "™", middot: "·"
+};
+function decodeHtmlEntities(value) {
+  return String(value || "").replace(/&(#(?:x[0-9a-f]+|\d+)|[a-z][a-z0-9]+);/gi, (entity, token) => {
+    if (token.startsWith("#")) {
+      const isHex = token[1]?.toLowerCase() === "x";
+      const number = Number.parseInt(token.slice(isHex ? 2 : 1), isHex ? 16 : 10);
+      if (Number.isFinite(number) && number > 0 && number <= 0x10ffff) {
+        try { return String.fromCodePoint(number); } catch {}
+      }
+      return entity;
+    }
+    return HTML_ENTITY_NAMES[token.toLowerCase()] ?? entity;
+  });
+}
+function cleanDiscoveredText(value) {
+  return decodeHtmlEntities(String(value || "").replace(/<[^>]*>/g, " "))
+    .replace(/\s+/g, " ")
+    .trim();
+}
+function extractReadableText(html, pattern) {
+  const match = html.match(pattern);
+  return match ? cleanDiscoveredText(match[1] || "") : "";
+}
+function parseDeclaredSize(value) {
+  const sizes = String(value || "").toLowerCase().match(/\d+x\d+/g) || [];
+  return sizes.reduce((largest, size) => {
+    const [width, height] = size.split("x").map(Number);
+    return Math.max(largest, width || 0, height || 0);
+  }, 0);
+}
+function addFaviconCandidate(candidates, rawUrl, baseUrl, metadata = {}) {
+  const url = resolveHttpCandidate(rawUrl, baseUrl);
+  if (!url) return;
+  const lowerUrl = url.toLowerCase();
+  let score = Number(metadata.score || 0);
+  if (metadata.type === "image/svg+xml" || /\.svg(?:$|[?#])/i.test(lowerUrl)) score += 240;
+  if (/\.png(?:$|[?#])/i.test(lowerUrl)) score += 80;
+  if (/favicon\.ico(?:$|[?#])/i.test(lowerUrl)) score += 50;
+  const declaredSize = parseDeclaredSize(metadata.sizes);
+  if (declaredSize) {
+    if (declaredSize <= 24) score += 35;
+    else if (declaredSize <= 64) score += 105;
+    else if (declaredSize <= 192) score += 135;
+    else if (declaredSize <= 512) score += 95;
+    else score += 25;
+  }
+  const existing = candidates.get(url);
+  if (!existing || score > existing.score) {
+    candidates.set(url, {
+      url,
+      score,
+      source: metadata.source || "page",
+      type: metadata.type || "",
+      sizes: metadata.sizes || ""
+    });
+  }
+}
+async function probeFaviconCandidate(candidate) {
+  try {
+    const { response, finalUrl } = await fetchDiscoveryResource(candidate.url, {
+      method: "GET",
+      headers: {
+        accept: "image/avif,image/webp,image/svg+xml,image/png,image/*,*/*;q=0.5"
+      }
+    });
+    const contentType = String(response.headers.get("content-type") || "").toLowerCase();
+    const clearlyNotImage =
+      contentType.includes("text/html") ||
+      contentType.includes("application/json") ||
+      contentType.includes("text/plain");
+    const iconLikeUrl = /(?:favicon|apple-touch-icon|site-icon|logo|\.(?:ico|png|svg|webp|gif|jpe?g))(?:$|[/?#._-])/i.test(finalUrl.href);
+    const looksLikeImage = response.ok && !clearlyNotImage && (
+      contentType.startsWith("image/") ||
+      contentType.includes("svg") ||
+      iconLikeUrl ||
+      candidate.source === "favicon service fallback"
+    );
+    if (response.body) response.body.cancel().catch(() => {});
+    return {
+      ...candidate,
+      url: finalUrl.href,
+      works: looksLikeImage,
+      contentType
+    };
+  } catch {
+    return { ...candidate, works: false, contentType: "" };
+  }
+}
+async function inspectManifestIcons(manifestUrl, candidates) {
+  try {
+    const { response, finalUrl } = await fetchDiscoveryResource(manifestUrl, {
+      method: "GET",
+      headers: { accept: "application/manifest+json,application/json;q=0.9,*/*;q=0.2" }
+    });
+    if (!response.ok) {
+      if (response.body) response.body.cancel().catch(() => {});
+      return;
+    }
+    const text = await readTextLimited(response, 256 * 1024);
+    const manifest = JSON.parse(text);
+    for (const icon of Array.isArray(manifest.icons) ? manifest.icons : []) {
+      addFaviconCandidate(candidates, icon?.src, finalUrl, {
+        source: "web app manifest",
+        type: icon?.type || "",
+        sizes: icon?.sizes || "",
+        score: 310
+      });
+    }
+  } catch {}
+}
+function collectLooseIconCandidates(html, baseUrl, candidates) {
+  const metaTags = html.match(/<meta\b[^>]*>/gi) || [];
+  for (const tag of metaTags) {
+    const attributes = parseHtmlAttributes(tag);
+    const key = String(attributes.name || attributes.property || attributes.itemprop || "").toLowerCase();
+    if (!/(?:image|icon|logo)/.test(key) || !attributes.content) continue;
+    addFaviconCandidate(candidates, attributes.content, baseUrl, {
+      source: key || "page metadata",
+      score: /icon|logo/.test(key) ? 205 : 115
+    });
+  }
+  const imageTags = html.match(/<img\b[^>]*>/gi) || [];
+  for (const tag of imageTags.slice(0, 250)) {
+    const attributes = parseHtmlAttributes(tag);
+    const clue = [attributes.src, attributes.alt, attributes.class, attributes.id]
+      .filter(Boolean).join(" ").toLowerCase();
+    if (!/(?:favicon|site[-_ ]?icon|logo|brand)/.test(clue)) continue;
+    addFaviconCandidate(candidates, attributes.src, baseUrl, {
+      source: "page logo image",
+      sizes: attributes.width && attributes.height ? `${attributes.width}x${attributes.height}` : "",
+      score: /favicon|site[-_ ]?icon/.test(clue) ? 260 : 125
+    });
+  }
+  const quotedAssetPattern = /["']([^"'<>\s]{1,420}(?:favicon|apple-touch-icon|site[-_]?icon|logo)[^"'<>\s]{0,180})["']/gi;
+  let assetMatch;
+  let looseCount = 0;
+  while ((assetMatch = quotedAssetPattern.exec(html)) && looseCount < 40) {
+    const raw = assetMatch[1].replaceAll("\/", "/");
+    if (/^(?:javascript|mailto|tel):/i.test(raw)) continue;
+    addFaviconCandidate(candidates, raw, baseUrl, {
+      source: "icon-like page asset",
+      score: /favicon|apple-touch-icon|site[-_]?icon/i.test(raw) ? 235 : 95
+    });
+    looseCount += 1;
+  }
+}
+async function buildFaviconDiscovery(homeUrl) {
+  let finalPageUrl = homeUrl;
+  let html = "";
+  let pageTitle = "";
+  let pageDescription = "";
+  let pageWarning = "";
+  try {
+    const { response, finalUrl } = await fetchDiscoveryResource(homeUrl, {
+      method: "GET",
+      headers: {
+        accept: "text/html,application/xhtml+xml;q=0.9,*/*;q=0.2",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/126 Safari/537.36"
+      }
+    });
+    finalPageUrl = finalUrl;
+    const contentType = String(response.headers.get("content-type") || "").toLowerCase();
+    if (response.ok && (!contentType || contentType.includes("html") || contentType.includes("xhtml"))) {
+      html = await readTextLimited(response, 1000 * 1024);
+      pageTitle = extractReadableText(html, /<title\b[^>]*>([\s\S]*?)<\/title>/i);
+      const metaTags = html.match(/<meta\b[^>]*>/gi) || [];
+      for (const tag of metaTags) {
+        const attributes = parseHtmlAttributes(tag);
+        const key = String(attributes.name || attributes.property || "").toLowerCase();
+        if ((key === "description" || key === "og:description" || key === "twitter:description") && attributes.content) {
+          pageDescription = cleanDiscoveredText(attributes.content);
+          if (key === "description") break;
+        }
+      }
+    } else {
+      pageWarning = `Page returned HTTP ${response.status}; fallback checks still ran.`;
+      if (response.body) response.body.cancel().catch(() => {});
+    }
+  } catch (error) {
+    pageWarning = `Page inspection failed; fallback checks still ran.`;
+  }
+  const candidates = new Map();
+  const defaultIconUrl = new URL("/favicon.ico", finalPageUrl).href;
+  addFaviconCandidate(candidates, defaultIconUrl, finalPageUrl, {
+    source: "default /favicon.ico",
+    score: 300
+  });
+  const manifestUrls = new Set([
+    new URL("/site.webmanifest", finalPageUrl).href,
+    new URL("/manifest.webmanifest", finalPageUrl).href,
+    new URL("/manifest.json", finalPageUrl).href
+  ]);
+  if (html) {
+    const linkTags = html.match(/<link\b[^>]*>/gi) || [];
+    for (const tag of linkTags) {
+      const attributes = parseHtmlAttributes(tag);
+      const rel = String(attributes.rel || "").toLowerCase();
+      const relTokens = rel.split(/\s+/).filter(Boolean);
+      if (relTokens.includes("manifest") && attributes.href) {
+        const manifestUrl = resolveHttpCandidate(attributes.href, finalPageUrl);
+        if (manifestUrl) manifestUrls.add(manifestUrl);
+        continue;
+      }
+      const hrefLooksRelevant = /(?:favicon|icon|logo)/i.test(String(attributes.href || ""));
+      if (!relTokens.includes("icon") && !rel.includes("shortcut icon") && !rel.includes("apple-touch-icon") && !rel.includes("mask-icon") && !hrefLooksRelevant) {
+        continue;
+      }
+      let score = 420;
+      if (rel.includes("mask-icon")) score += 70;
+      if (rel.includes("apple-touch-icon")) score += 30;
+      if (rel.includes("shortcut icon")) score += 20;
+      if (!rel.includes("icon")) score -= 180;
+      addFaviconCandidate(candidates, attributes.href, finalPageUrl, {
+        source: `<link rel="${rel || "asset"}">`,
+        type: attributes.type || "",
+        sizes: attributes.sizes || "",
+        score
+      });
+    }
+    collectLooseIconCandidates(html, finalPageUrl, candidates);
+  }
+  await Promise.all([...manifestUrls].slice(0, 6).map((url) => inspectManifestIcons(url, candidates)));
+  const commonPaths = [
+    ["/favicon.svg", "common /favicon.svg", "image/svg+xml", 250],
+    ["/favicon.png", "common /favicon.png", "image/png", 210],
+    ["/apple-touch-icon.png", "common Apple touch icon", "image/png", 190],
+    ["/icon.svg", "common /icon.svg", "image/svg+xml", 165],
+    ["/logo.svg", "common /logo.svg", "image/svg+xml", 90]
+  ];
+  for (const [path, source, type, score] of commonPaths) {
+    addFaviconCandidate(candidates, path, finalPageUrl, { source, type, score });
+  }
+  const host = finalPageUrl.hostname.replace(/^www\./, "");
+  addFaviconCandidate(candidates, `https://icons.duckduckgo.com/ip3/${encodeURIComponent(host)}.ico`, finalPageUrl, {
+    source: "favicon service fallback",
+    score: 65
+  });
+  addFaviconCandidate(candidates, `https://www.google.com/s2/favicons?domain_url=${encodeURIComponent(finalPageUrl.origin)}&sz=128`, finalPageUrl, {
+    source: "favicon service fallback",
+    score: 60
+  });
+  const rankedCandidates = [...candidates.values()]
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 28);
+  const checked = await Promise.all(rankedCandidates.map(probeFaviconCandidate));
+  const working = checked
+    .filter((candidate) => candidate.works)
+    .sort((a, b) => b.score - a.score);
+  const defaultResult = checked.find((candidate) => candidate.source === "default /favicon.ico");
+  const defaultIconWorks = Boolean(defaultResult?.works);
+  const bestCandidate = working[0] || null;
+  const recommended = bestCandidate?.source === "default /favicon.ico" && defaultIconWorks
+    ? ""
+    : (bestCandidate?.url || "");
+  return {
+    ok: true,
+    homeUrl: homeUrl.href,
+    finalPageUrl: finalPageUrl.href,
+    title: pageTitle,
+    description: pageDescription,
+    pageWarning,
+    defaultIconUrl,
+    defaultIconWorks,
+    recommendedIcon: recommended,
+    candidates: working.slice(0, 20).map((candidate) => ({
+      url: candidate.url,
+      source: candidate.source,
+      type: candidate.contentType || candidate.type || "",
+      sizes: candidate.sizes || "",
+      score: candidate.score || 0,
+      isDefault: candidate.source === "default /favicon.ico",
+      isFallback: candidate.source === "favicon service fallback"
+    }))
+  };
+}
+async function handleFaviconDiscovery(request) {
+  if (request.method !== "POST") {
+    return jsonResponse({ ok: false, error: "Use POST for favicon discovery." }, 405);
+  }
+  const requestOrigin = request.headers.get("origin");
+  if (requestOrigin && requestOrigin !== new URL(request.url).origin) {
+    return jsonResponse({ ok: false, error: "Cross-site requests are not allowed." }, 403);
+  }
+  try {
+    const contentLength = Number(request.headers.get("content-length") || 0);
+    if (contentLength > 16 * 1024) {
+      return jsonResponse({ ok: false, error: "The request is too large." }, 413);
+    }
+    const body = await request.json();
+    const homeUrl = normalizeDiscoveryUrl(body?.url);
+    const cacheKey = homeUrl.href;
+    const cached = getCachedFaviconDiscovery(cacheKey);
+    if (cached) return jsonResponse({ ...cached, cached: true });
+    const result = await buildFaviconDiscovery(homeUrl);
+    setCachedFaviconDiscovery(cacheKey, result);
+    return jsonResponse(result);
+  } catch (error) {
+    return jsonResponse({
+      ok: false,
+      error: error instanceof Error ? error.message : "Favicon discovery failed."
+    }, 400);
+  }
+}
+
 function getFaviconUrl(site) {
   const explicit = String(site?.icon || "").trim();
   if (explicit) return explicit;
@@ -2077,6 +2584,20 @@ function renderHelpPage(requestUrl) {
     sites: browserBangSites,
     aliases: browserBangAliases
   }).replaceAll("<", "\\u003c");
+  const bangBuilderAliasOwnersJson = JSON.stringify(Object.fromEntries([
+    ...[...BANGS.entries()].map(([alias, site]) => [alias, { id: site.id, name: site.name }]),
+    ...[...MULTI_SEARCH_BY_ALIAS.entries()].map(([alias, multi]) => [alias, { id: `multi:${multi.id}`, name: multi.name }])
+  ])).replaceAll("<", "\u003c");
+  const bangBuilderExistingSitesJson = JSON.stringify(SITES.map((site) => ({
+    id: site.id,
+    category: site.category,
+    name: site.name,
+    description: site.description || "",
+    aliases: site.aliases,
+    home: site.home,
+    search: site.search || "",
+    icon: site.icon || ""
+  }))).replaceAll("<", "\u003c");
   const multiSearchDisplayGroup = {
     category: "Multisearch",
     sites: MULTI_SEARCHES.map((multi) => ({
@@ -2087,6 +2608,8 @@ function renderHelpPage(requestUrl) {
       handler: "multi",
       id: `multi:${multi.id}`,
       category: "Multisearch",
+      icon: multi.icon || "",
+      iconSvg: multi.iconSvg || "",
       searchTerms: MULTI_SEARCH_CARD_TERMS.get(multi.id) || ""
     }))
   };
@@ -2232,7 +2755,42 @@ function renderHelpPage(requestUrl) {
       align-items: center;
       gap: 8px;
     }
-    .header-actions { justify-content: flex-end; }
+    .header-actions { position: relative; justify-content: flex-end; }
+    .header-actions-panel { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px; }
+    .header-menu-button, .compact-header-control { display: none; }
+    :root:not([data-density="compact"]) .header-menu-button,
+    :root:not([data-density="compact"]) .compact-header-control { display: none !important; }
+    :root[data-density="compact"] .header-menu-button,
+    :root[data-density="compact"] .compact-header-control { display: grid; }
+    :root[data-density="compact"] .header-actions-panel {
+      position: absolute;
+      z-index: 20;
+      top: 0;
+      right: calc(100% + 8px);
+      width: max-content;
+      max-width: min(calc(100vw - 80px), 520px);
+      height: 36px;
+      flex-wrap: nowrap;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateX(10px);
+      transform-origin: right center;
+      transition: opacity .16s ease, transform .16s ease, visibility .16s;
+    }
+    :root[data-density="compact"] .header-actions-panel > .theme-select,
+    :root[data-density="compact"] .header-actions-panel > .layout-select { display: none; }
+    :root[data-density="compact"] .header-actions.is-menu-open .header-actions-panel {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: none;
+    }
     .badges { margin-top: 14px; }
     .badge {
       border: 1px solid var(--border);
@@ -2305,6 +2863,12 @@ function renderHelpPage(requestUrl) {
       color: var(--text);
       padding: 8px 10px;
       cursor: pointer;
+    }
+    .dialog-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
     }
     .search-button {
       border-color: var(--accent);
@@ -2404,8 +2968,111 @@ function renderHelpPage(requestUrl) {
     }
     .dialog-heading { justify-content: space-between; }
     .dialog-heading h2 { margin: 0; }
+    .dialog-heading-actions { display: flex; align-items: center; gap: 8px; }
     .dialog-actions { justify-content: flex-end; margin-top: 18px; }
     .dialog-button.danger { border-color: var(--danger); color: var(--danger); }
+    .builder-dialog {
+      width: min(820px, calc(100vw - 32px));
+      max-height: min(900px, calc(100vh - 32px));
+      overflow: auto;
+    }
+    .builder-form { margin-top: 14px; }
+    .builder-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 13px;
+    }
+    .builder-field { display: grid; align-content: start; gap: 6px; min-width: 0; }
+    .builder-field.full { grid-column: 1 / -1; }
+    .builder-field > label { color: var(--text); font-size: .88rem; font-weight: 700; }
+    .builder-field small, .builder-note, .builder-status {
+      color: var(--muted);
+      font-size: .8rem;
+      line-height: 1.35;
+    }
+    .builder-note { margin-top: 5px; }
+    .builder-field textarea {
+      width: 100%; min-width: 0; min-height: 68px; padding: 10px 11px; resize: vertical;
+      border: 1px solid var(--border); border-radius: 10px; background: var(--input); color: var(--text); font: inherit;
+    }
+    .builder-icon-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+    .builder-icon-result { display: flex; align-items: center; gap: 10px; min-height: 42px; }
+    .builder-icon-preview {
+      display: grid; flex: 0 0 42px; place-items: center; width: 42px; height: 42px;
+      border: 1px solid var(--border); border-radius: 10px; background: var(--surface-2);
+    }
+    .builder-icon-preview img { display: block; max-width: 29px; max-height: 29px; object-fit: contain; }
+    .builder-candidates { display: grid; gap: 8px; margin-top: 2px; }
+    .builder-candidate {
+      display: grid;
+      grid-template-columns: auto 44px minmax(0, 1fr);
+      gap: 10px;
+      align-items: center;
+      padding: 9px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--surface-2);
+      cursor: pointer;
+    }
+    .builder-candidate:has(input:checked) { border-color: var(--accent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 22%, transparent); }
+    .builder-candidate-thumb {
+      display: grid; place-items: center; width: 44px; height: 44px;
+      border: 1px solid var(--border); border-radius: 9px; background: var(--surface);
+      color: var(--muted); font-size: .72rem; text-align: center;
+    }
+    .builder-candidate-thumb img { max-width: 30px; max-height: 30px; object-fit: contain; }
+    .builder-candidate-copy { min-width: 0; }
+    .builder-candidate-copy strong { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; color: var(--text); font-size: .84rem; }
+    .builder-candidate-copy a { display: block; margin-top: 2px; font-size: .75rem; overflow-wrap: anywhere; }
+    .builder-recommended {
+      display: inline-flex;
+      align-items: center;
+      min-height: 18px;
+      padding: 1px 6px;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--good) 16%, transparent);
+      color: var(--good);
+      font-size: .67rem;
+      font-weight: 800;
+      letter-spacing: .01em;
+    }
+    .builder-show-more { justify-self: start; margin-top: 2px; }
+    .builder-existing {
+      grid-column: 1 / -1;
+      padding: 11px 12px;
+      border: 1px solid var(--warn);
+      border-radius: 10px;
+      background: color-mix(in srgb, var(--warn) 8%, var(--surface));
+    }
+    .builder-existing-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 9px; }
+    .builder-output { min-height: 220px !important; padding-right: 48px !important; tab-size: 2; white-space: pre; font: .84rem/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace !important; }
+    .builder-output-meta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+    .builder-output-wrap { position: relative; }
+    .builder-code-copy {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 32px;
+      height: 32px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface-2);
+      color: var(--text);
+      cursor: pointer;
+    }
+    .builder-code-copy:hover { border-color: var(--accent); }
+    .builder-code-copy svg { display: block; width: 16px; height: 16px; margin: auto; fill: currentColor; }
+    .builder-status[data-tone="good"] { color: var(--good); }
+    .builder-status[data-tone="warn"] { color: var(--warn); }
+    .builder-status[data-tone="danger"] { color: var(--danger); }
+    .builder-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; margin-top: 16px; }
+    .builder-primary { border-color: var(--accent); background: var(--accent); color: var(--accent-contrast); font-weight: 700; }
+    #bang-builder-button svg, #header-menu-button svg, #compact-theme-button svg, #compact-layout-button svg { display: block; width: 19px; height: 19px; }
+    @media (max-width: 640px) {
+      .builder-grid { grid-template-columns: 1fr; }
+      .builder-field.full { grid-column: auto; }
+      .builder-icon-row { grid-template-columns: 1fr; }
+    }
     .shortcut-list {
       display: grid;
       gap: 8px;
@@ -2442,8 +3109,24 @@ function renderHelpPage(requestUrl) {
     :root[data-density="compact"] .group { margin: 16px 0; }
     :root[data-density="compact"] .engine-grid, :root[data-density="compact"] .site-grid { gap: 8px; }
     :root[data-density="compact"] .site-card { padding: 10px; }
-    :root[data-density="compact"] .site-description { margin-top: 6px; }
-    :root[data-density="compact"] .aliases { margin-top: 8px; }
+    :root[data-density="compact"] .site-description {
+      display: -webkit-box;
+      margin-top: 6px;
+      overflow: hidden;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+    }
+    :root[data-density="compact"] .aliases {
+      flex-wrap: nowrap;
+      margin-top: 8px;
+      padding-bottom: 3px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      overscroll-behavior-inline: contain;
+      scrollbar-width: thin;
+    }
+    :root[data-density="compact"] .aliases .alias { flex: 0 0 auto; }
     :root[data-density="compact"] .site-url { display: none; }
     :root[data-density="compact"] .footer { margin-top: 24px; }
     :root[data-density="minimalist"] body { min-height: 100vh; }
@@ -2454,7 +3137,7 @@ function renderHelpPage(requestUrl) {
       place-items: center;
       padding: 24px;
     }
-    :root[data-density="minimalist"] main > :not(.toolbar) { display: none !important; }
+    :root[data-density="minimalist"] main > :not(.toolbar):not(dialog) { display: none !important; }
     :root[data-density="minimalist"] .toolbar {
       width: min(760px, 100%);
       margin: 0;
@@ -2570,8 +3253,8 @@ function renderHelpPage(requestUrl) {
       border: 1px solid var(--border);
       border-radius: 12px;
     }
-    .site-top { display: flex; gap: 10px; justify-content: space-between; align-items: flex-start; }
-    .site-heading { display: flex; align-items: center; gap: 9px; min-width: 0; }
+    .site-top { display: flex; min-width: 0; gap: 10px; justify-content: space-between; align-items: flex-start; }
+    .site-heading { display: flex; flex: 1 1 auto; align-items: center; gap: 9px; min-width: 0; overflow: hidden; }
     .site-favicon {
       width: 20px;
       height: 20px;
@@ -2580,8 +3263,19 @@ function renderHelpPage(requestUrl) {
       border-radius: 4px;
     }
     .site-favicon[hidden] { display: none; }
-    .site-name { min-width: 0; color: var(--text); font-weight: 750; text-decoration: none; overflow-wrap: anywhere; }
-    .site-actions { justify-content: flex-end; }
+    .site-favicon-svg { display: grid; place-items: center; color: var(--accent); }
+    .site-favicon-svg svg { display: block; width: 20px; height: 20px; }
+    .site-name {
+      display: block;
+      min-width: 0;
+      overflow: hidden;
+      color: var(--text);
+      font-weight: 750;
+      text-decoration: none;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .site-actions { flex: 0 0 auto; flex-wrap: nowrap; justify-content: flex-end; }
     .site-description { min-height: 1.45em; margin: 8px 0 0; font-size: .87rem; }
     .aliases { margin-top: 11px; }
     .alias, .favorite-button {
@@ -2619,6 +3313,7 @@ function renderHelpPage(requestUrl) {
       main { padding: 25px 14px 48px; }
       header { flex-direction: column; }
       .header-actions { justify-content: flex-start; }
+      :root[data-density="compact"] .header-actions { align-self: flex-end; justify-content: flex-end; }
       .search-row { flex-direction: column; }
       .search-button { width: 100%; }
     }
@@ -2635,12 +3330,22 @@ function renderHelpPage(requestUrl) {
           <span class="badge">Symbols: ! ; : .</span>
         </div>
       </div>
-      <div class="header-actions">
+      <div class="header-actions" id="header-actions">
+        <button class="icon-button header-menu-button" id="header-menu-button" type="button" aria-expanded="false" aria-controls="header-actions-panel" aria-label="Open page controls" title="Page controls">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 7a1 1 0 0 1 1-1h14a1 1 0 1 1 0 2H5a1 1 0 0 1-1-1Zm0 5a1 1 0 0 1 1-1h14a1 1 0 1 1 0 2H5a1 1 0 0 1-1-1Zm0 5a1 1 0 0 1 1-1h14a1 1 0 1 1 0 2H5a1 1 0 0 1-1-1Z"/></svg>
+        </button>
+        <div class="header-actions-panel" id="header-actions-panel">
+        <button class="icon-button compact-header-control" id="compact-theme-button" type="button" aria-label="Theme: Auto" title="Theme: Auto">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3.5a8.5 8.5 0 0 0 0 17V3.5Z" fill="currentColor"/></svg>
+        </button>
+        <button class="icon-button compact-header-control" id="compact-layout-button" type="button" aria-label="Change page density" title="Change page density">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 5a1 1 0 0 1 1-1h14a1 1 0 1 1 0 2H5a1 1 0 0 1-1-1Zm0 7a1 1 0 0 1 1-1h14a1 1 0 1 1 0 2H5a1 1 0 0 1-1-1Zm0 7a1 1 0 0 1 1-1h14a1 1 0 1 1 0 2H5a1 1 0 0 1-1-1Z"/></svg>
+        </button>
         <label class="sr-only" for="theme-select">Color theme</label>
         <select id="theme-select" class="theme-select" aria-label="Color theme">
           <option value="auto">Auto</option>
-          <option value="dark">Dark</option>
           <option value="light">Light</option>
+          <option value="dark">Dark</option>
           <option value="black">Black</option>
         </select>
         <label class="sr-only" for="layout-select">Page density</label>
@@ -2649,6 +3354,9 @@ function renderHelpPage(requestUrl) {
           <option value="compact">Compact</option>
           <option value="minimalist">Minimalist</option>
         </select>
+        <button class="icon-button" id="bang-builder-button" type="button" aria-haspopup="dialog" aria-controls="bang-builder" aria-label="Add a bang" title="Build a new bang">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11 5a1 1 0 0 1 2 0v6h6a1 1 0 1 1 0 2h-6v6a1 1 0 1 1-2 0v-6H5a1 1 0 1 1 0-2h6V5Z"/></svg>
+        </button>
         <button class="icon-button" id="keyboard-shortcuts-button" type="button" aria-haspopup="dialog" aria-controls="keyboard-shortcuts" aria-label="Keyboard shortcuts" title="Keyboard shortcuts">
           <img src="https://upload.wikimedia.org/wikipedia/commons/4/49/OOjs_UI_icon_keyboard-progressive.svg" alt="" width="19" height="19" referrerpolicy="no-referrer">
         </button>
@@ -2656,6 +3364,7 @@ function renderHelpPage(requestUrl) {
         <a class="github-link" href="${escapeAttribute(PROJECT.repository)}" target="_blank" rel="noreferrer" aria-label="Open the GitHub repository" title="Open the GitHub repository">
           <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="" width="19" height="19" referrerpolicy="no-referrer">
         </a>
+        </div>
       </div>
     </header>
     ${warning}
@@ -2708,6 +3417,7 @@ function renderHelpPage(requestUrl) {
         <ul class="shortcut-list">
           <li><span>Focus or select the search box</span><kbd>/</kbd></li>
           <li><span>Open this shortcuts popup</span><kbd>?</kbd></li>
+          <li><span>Open Bang Builder</span><kbd>+</kbd></li>
           <li><span>Clear the search box; blur it when empty</span><kbd>Esc</kbd></li>
           <li><span>Comfortable mode</span><kbd>1</kbd></li>
           <li><span>Compact mode</span><kbd>2</kbd></li>
@@ -2717,6 +3427,86 @@ function renderHelpPage(requestUrl) {
           <li><span>Move through filtered cards</span><span><kbd>↑</kbd> <kbd>↓</kbd></span></li>
           <li><span>Use the selected card</span><kbd>Enter</kbd></li>
         </ul>
+      </div>
+    </dialog>
+    <dialog class="dialog builder-dialog" id="bang-builder" aria-labelledby="bang-builder-title">
+      <div class="dialog-body">
+        <div class="dialog-heading">
+          <div>
+            <h2 id="bang-builder-title">Bang Builder</h2>
+            <p class="builder-note">Build a copyable bang entry. Nothing is submitted automatically.</p>
+          </div>
+          <div class="dialog-heading-actions">
+            <button class="dialog-button" id="builder-reset" type="button">Clear</button>
+            <button class="dialog-close" type="button" data-close-dialog="bang-builder" aria-label="Close Bang Builder">Close</button>
+          </div>
+        </div>
+        <form id="bang-builder-form" class="builder-form" novalidate>
+          <div class="builder-grid">
+            <div class="builder-field full">
+              <label for="builder-home">Home URL</label>
+              <div class="builder-icon-row">
+                <input id="builder-home" type="url" inputmode="url" autocomplete="url" spellcheck="false" placeholder="https://example.com/">
+                <button class="dialog-button" id="builder-find-icon" type="button">Inspect site</button>
+              </div>
+              <small>Inspection can autofill the name, description, and favicon choices.</small>
+            </div>
+            <div class="builder-existing" id="builder-existing" hidden>
+              <strong id="builder-existing-title"></strong>
+              <div class="builder-status" id="builder-existing-text"></div>
+              <div class="builder-existing-actions">
+                <button class="dialog-button" id="builder-edit-existing" type="button">Edit existing bang</button>
+                <button class="dialog-button" id="builder-keep-new" type="button">Create another anyway</button>
+              </div>
+            </div>
+            <div class="builder-field">
+              <label for="builder-name">Name</label>
+              <input id="builder-name" type="text" autocomplete="off" placeholder="Example">
+            </div>
+            <div class="builder-field">
+              <label for="builder-aliases">Aliases</label>
+              <input id="builder-aliases" type="text" autocomplete="off" spellcheck="false" placeholder="example, ex">
+              <small>Separate with spaces or commas.</small>
+            </div>
+            <div class="builder-field full">
+              <label for="builder-description">Description <span class="builder-note">(optional)</span></label>
+              <textarea id="builder-description" placeholder="Short directory description."></textarea>
+            </div>
+            <div class="builder-field full">
+              <label for="builder-search">Search URL <span class="builder-note">(optional)</span></label>
+              <input id="builder-search" type="text" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://example.com/search?q={q}">
+              <small>Use <code>{q}</code>; <code>%s</code> is converted automatically.</small>
+            </div>
+            <div class="builder-field full">
+              <label for="builder-icon">Icon override <span class="builder-note">(optional)</span></label>
+              <input id="builder-icon" type="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="Paste an icon URL or choose one below">
+              <div class="builder-icon-result">
+                <span class="builder-icon-preview" aria-hidden="true"><img id="builder-icon-preview" alt="" hidden></span>
+                <span class="builder-status" id="builder-icon-status">Inspect the site to find favicon choices.</span>
+              </div>
+              <div class="builder-candidates" id="builder-icon-candidates" aria-label="Discovered favicon choices" hidden></div>
+              <button class="dialog-button builder-show-more" id="builder-icon-more" type="button" hidden>Show more</button>
+            </div>
+            <div class="builder-field full">
+              <div class="builder-output-meta">
+                <label for="builder-code">Generated bang code</label>
+                <span class="builder-status" id="builder-validation-status" aria-live="polite"></span>
+              </div>
+              <small id="builder-code-hint">Paste this object into the appropriate <code>SITE_GROUPS</code> sites array.</small>
+              <div class="builder-output-wrap">
+                <textarea class="builder-output" id="builder-code" readonly spellcheck="false" aria-label="Generated bang code"></textarea>
+                <button class="builder-code-copy" id="builder-copy-inline" type="button" aria-label="Copy generated bang code" title="Copy generated bang code">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 7V5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2h3Zm2 1h5a2 2 0 0 1 2 2v4h2V5h-9v3Zm5 2H5v9h10v-9Z"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="builder-actions">
+            <button class="dialog-button" id="builder-reset-bottom" type="button">Clear</button>
+            <button class="dialog-button builder-primary" id="builder-copy-bottom" type="button">Copy code</button>
+            <a class="dialog-button" id="builder-open-github" href="${escapeAttribute(PROJECT.editMain)}" target="_blank" rel="noopener noreferrer">Open GitHub</a>
+          </div>
+        </form>
       </div>
     </dialog>
     <dialog class="dialog" id="disable-history-dialog" aria-labelledby="disable-history-title">
@@ -2767,6 +3557,9 @@ function renderHelpPage(requestUrl) {
     const RECENT_SEARCH_LIMIT = 20;
     const HOME_ENGINE_PATHS = ${JSON.stringify(homeEnginePaths)};
     const BANG_DATA = ${browserBangDataJson};
+    const GITHUB_EDITOR_URL = ${JSON.stringify(PROJECT.editMain)};
+    const BANG_BUILDER_ALIAS_OWNERS = ${bangBuilderAliasOwnersJson};
+    const BANG_BUILDER_EXISTING_SITES = ${bangBuilderExistingSitesJson};
     const filter = document.getElementById("filter");
     const searchForm = document.getElementById("search-form");
     const homeEngineSelect = document.getElementById("home-engine-select");
@@ -2778,7 +3571,38 @@ function renderHelpPage(requestUrl) {
     const clearRecentSearchesButton = document.getElementById("clear-recent-searches");
     const disableHistoryButton = document.getElementById("disable-history");
     const keyboardShortcutsButton = document.getElementById("keyboard-shortcuts-button");
+    const headerActions = document.getElementById("header-actions");
+    const headerMenuButton = document.getElementById("header-menu-button");
+    const compactThemeButton = document.getElementById("compact-theme-button");
+    const compactLayoutButton = document.getElementById("compact-layout-button");
     const keyboardShortcutsDialog = document.getElementById("keyboard-shortcuts");
+    const bangBuilderButton = document.getElementById("bang-builder-button");
+    const bangBuilderDialog = document.getElementById("bang-builder");
+    const bangBuilderForm = document.getElementById("bang-builder-form");
+    const builderName = document.getElementById("builder-name");
+    const builderAliases = document.getElementById("builder-aliases");
+    const builderDescription = document.getElementById("builder-description");
+    const builderHome = document.getElementById("builder-home");
+    const builderSearch = document.getElementById("builder-search");
+    const builderIcon = document.getElementById("builder-icon");
+    const builderFindIcon = document.getElementById("builder-find-icon");
+    const builderIconCandidates = document.getElementById("builder-icon-candidates");
+    const builderIconMore = document.getElementById("builder-icon-more");
+    const builderIconPreview = document.getElementById("builder-icon-preview");
+    const builderIconStatus = document.getElementById("builder-icon-status");
+    const builderExisting = document.getElementById("builder-existing");
+    const builderExistingTitle = document.getElementById("builder-existing-title");
+    const builderExistingText = document.getElementById("builder-existing-text");
+    const builderEditExisting = document.getElementById("builder-edit-existing");
+    const builderKeepNew = document.getElementById("builder-keep-new");
+    const builderValidationStatus = document.getElementById("builder-validation-status");
+    const builderCodeHint = document.getElementById("builder-code-hint");
+    const builderCode = document.getElementById("builder-code");
+    const builderCopyInline = document.getElementById("builder-copy-inline");
+    const builderCopyBottom = document.getElementById("builder-copy-bottom");
+    const builderOpenGithub = document.getElementById("builder-open-github");
+    const builderReset = document.getElementById("builder-reset");
+    const builderResetBottom = document.getElementById("builder-reset-bottom");
     const disableHistoryDialog = document.getElementById("disable-history-dialog");
     const cancelDisableHistoryButton = document.getElementById("cancel-disable-history");
     const confirmDisableHistoryButton = document.getElementById("confirm-disable-history");
@@ -2822,6 +3646,410 @@ function renderHelpPage(requestUrl) {
       try {
         localStorage.setItem(key, value);
       } catch {}
+    }
+    const BANG_BUILDER_STORAGE_KEY = "search-bang-builder-draft-v2";
+    const BUILDER_ICON_INITIAL_LIMIT = 6;
+    const bangBuilderFields = [builderHome, builderName, builderAliases, builderDescription, builderSearch, builderIcon];
+    let discoveredIconPreviewUrl = "";
+    let builderIconChoices = [];
+    let builderIconPreferredIndex = -1;
+    let builderIconChoicesExpanded = false;
+    let builderExistingMatch = null;
+    let builderEditingId = "";
+    let builderDuplicateAllowed = false;
+    function setBuilderStatus(element, message, tone = "") {
+      element.textContent = message;
+      if (tone) element.dataset.tone = tone;
+      else delete element.dataset.tone;
+    }
+    function normalizeBuilderHttpUrl(value) {
+      let raw = String(value || "").trim();
+      if (!raw) return "";
+      if (!/^[a-z][a-z0-9+.-]*:\\/\\//i.test(raw)) raw = "https://" + raw;
+      const url = new URL(raw);
+      if (url.protocol !== "https:" && url.protocol !== "http:") throw new Error("Use an HTTP or HTTPS URL.");
+      url.hash = "";
+      return url.href;
+    }
+    function normalizeBuilderSearchUrl(value) {
+      let raw = String(value || "").trim().replaceAll("%s", "{q}");
+      if (!raw) return "";
+      if (!/^[a-z][a-z0-9+.-]*:\\/\\//i.test(raw)) raw = "https://" + raw;
+      const testUrl = new URL(raw.replaceAll("{q}", "example"));
+      if (testUrl.protocol !== "https:" && testUrl.protocol !== "http:") throw new Error("Use an HTTP or HTTPS search URL.");
+      return raw;
+    }
+    function parseBuilderAliases(value) {
+      return [...new Set(String(value || "").toLowerCase().split(/[\\s,]+/).map((alias) => alias.trim()).filter(Boolean))];
+    }
+    function builderHomeKey(value) {
+      try {
+        const url = new URL(normalizeBuilderHttpUrl(value));
+        const host = url.hostname.toLowerCase().replace(/^www\\./, "");
+        const path = url.pathname.replace(/\\/+$/, "") || "/";
+        return host + path;
+      } catch { return ""; }
+    }
+    function builderSearchKey(value) {
+      try {
+        const raw = normalizeBuilderSearchUrl(value);
+        if (!raw) return "";
+        const url = new URL(raw.replaceAll("{q}", "__QUERY__"));
+        url.hostname = url.hostname.toLowerCase().replace(/^www\\./, "");
+        return url.href.replace("__QUERY__", "{q}").replace(/\\/+$/, "");
+      } catch { return ""; }
+    }
+    function findExistingBuilderSite() {
+      const homeKey = builderHomeKey(builderHome.value);
+      const searchKey = builderSearchKey(builderSearch.value);
+      if (!homeKey && !searchKey) return null;
+      return BANG_BUILDER_EXISTING_SITES.find((site) =>
+        (homeKey && builderHomeKey(site.home) === homeKey) ||
+        (searchKey && site.search && builderSearchKey(site.search) === searchKey)
+      ) || null;
+    }
+    function updateExistingBuilderMatch() {
+      const match = findExistingBuilderSite();
+      const previousId = builderExistingMatch?.id || "";
+      builderExistingMatch = match;
+      if (!match) {
+        builderExisting.hidden = true;
+        if (builderEditingId && builderEditingId !== previousId) builderEditingId = "";
+        builderDuplicateAllowed = false;
+        return;
+      }
+      if (builderEditingId === match.id) {
+        builderExisting.hidden = false;
+        builderExistingTitle.textContent = "Editing " + match.name;
+        builderExistingText.textContent = "Generated code replaces the existing entry in " + match.category + ".";
+        builderEditExisting.hidden = true;
+        builderKeepNew.hidden = true;
+        return;
+      }
+      builderExisting.hidden = false;
+      builderExistingTitle.textContent = "This URL already exists";
+      builderExistingText.textContent = match.name + " uses !" + match.aliases.join(", !") + ".";
+      builderEditExisting.hidden = false;
+      builderKeepNew.hidden = false;
+    }
+    function loadExistingBang() {
+      const site = builderExistingMatch;
+      if (!site) return;
+      builderEditingId = site.id;
+      builderDuplicateAllowed = false;
+      builderHome.value = site.home || "";
+      builderName.value = site.name || "";
+      builderAliases.value = (site.aliases || []).join(", ");
+      builderDescription.value = site.description || "";
+      builderSearch.value = site.search || "";
+      builderIcon.value = site.icon || "";
+      setBuilderIconPreview(builderIcon.value);
+      updateExistingBuilderMatch();
+      renderBangBuilderCode();
+    }
+    function keepDuplicateBang() {
+      builderEditingId = "";
+      builderDuplicateAllowed = true;
+      builderExistingTitle.textContent = "Creating another bang for this URL";
+      builderExistingText.textContent = "Alias conflicts still need to be resolved.";
+      builderEditExisting.hidden = true;
+      builderKeepNew.hidden = true;
+      renderBangBuilderCode();
+    }
+    function saveBangBuilderDraft() {
+      writeStorage(BANG_BUILDER_STORAGE_KEY, JSON.stringify({
+        name: builderName.value, aliases: builderAliases.value, description: builderDescription.value,
+        home: builderHome.value, search: builderSearch.value, icon: builderIcon.value,
+        editingId: builderEditingId, duplicateAllowed: builderDuplicateAllowed
+      }));
+    }
+    function restoreBangBuilderDraft() {
+      try {
+        const draft = JSON.parse(readStorage(BANG_BUILDER_STORAGE_KEY, "{}"));
+        builderName.value = typeof draft.name === "string" ? draft.name : "";
+        builderAliases.value = typeof draft.aliases === "string" ? draft.aliases : "";
+        builderDescription.value = typeof draft.description === "string" ? draft.description : "";
+        builderHome.value = typeof draft.home === "string" ? draft.home : "";
+        builderSearch.value = typeof draft.search === "string" ? draft.search : "";
+        builderIcon.value = typeof draft.icon === "string" ? draft.icon : "";
+        builderEditingId = typeof draft.editingId === "string" ? draft.editingId : "";
+        builderDuplicateAllowed = Boolean(draft.duplicateAllowed);
+      } catch {}
+    }
+    function setBuilderIconPreview(url) {
+      discoveredIconPreviewUrl = String(url || "").trim();
+      if (!discoveredIconPreviewUrl) {
+        builderIconPreview.hidden = true;
+        builderIconPreview.removeAttribute("src");
+        return;
+      }
+      builderIconPreview.hidden = false;
+      builderIconPreview.src = discoveredIconPreviewUrl;
+    }
+    function renderBangBuilderCode() {
+      updateExistingBuilderMatch();
+      const name = builderName.value.trim();
+      const aliases = parseBuilderAliases(builderAliases.value);
+      const description = builderDescription.value.trim();
+      const errors = [];
+      let home = "", search = "", icon = "";
+      try { home = normalizeBuilderHttpUrl(builderHome.value); } catch (error) { errors.push(error.message || "Invalid home URL."); }
+      try { search = normalizeBuilderSearchUrl(builderSearch.value); } catch (error) { errors.push(error.message || "Invalid search URL."); }
+      try { icon = normalizeBuilderHttpUrl(builderIcon.value); } catch (error) { errors.push(error.message || "Invalid icon URL."); }
+      if (!name) errors.push("Add a name.");
+      if (!aliases.length) errors.push("Add an alias.");
+      const invalidAliases = aliases.filter((alias) => !/^[a-z0-9_-]+$/.test(alias));
+      if (invalidAliases.length) errors.push("Invalid aliases: " + invalidAliases.join(", ") + ".");
+      const conflicts = aliases.flatMap((alias) => {
+        const owner = BANG_BUILDER_ALIAS_OWNERS[alias];
+        if (!owner || owner.id === builderEditingId) return [];
+        return [alias + " (" + owner.name + ")"];
+      });
+      if (conflicts.length) errors.push("Aliases in use: " + conflicts.join(", ") + ".");
+      if (!home && !errors.some((message) => message.toLowerCase().includes("home url"))) errors.push("Add a home URL.");
+      if (search && !search.includes("{q}")) errors.push('Search URL needs "{q}".');
+      if (builderExistingMatch && builderExistingMatch.id !== builderEditingId && !builderDuplicateAllowed) {
+        errors.push("This URL already has a bang. Edit it or choose Create another anyway.");
+      }
+      const lines = [];
+      lines.push("{");
+      lines.push("  name: " + JSON.stringify(name || "Example") + ",");
+      if (description) lines.push("  description: " + JSON.stringify(description) + ",");
+      lines.push("  aliases: " + JSON.stringify(aliases.length ? aliases : ["example"]) + ",");
+      lines.push("  home: " + JSON.stringify(home || "https://example.com/") + (search || icon ? "," : ""));
+      if (search) lines.push("  search: " + JSON.stringify(search) + (icon ? "," : ""));
+      if (icon) lines.push("  icon: " + JSON.stringify(icon));
+      lines.push("},");
+      builderCode.value = lines.join("\\n");
+      // Keep copy actions available even when validation warnings are shown.
+      // The generated textarea is always copyable; validation remains advisory.
+      builderCopyInline.disabled = false;
+      builderCopyBottom.disabled = false;
+      builderOpenGithub.href = GITHUB_EDITOR_URL;
+      builderCodeHint.textContent = builderEditingId && builderExistingMatch
+        ? "Replace the existing " + builderExistingMatch.name + " object in " + builderExistingMatch.category + "."
+        : "Paste this object into the appropriate SITE_GROUPS sites array.";
+      setBuilderStatus(builderValidationStatus, errors.length ? errors.join(" ") : "Ready to copy.", errors.length ? "danger" : "good");
+      saveBangBuilderDraft();
+    }
+    function paintBuilderIconChoices() {
+      builderIconCandidates.replaceChildren();
+      if (!builderIconChoices.length) {
+        builderIconCandidates.hidden = true;
+        builderIconMore.hidden = true;
+        return;
+      }
+      const visibleIndexes = builderIconChoicesExpanded
+        ? builderIconChoices.map((_, index) => index)
+        : builderIconChoices.slice(0, BUILDER_ICON_INITIAL_LIMIT).map((_, index) => index);
+      if (!builderIconChoicesExpanded && builderIconPreferredIndex >= BUILDER_ICON_INITIAL_LIMIT) {
+        visibleIndexes.push(builderIconPreferredIndex);
+      }
+      [...new Set(visibleIndexes)].forEach((index) => {
+        const choice = builderIconChoices[index];
+        const label = document.createElement("label");
+        label.className = "builder-candidate";
+        const radio = document.createElement("input");
+        radio.type = "radio";
+        radio.name = "builder-icon-choice";
+        radio.value = String(index);
+        radio.checked = index === builderIconPreferredIndex;
+        const thumb = document.createElement("span");
+        thumb.className = "builder-candidate-thumb";
+        const image = document.createElement("img");
+        image.alt = "";
+        image.loading = "lazy";
+        image.decoding = "async";
+        image.src = choice.url;
+        image.addEventListener("error", () => {
+          image.remove();
+          thumb.textContent = "No preview";
+        });
+        thumb.append(image);
+        const copy = document.createElement("span");
+        copy.className = "builder-candidate-copy";
+        const title = document.createElement("strong");
+        const titleText = document.createElement("span");
+        titleText.textContent = choice.label;
+        title.append(titleText);
+        if (choice.recommended) {
+          const badge = document.createElement("span");
+          badge.className = "builder-recommended";
+          badge.textContent = "Recommended";
+          title.append(badge);
+        }
+        const link = document.createElement("a");
+        link.href = choice.url;
+        link.target = "_blank";
+        link.rel = "noreferrer";
+        link.textContent = choice.url;
+        link.addEventListener("click", (event) => event.stopPropagation());
+        copy.append(title, link);
+        label.append(radio, thumb, copy);
+        radio.addEventListener("change", () => {
+          if (!radio.checked) return;
+          builderIconPreferredIndex = index;
+          builderIcon.value = choice.override;
+          setBuilderIconPreview(choice.url);
+          setBuilderStatus(builderIconStatus, choice.override ? "Icon override selected." : "Default favicon selected; no override needed.", "good");
+          renderBangBuilderCode();
+        });
+        builderIconCandidates.append(label);
+      });
+      builderIconCandidates.hidden = false;
+      const hiddenCount = Math.max(0, builderIconChoices.length - BUILDER_ICON_INITIAL_LIMIT);
+      builderIconMore.hidden = hiddenCount === 0;
+      builderIconMore.textContent = builderIconChoicesExpanded ? "Show fewer" : "Show " + hiddenCount + " more";
+      builderIconMore.setAttribute("aria-expanded", String(builderIconChoicesExpanded));
+    }
+    function renderBuilderIconChoices(choices, preferredIndex) {
+      builderIconChoices = choices;
+      builderIconPreferredIndex = preferredIndex;
+      builderIconChoicesExpanded = false;
+      paintBuilderIconChoices();
+    }
+    async function findBuilderFavicon() {
+      let home;
+      try {
+        home = normalizeBuilderHttpUrl(builderHome.value);
+        if (!home) throw new Error("Enter a home URL first.");
+      } catch (error) {
+        setBuilderStatus(builderIconStatus, error.message || "Enter a valid home URL.", "danger");
+        return;
+      }
+      builderHome.value = home;
+      updateExistingBuilderMatch();
+      builderFindIcon.disabled = true;
+      builderIconCandidates.hidden = true;
+      builderIconCandidates.replaceChildren();
+      builderIconMore.hidden = true;
+      builderIconChoices = [];
+      builderIconPreferredIndex = -1;
+      builderIconChoicesExpanded = false;
+      setBuilderStatus(builderIconStatus, "Inspecting site…");
+      try {
+        const response = await fetch("/api/favicon-discover", {
+          method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ url: home })
+        });
+        const data = await response.json();
+        if (!response.ok || !data.ok) throw new Error(data.error || "Inspection failed.");
+        if (!builderName.value.trim() && data.title) {
+          builderName.value = String(data.title).replace(/\\s+[|–—-]\\s+.*$/, "").trim().slice(0, 70);
+        }
+        if (!builderDescription.value.trim() && data.description) {
+          const concise = String(data.description).replace(/\\s+/g, " ").trim();
+          builderDescription.value = (concise.length > 150 ? concise.slice(0, 147).replace(/\\s+\\S*$/, "") + "…" : concise);
+        }
+        const choices = [];
+        for (const candidate of Array.isArray(data.candidates) ? data.candidates : []) {
+          if (!candidate?.url || choices.some((choice) => choice.url === candidate.url)) continue;
+          const override = candidate.isDefault && data.defaultIconWorks ? "" : candidate.url;
+          choices.push({
+            url: candidate.url,
+            override,
+            score: Number(candidate.score || 0),
+            fallback: Boolean(candidate.isFallback),
+            recommended: override === data.recommendedIcon,
+            label: candidate.isDefault && data.defaultIconWorks
+              ? "Default favicon (no override)"
+              : candidate.isFallback ? "Favicon service fallback" : (candidate.source || "Discovered icon")
+          });
+        }
+        if (!choices.length) {
+          builderIcon.value = "";
+          setBuilderIconPreview("");
+          setBuilderStatus(builderIconStatus, "No icon found. Paste one manually." + (data.pageWarning ? " " + data.pageWarning : ""), "warn");
+        } else {
+          let preferredIndex = choices.findIndex((choice) => choice.override === data.recommendedIcon);
+          if (preferredIndex < 0) preferredIndex = 0;
+          choices.forEach((choice, index) => { choice.recommended = index === preferredIndex; });
+          choices.sort((a, b) => Number(b.recommended) - Number(a.recommended) || Number(a.fallback) - Number(b.fallback) || b.score - a.score);
+          preferredIndex = choices.findIndex((choice) => choice.recommended);
+          const selected = choices[preferredIndex];
+          builderIcon.value = selected.override;
+          setBuilderIconPreview(selected.url);
+          renderBuilderIconChoices(choices, preferredIndex);
+          setBuilderStatus(builderIconStatus, choices.length + (choices.length === 1 ? " icon found. Best match selected." : " icons found. Best match selected."), "good");
+        }
+        updateExistingBuilderMatch();
+        renderBangBuilderCode();
+      } catch (error) {
+        setBuilderStatus(builderIconStatus, error.message || "Inspection failed.", "danger");
+      } finally {
+        builderFindIcon.disabled = false;
+      }
+    }
+    function setBangBuilderCopyFeedback(button, copied) {
+      const originalLabel = button.getAttribute("aria-label") || button.textContent;
+      if (button === builderCopyInline) {
+        button.setAttribute("aria-label", copied ? "Copied" : "Copy failed");
+        button.title = copied ? "Copied" : "Copy failed";
+      } else {
+        button.textContent = copied ? "Copied" : "Copy failed";
+      }
+      window.setTimeout(() => {
+        if (button === builderCopyInline) {
+          button.setAttribute("aria-label", originalLabel);
+          button.title = originalLabel;
+        } else {
+          button.textContent = originalLabel;
+        }
+      }, 1400);
+    }
+    async function copyBangBuilderCode(button = builderCopyInline) {
+      const text = builderCode.value;
+      if (!text) {
+        setBangBuilderCopyFeedback(button, false);
+        return;
+      }
+
+      let copied = false;
+      try {
+        await navigator.clipboard.writeText(text);
+        copied = true;
+      } catch {
+        // Legacy fallback: copy directly from the visible textarea.
+        const previousFocus = document.activeElement;
+        builderCode.focus({ preventScroll: true });
+        builderCode.select();
+        builderCode.setSelectionRange(0, builderCode.value.length);
+        try { copied = document.execCommand("copy"); } catch {}
+        if (previousFocus instanceof HTMLElement) {
+          try { previousFocus.focus({ preventScroll: true }); } catch {}
+        }
+      }
+
+      setBangBuilderCopyFeedback(button, copied);
+      if (!copied) {
+        builderCode.focus({ preventScroll: true });
+        builderCode.select();
+        setBuilderStatus(builderValidationStatus, "Automatic copy was blocked. The code is selected; press Ctrl+C or Command+C.", "warn");
+      }
+    }
+    function resetBangBuilder() {
+      bangBuilderForm.reset();
+      builderIconCandidates.replaceChildren();
+      builderIconCandidates.hidden = true;
+      builderIconMore.hidden = true;
+      builderIconChoices = [];
+      builderIconPreferredIndex = -1;
+      builderIconChoicesExpanded = false;
+      builderEditingId = "";
+      builderDuplicateAllowed = false;
+      builderExistingMatch = null;
+      builderExisting.hidden = true;
+      setBuilderIconPreview("");
+      setBuilderStatus(builderIconStatus, "Inspect the site to find favicon choices.");
+      try { localStorage.removeItem(BANG_BUILDER_STORAGE_KEY); } catch {}
+      renderBangBuilderCode();
+      builderHome.focus();
+    }
+    function openBangBuilder() {
+      if (!bangBuilderDialog.open) bangBuilderDialog.showModal();
+      window.setTimeout(() => {
+        const firstEmpty = [builderHome, builderName, builderAliases].find((field) => !field.value.trim());
+        (firstEmpty || builderHome).focus();
+      }, 0);
     }
     function normalizeRecentSearch(value) {
       return String(value).trim().replace(/\\s+/g, " ");
@@ -2894,18 +4122,42 @@ function renderHelpPage(requestUrl) {
       if (preference !== "auto") return preference;
       return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
     }
+    const COMPACT_THEME_ORDER = ["auto", "light", "dark", "black"];
+    const COMPACT_THEME_ICONS = {
+      auto: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3.5a8.5 8.5 0 0 0 0 17V3.5Z" fill="currentColor"/></svg>',
+      light: '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="3.5" fill="currentColor"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+      dark: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.4 15.1A8.5 8.5 0 0 1 8.9 3.6 8.5 8.5 0 1 0 20.4 15.1Z" fill="currentColor"/></svg>',
+      black: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5c.7 5.35 3.15 7.8 8.5 8.5-5.35.7-7.8 3.15-8.5 8.5-.7-5.35-3.15-7.8-8.5-8.5 5.35-.7 7.8-3.15 8.5-8.5Z" fill="currentColor"/></svg>'
+    };
+    function syncCompactHeaderControls() {
+      const theme = themeSelect.value || "auto";
+      const themeName = theme.charAt(0).toUpperCase() + theme.slice(1);
+      const nextTheme = COMPACT_THEME_ORDER[(COMPACT_THEME_ORDER.indexOf(theme) + 1) % COMPACT_THEME_ORDER.length];
+      const nextThemeName = nextTheme.charAt(0).toUpperCase() + nextTheme.slice(1);
+      compactThemeButton.innerHTML = COMPACT_THEME_ICONS[theme] || COMPACT_THEME_ICONS.auto;
+      compactThemeButton.setAttribute("aria-label", "Theme: " + themeName + ". Change to " + nextThemeName);
+      compactThemeButton.title = "Theme: " + themeName + " · Next: " + nextThemeName;
+      const layout = layoutSelect.value || "comfortable";
+      const nextLayout = layout === "compact" ? "comfortable" : "compact";
+      compactLayoutButton.setAttribute("aria-label", "Layout: " + layout + ". Change to " + nextLayout);
+      compactLayoutButton.title = "Layout: " + layout.charAt(0).toUpperCase() + layout.slice(1) + " · Change to " + nextLayout.charAt(0).toUpperCase() + nextLayout.slice(1);
+    }
     function applyTheme(preference) {
       const nextPreference = ["auto", "dark", "light", "black"].includes(preference) ? preference : "auto";
       document.documentElement.dataset.theme = resolveTheme(nextPreference);
       document.documentElement.dataset.themePreference = nextPreference;
       themeSelect.value = nextPreference;
       writeStorage(STORAGE.theme, nextPreference);
+      syncCompactHeaderControls();
     }
     function applyLayout(layout) {
       const nextLayout = ["compact", "minimalist"].includes(layout) ? layout : "comfortable";
       document.documentElement.dataset.density = nextLayout;
+      headerActions.classList.remove("is-menu-open");
+      headerMenuButton.setAttribute("aria-expanded", "false");
       layoutSelect.value = nextLayout;
       writeStorage(STORAGE.layout, nextLayout);
+      syncCompactHeaderControls();
       if (nextLayout === "minimalist") {
         requestAnimationFrame(() => filter.focus());
       }
@@ -2937,6 +4189,14 @@ function renderHelpPage(requestUrl) {
     }
     layoutSelect.addEventListener("change", () => {
       applyLayout(layoutSelect.value);
+    });
+    compactThemeButton.addEventListener("click", () => {
+      const current = themeSelect.value || "auto";
+      const next = COMPACT_THEME_ORDER[(COMPACT_THEME_ORDER.indexOf(current) + 1) % COMPACT_THEME_ORDER.length];
+      applyTheme(next);
+    });
+    compactLayoutButton.addEventListener("click", () => {
+      applyLayout(layoutSelect.value === "compact" ? "comfortable" : "compact");
     });
     exitMinimalistButton.addEventListener("click", () => {
       applyLayout("compact");
@@ -3129,7 +4389,7 @@ function renderHelpPage(requestUrl) {
         .trim()
         .toLowerCase()
         .replace(/[!;:.]/g, "");
-      const queryTokens = query.split(/\s+/).filter(Boolean);
+      const queryTokens = query.split(/\\s+/).filter(Boolean);
       const cardMatches = (card) =>
         queryTokens.length === 0 || queryTokens.every((token) => card.dataset.search.includes(token));
       defaults.hidden = queryTokens.length > 0;
@@ -3185,6 +4445,16 @@ function renderHelpPage(requestUrl) {
     }
     filter.addEventListener("input", scheduleFilter);
     filter.addEventListener("keydown", (event) => {
+      if (!filter.value && event.key === "+") {
+        event.preventDefault();
+        openBangBuilder();
+        return;
+      }
+      if (!filter.value && event.key === "?") {
+        event.preventDefault();
+        keyboardShortcutsDialog.showModal();
+        return;
+      }
       if (event.key === "Escape") {
         if (clearSearch()) {
           event.preventDefault();
@@ -3237,6 +4507,13 @@ function renderHelpPage(requestUrl) {
     }
     searchForm.addEventListener("submit", async (event) => {
       const raw = filter.value.trim();
+      if (raw === "+") {
+        event.preventDefault();
+        filter.value = "";
+        applyFilter();
+        openBangBuilder();
+        return;
+      }
       const mathResult = parseBangInput(raw) ? null : evaluateMathExpression(raw);
       if (mathResult !== null) {
         event.preventDefault();
@@ -3247,6 +4524,53 @@ function renderHelpPage(requestUrl) {
         return;
       }
       saveRecentSearch(filter.value);
+    });
+    restoreBangBuilderDraft();
+    updateExistingBuilderMatch();
+    renderBangBuilderCode();
+    if (builderIcon.value.trim()) setBuilderIconPreview(builderIcon.value);
+    bangBuilderFields.forEach((field) => {
+      field.addEventListener("input", () => {
+        if (field === builderIcon) setBuilderIconPreview(builderIcon.value);
+        if (field === builderHome || field === builderSearch) {
+          if (builderEditingId && builderExistingMatch && builderHomeKey(builderHome.value) !== builderHomeKey(builderExistingMatch.home)) builderEditingId = "";
+          builderDuplicateAllowed = false;
+        }
+        renderBangBuilderCode();
+      });
+      field.addEventListener("change", renderBangBuilderCode);
+    });
+    builderSearch.addEventListener("blur", () => {
+      if (builderSearch.value.includes("%s")) {
+        builderSearch.value = builderSearch.value.replaceAll("%s", "{q}");
+        renderBangBuilderCode();
+      }
+    });
+    builderIconPreview.addEventListener("load", () => {
+      if (builderIconPreview.src === discoveredIconPreviewUrl || builderIconPreview.currentSrc === discoveredIconPreviewUrl) {
+        builderIconPreview.hidden = false;
+      }
+    });
+    builderIconPreview.addEventListener("error", () => {
+      builderIconPreview.hidden = true;
+      setBuilderStatus(builderIconStatus, "Preview unavailable; the URL can still be selected or replaced manually.", "warn");
+    });
+    bangBuilderForm.addEventListener("submit", (event) => event.preventDefault());
+    builderFindIcon.addEventListener("click", findBuilderFavicon);
+    builderIconMore.addEventListener("click", () => {
+      builderIconChoicesExpanded = !builderIconChoicesExpanded;
+      paintBuilderIconChoices();
+    });
+    builderCopyInline.addEventListener("click", () => copyBangBuilderCode(builderCopyInline));
+    builderCopyBottom.addEventListener("click", () => copyBangBuilderCode(builderCopyBottom));
+    builderReset.addEventListener("click", resetBangBuilder);
+    builderResetBottom.addEventListener("click", resetBangBuilder);
+    builderEditExisting.addEventListener("click", loadExistingBang);
+    builderKeepNew.addEventListener("click", keepDuplicateBang);
+    bangBuilderButton.addEventListener("click", openBangBuilder);
+    headerMenuButton.addEventListener("click", () => {
+      const open = headerActions.classList.toggle("is-menu-open");
+      headerMenuButton.setAttribute("aria-expanded", String(open));
     });
     clearRecentSearchesButton.addEventListener("click", clearRecentSearches);
     disableHistoryButton.addEventListener("click", () => {
@@ -3264,6 +4588,8 @@ function renderHelpPage(requestUrl) {
     });
     if (requestedAction === "shortcuts") {
       window.setTimeout(() => keyboardShortcutsDialog.showModal(), 0);
+    } else if (requestedAction === "builder") {
+      window.setTimeout(openBangBuilder, 0);
     }
     document.querySelectorAll("[data-close-dialog]").forEach((button) => {
       button.addEventListener("click", () => {
@@ -3271,10 +4597,16 @@ function renderHelpPage(requestUrl) {
         if (dialog) dialog.close();
       });
     });
-    [keyboardShortcutsDialog, disableHistoryDialog].forEach((dialog) => {
-      dialog.addEventListener("click", (event) => {
-        if (event.target === dialog) dialog.close();
+    [keyboardShortcutsDialog, bangBuilderDialog, disableHistoryDialog].forEach((dialog) => {
+      let startedOnBackdrop = false;
+      dialog.addEventListener("pointerdown", (event) => {
+        startedOnBackdrop = event.target === dialog;
       });
+      dialog.addEventListener("pointerup", (event) => {
+        if (startedOnBackdrop && event.target === dialog) dialog.close();
+        startedOnBackdrop = false;
+      });
+      dialog.addEventListener("pointercancel", () => { startedOnBackdrop = false; });
     });
     document.getElementById("expand-all").addEventListener("click", () => {
       setAllGroups(true);
@@ -3283,7 +4615,7 @@ function renderHelpPage(requestUrl) {
       setAllGroups(false);
     });
     document.addEventListener("keydown", (event) => {
-      if (keyboardShortcutsDialog.open || disableHistoryDialog.open || event.defaultPrevented || event.ctrlKey || event.metaKey || event.altKey) {
+      if (keyboardShortcutsDialog.open || bangBuilderDialog.open || disableHistoryDialog.open || event.defaultPrevented || event.ctrlKey || event.metaKey || event.altKey) {
         return;
       }
       if (event.key === "Escape") {
@@ -3304,6 +4636,9 @@ function renderHelpPage(requestUrl) {
       } else if (event.key === "?") {
         event.preventDefault();
         keyboardShortcutsDialog.showModal();
+      } else if (event.key === "+") {
+        event.preventDefault();
+        openBangBuilder();
       } else if (event.key === "1") {
         event.preventDefault();
         applyLayout("comfortable");
@@ -3428,6 +4763,11 @@ function renderMultiSearchPage(multi, query, requestUrl) {
       </label>`;
   }).join("");
   const targetDataJson = jsonForInlineScript(targets);
+  const multiHeadingIcon = multi.icon
+    ? `<img class="multi-heading-icon" src="${escapeAttribute(multi.icon)}" alt="" width="34" height="34" referrerpolicy="no-referrer">`
+    : String(multi.iconSvg || "").trim()
+      ? `<span class="multi-heading-icon" aria-hidden="true">${multi.iconSvg}</span>`
+      : "";
   const html = `<!doctype html>
 <html lang="en">
 <head>
@@ -3528,8 +4868,14 @@ function renderMultiSearchPage(multi, query, requestUrl) {
     main { max-width: 860px; margin: 0 auto; padding: 36px 20px 64px; }
     a { color: var(--accent); }
     h1 { margin: 0; font-size: clamp(2rem, 5vw, 3rem); line-height: 1.05; letter-spacing: -.03em; }
+    .multi-heading { display: flex; align-items: center; gap: 12px; }
+    .multi-heading-icon { display: grid; flex: 0 0 36px; place-items: center; width: 36px; height: 36px; color: var(--accent); object-fit: contain; }
+    .multi-heading-icon svg { display: block; width: 34px; height: 34px; }
     p { color: var(--muted); margin: 10px 0 0; }
     .top { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; margin-bottom: 24px; }
+    .multi-title { display: flex; align-items: center; gap: 12px; }
+    .multi-heading-icon { display: inline-grid; width: 34px; height: 34px; flex: 0 0 34px; place-items: center; color: var(--accent); }
+    .multi-heading-icon svg, img.multi-heading-icon { display: block; width: 34px; height: 34px; object-fit: contain; }
     .back { border: 1px solid var(--border); border-radius: 999px; padding: 8px 11px; text-decoration: none; color: var(--text); background: var(--surface-2); white-space: nowrap; }
     .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 8px 24px var(--shadow); padding: 16px; margin-top: 16px; }
     .search-row { display: flex; gap: 10px; align-items: stretch; }
@@ -3569,7 +4915,7 @@ function renderMultiSearchPage(multi, query, requestUrl) {
   <main>
     <div class="top">
       <div>
-        <h1>${escapeHtml(multi.name)}</h1>
+        <h1 class="multi-title">${multiHeadingIcon}<span>${escapeHtml(multi.name)}</span></h1>
         <p>${escapeHtml(multi.description || "Choose targets, then open them together.")}</p>
         <p class="small">Shortcut: <code>;${escapeHtml(primaryAlias)} ${escapeHtml(trimmedQuery || "your search")}</code></p>
       </div>
@@ -3806,9 +5152,13 @@ function renderSiteCard(site) {
   ].join(" ").toLowerCase();
   const link = site.home || "#";
   const faviconUrl = getFaviconUrl(site);
-  const favicon = faviconUrl
-    ? `<img class="site-favicon" src="${escapeAttribute(faviconUrl)}" alt="" width="20" height="20" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer" data-site-favicon>`
-    : "";
+  const explicitIconUrl = String(site.icon || "").trim();
+  const inlineIcon = String(site.iconSvg || "").trim();
+  const favicon = explicitIconUrl || !inlineIcon
+    ? (faviconUrl
+      ? `<img class="site-favicon" src="${escapeAttribute(faviconUrl)}" alt="" width="20" height="20" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer" data-site-favicon>`
+      : "")
+    : `<span class="site-favicon site-favicon-svg" aria-hidden="true">${inlineIcon}</span>`;
   const description = site.description
     ? `<p class="site-description">${escapeHtml(site.description)}</p>`
     : "";
@@ -3817,7 +5167,7 @@ function renderSiteCard(site) {
       <div class="site-top">
         <div class="site-heading">
           ${favicon}
-          <a class="site-name" href="${escapeAttribute(link)}" target="_blank" rel="noreferrer">${escapeHtml(site.name)}</a>
+          <a class="site-name" href="${escapeAttribute(link)}" target="_blank" rel="noreferrer" title="${escapeAttribute(site.name)}">${escapeHtml(site.name)}</a>
         </div>
         <div class="site-actions">
           <span class="type ${type.className}" role="img" aria-label="${escapeAttribute(type.label)}" title="${escapeAttribute(type.label)}"></span>
@@ -3874,6 +5224,9 @@ export default {
     const url = new URL(request.url);
     const route = normalizePath(url.pathname);
     const raw = (url.searchParams.get("q") || "").trim();
+    if (route === "api/favicon-discover") {
+      return handleFaviconDiscovery(request);
+    }
     if (route === "favicon.svg" || route === "favicon.ico") {
       return renderFavicon();
     }
