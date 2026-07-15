@@ -81,6 +81,14 @@ const SITE_GROUPS = [
         home: "https://search.micahjeffery.com/"
       },
       {
+        name: "Random Bang",
+        description: "Open a random shortcut, or send a query to a random searchable shortcut.",
+        aliases: ["random", "rand"],
+        home: "https://search.micahjeffery.com/?q=%21random",
+        iconSvg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="18" height="18" rx="4" stroke="currentColor" stroke-width="2"/><circle cx="8" cy="8" r="1.4" fill="currentColor"/><circle cx="16" cy="8" r="1.4" fill="currentColor"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/><circle cx="8" cy="16" r="1.4" fill="currentColor"/><circle cx="16" cy="16" r="1.4" fill="currentColor"/></svg>`,
+        handler: "random"
+      },
+      {
         name: "Search Project",
         description: "Open the GitHub repository for this Cloudflare Worker.",
         aliases: ["repo", "project"],
@@ -2565,7 +2573,26 @@ function renderReservedBareQueryPage(raw, hint, requestUrl) {
 </html>`;
   return htmlResponse(html);
 }
+function chooseRandom(items) {
+  if (!items.length) return null;
+  const values = new Uint32Array(1);
+  crypto.getRandomValues(values);
+  return items[values[0] % items.length];
+}
+function handleRandomBang(query) {
+  const candidates = query
+    ? SITES.filter((candidate) => candidate.handler !== "random" && !candidate.handler && candidate.search)
+    : SITES.filter((candidate) => candidate.handler !== "random" && candidate.home && !candidate.aliases.includes("home"));
+  const selected = chooseRandom(candidates);
+  if (!selected) return redirectTo(PROJECT.repository);
+  return query && selected.search
+    ? redirectTo(selected.search, query)
+    : redirectTo(selected.home);
+}
 function handleSite(site, query, requestUrl) {
+  if (site.handler === "random") {
+    return handleRandomBang(query);
+  }
   if (site.handler === "virustotal") {
     return query ? handleVirusTotalLookup(query) : redirectTo(site.home);
   }
@@ -2574,6 +2601,75 @@ function handleSite(site, query, requestUrl) {
   }
   return redirectTo(site.home);
 }
+function renderLocalBangResolverPage(shortcut, raw, defaultEngine) {
+  const fallbackUrl = defaultEngine.search.replaceAll("{q}", encodeURIComponent(String(raw).trim()));
+  const payload = JSON.stringify({
+    bang: shortcut.bang,
+    query: shortcut.query,
+    fallbackUrl
+  }).replaceAll("<", "\\u003c");
+  const html = `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Opening local bang · ${escapeHtml(PROJECT.name)}</title>
+  <style>
+    :root { color-scheme: light dark; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #101114; color: #eef0f4; }
+    @media (prefers-color-scheme: light) { :root { background: #f7f8fb; color: #17191f; } }
+    body { min-height: 100vh; margin: 0; display: grid; place-items: center; padding: 24px; box-sizing: border-box; }
+    main { width: min(560px, 100%); text-align: center; }
+    h1 { margin: 0 0 8px; font-size: clamp(1.55rem, 5vw, 2.1rem); }
+    p { margin: 0; opacity: .72; }
+    a { display: inline-block; margin-top: 18px; color: inherit; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1 id="resolver-title">Checking local bangs…</h1>
+    <p id="resolver-status">This should only take a moment.</p>
+    <a id="resolver-fallback" href="${escapeAttribute(fallbackUrl)}">Continue with the default search</a>
+  </main>
+  <script>
+    (() => {
+      const request = ${payload};
+      const storageKey = "search-local-bangs-v1";
+      const isHttpUrl = (value) => {
+        try {
+          const url = new URL(String(value || ""));
+          return url.protocol === "http:" || url.protocol === "https:";
+        } catch { return false; }
+      };
+      let localBangs = [];
+      try {
+        const parsed = JSON.parse(localStorage.getItem(storageKey) || "[]");
+        if (Array.isArray(parsed)) localBangs = parsed;
+      } catch {}
+      const target = localBangs.find((bang) =>
+        bang && bang.enabled !== false && Array.isArray(bang.aliases) &&
+        bang.aliases.some((alias) => String(alias).toLowerCase() === request.bang)
+      );
+      let destination = request.fallbackUrl;
+      if (target && isHttpUrl(target.home)) {
+        const search = String(target.search || "");
+        destination = request.query && search.includes("{q}") && isHttpUrl(search.replaceAll("{q}", "example"))
+          ? search.replaceAll("{q}", encodeURIComponent(request.query.trim()))
+          : target.home;
+        document.getElementById("resolver-title").textContent = "Opening " + String(target.name || "local bang") + "…";
+        document.getElementById("resolver-status").textContent = "Resolved !" + request.bang + " from this browser.";
+      } else {
+        document.getElementById("resolver-title").textContent = "Local bang not found";
+        document.getElementById("resolver-status").textContent = "Continuing with your default search.";
+      }
+      document.getElementById("resolver-fallback").href = destination;
+      window.location.replace(destination);
+    })();
+  </script>
+</body>
+</html>`;
+  return htmlResponse(html, "no-store");
+}
+
 // -----------------------------------------------------------------------------
 // 6. AUTOMATIC HELP / HOMEPAGE
 // -----------------------------------------------------------------------------
@@ -2629,7 +2725,7 @@ function renderHelpPage(requestUrl) {
     ...SITES.map((site) => [
       site.name,
       `!${site.aliases[0]}`,
-      site.handler === "virustotal" ? "domain" : site.handler === "math" ? "math" : site.search ? "search" : "link"
+      site.handler === "virustotal" ? "domain" : site.handler === "math" ? "math" : site.handler === "random" ? "random" : site.search ? "search" : "link"
     ]),
     ...MULTI_SEARCHES.map((multi) => [
       multi.name,
@@ -2653,6 +2749,11 @@ function renderHelpPage(requestUrl) {
     ...[...BANGS.entries()].map(([alias, site]) => [alias, { id: site.id, name: site.name }]),
     ...[...MULTI_SEARCH_BY_ALIAS.entries()].map(([alias, multi]) => [alias, { id: `multi:${multi.id}`, name: multi.name }])
   ])).replaceAll("<", "\u003c");
+  const bangBuilderHandlers = [...new Set(SITES.map((site) => site.handler).filter(Boolean))].sort();
+  const bangBuilderHandlersJson = JSON.stringify(bangBuilderHandlers).replaceAll("<", "\u003c");
+  const bangBuilderHandlerOptions = bangBuilderHandlers
+    .map((handler) => `<option value="${escapeAttribute(handler)}"></option>`)
+    .join("");
   const bangBuilderExistingSitesJson = JSON.stringify(SITES.map((site) => ({
     id: site.id,
     category: site.category,
@@ -2661,7 +2762,8 @@ function renderHelpPage(requestUrl) {
     aliases: site.aliases,
     home: site.home,
     search: site.search || "",
-    icon: site.icon || ""
+    icon: site.icon || "",
+    handler: site.handler || ""
   }))).replaceAll("<", "\u003c");
   const multiSearchDisplayGroup = {
     category: "Multisearch",
@@ -2867,17 +2969,17 @@ function renderHelpPage(requestUrl) {
     }
     .type {
       display: grid;
-      flex: 0 0 30px;
+      flex: 0 0 24px;
       place-items: center;
-      width: 30px;
-      height: 30px;
+      width: 24px;
+      height: 24px;
       border: 1px solid var(--border);
       border-radius: 999px;
     }
     .type::before {
       content: "";
-      width: 15px;
-      height: 15px;
+      width: 13px;
+      height: 13px;
       background: currentColor;
       -webkit-mask: var(--type-icon) center / contain no-repeat;
       mask: var(--type-icon) center / contain no-repeat;
@@ -3044,7 +3146,7 @@ function renderHelpPage(requestUrl) {
     .builder-form { margin-top: 14px; }
     .builder-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr) minmax(140px, .55fr);
       gap: 13px;
     }
     .builder-field { display: grid; align-content: start; gap: 6px; min-width: 0; }
@@ -3132,8 +3234,73 @@ function renderHelpPage(requestUrl) {
     .builder-status[data-tone="danger"] { color: var(--danger); }
     .builder-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; margin-top: 16px; }
     .builder-primary { border-color: var(--accent); background: var(--accent); color: var(--accent-contrast); font-weight: 700; }
-    #bang-builder-button svg, #header-menu-button svg, #compact-theme-button svg, #compact-layout-button svg { display: block; width: 19px; height: 19px; }
-    @media (max-width: 640px) {
+    #settings-backup-button svg, #bang-builder-button svg, #header-menu-button svg, #compact-theme-button svg, #compact-layout-button svg { display: block; width: 19px; height: 19px; }
+    .settings-backup-grid { display: grid; gap: 12px; margin-top: 16px; }
+    .settings-option {
+      display: grid;
+      grid-template-columns: 18px minmax(0, 1fr);
+      align-items: center;
+      gap: 10px;
+      min-height: 42px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--surface-2);
+      color: var(--text);
+      cursor: pointer;
+    }
+    .settings-option input[type="checkbox"] {
+      appearance: auto;
+      width: 18px;
+      height: 18px;
+      min-width: 18px;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      border-radius: 4px;
+      accent-color: var(--accent);
+      box-shadow: none;
+    }
+    .settings-import-mode { display: grid; gap: 6px; color: var(--text); font-size: .88rem; font-weight: 700; }
+    .settings-import-mode select {
+      width: 100%;
+      min-height: 42px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--input);
+      color: var(--text);
+      font: inherit;
+      cursor: pointer;
+    }
+    .settings-import-mode select:focus {
+      outline: 3px solid color-mix(in srgb, var(--accent) 45%, transparent);
+      outline-offset: 2px;
+    }
+    .settings-backup-status { min-height: 1.3em; margin: 0; }
+    .local-bangs-list { display: grid; gap: 10px; margin-top: 14px; }
+    .local-bang-item {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px 14px;
+      align-items: center;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--surface);
+    }
+    .local-bang-main { min-width: 0; }
+    .local-bang-main strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .local-bang-main code { display: block; margin-top: 3px; color: var(--muted); overflow-wrap: anywhere; }
+    .local-bang-main small { display: block; margin-top: 4px; color: var(--muted); }
+    .local-bang-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 7px; }
+    .local-bang-toggle { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: .82rem; }
+    .local-bang-empty { margin: 16px 0 0; color: var(--muted); }
+    @media (max-width: 620px) {
+      .local-bang-item { grid-template-columns: 1fr; }
+      .local-bang-actions { justify-content: flex-start; }
+    }
+    @media (max-width: 760px) {
       .builder-grid { grid-template-columns: 1fr; }
       .builder-field.full { grid-column: auto; }
       .builder-icon-row { grid-template-columns: 1fr; }
@@ -3328,8 +3495,64 @@ function renderHelpPage(requestUrl) {
       border-radius: 4px;
     }
     .site-favicon[hidden] { display: none; }
+    .site-favicon-edit {
+      position: relative;
+      display: grid;
+      width: 20px;
+      height: 20px;
+      flex: 0 0 20px;
+      place-items: center;
+      overflow: hidden;
+      padding: 0;
+      border: 0;
+      border-radius: 4px;
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+    }
+    .site-favicon-edit > img.site-favicon {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: var(--surface);
+    }
+    .site-favicon-fallback {
+      display: block;
+      width: 18px;
+      height: 18px;
+      background: currentColor;
+      color: var(--muted);
+      -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M3 12h18M12 3c2.7 2.5 4.2 5.5 4.2 9S14.7 18.5 12 21M12 3C9.3 5.5 7.8 8.5 7.8 12s1.5 6.5 4.2 9'/%3E%3C/g%3E%3C/svg%3E") center / contain no-repeat;
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M3 12h18M12 3c2.7 2.5 4.2 5.5 4.2 9S14.7 18.5 12 21M12 3C9.3 5.5 7.8 8.5 7.8 12s1.5 6.5 4.2 9'/%3E%3C/g%3E%3C/svg%3E") center / contain no-repeat;
+    }
+    .site-favicon-pencil {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: grid;
+      place-items: center;
+      border-radius: inherit;
+      background: color-mix(in srgb, var(--surface) 84%, transparent);
+      color: var(--text);
+      opacity: 0;
+      transition: opacity .12s ease;
+      pointer-events: none;
+    }
+    .site-favicon-pencil svg { display: block; width: 11px; height: 11px; fill: currentColor; }
+    .site-favicon-edit:hover .site-favicon-pencil,
+    .site-favicon-edit:focus-visible .site-favicon-pencil { opacity: 1; }
+    .site-favicon-edit:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; overflow: visible; }
     .site-favicon-svg { display: grid; place-items: center; color: var(--accent); }
     .site-favicon-svg svg { display: block; width: 20px; height: 20px; }
+    .site-favicon-mask {
+      display: block;
+      background: currentColor;
+      color: var(--accent);
+      -webkit-mask: var(--site-icon-mask) center / contain no-repeat;
+      mask: var(--site-icon-mask) center / contain no-repeat;
+    }
+    .site-card[data-site-key="random"] .site-favicon-mask,
+    .site-card[data-site-key="random"] .site-favicon-svg { color: var(--warn); }
     .site-name {
       display: block;
       min-width: 0;
@@ -3340,7 +3563,7 @@ function renderHelpPage(requestUrl) {
       text-overflow: ellipsis;
       white-space: nowrap;
     }
-    .site-actions { flex: 0 0 auto; flex-wrap: nowrap; justify-content: flex-end; }
+    .site-actions { flex: 0 0 auto; flex-wrap: nowrap; justify-content: flex-end; gap: 6px; }
     .site-description { min-height: 1.45em; margin: 8px 0 0; font-size: .87rem; }
     .aliases { margin-top: 11px; }
     .alias, .favorite-button {
@@ -3356,13 +3579,27 @@ function renderHelpPage(requestUrl) {
       font: .78rem ui-monospace, SFMono-Regular, Menlo, monospace;
     }
     .favorite-button {
-      width: 30px;
-      height: 30px;
+      width: 24px;
+      height: 24px;
       padding: 0;
-      font-size: 1.1rem;
+      font-size: .98rem;
       line-height: 1;
     }
     .favorite-button.is-favorite { color: var(--warn); }
+    .local-delete-button {
+      display: grid;
+      width: 24px;
+      height: 24px;
+      place-items: center;
+      padding: 0;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      background: var(--surface-2);
+      color: var(--muted);
+      cursor: pointer;
+    }
+    .local-delete-button:hover, .local-delete-button:focus-visible { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 45%, var(--border)); }
+    .local-delete-button svg { width: 13px; height: 13px; fill: currentColor; }
     .site-url { display: block; margin-top: 12px; color: var(--muted); font-size: .77rem; overflow-wrap: anywhere; text-decoration: none; }
     .warning { padding: 12px 14px; color: var(--warn); margin-bottom: 20px; }
     .empty { display: none; color: var(--muted); margin: 30px 0; }
@@ -3390,8 +3627,8 @@ function renderHelpPage(requestUrl) {
       <div>
         <h1>Micah ${escapeHtml(PROJECT.name)}</h1>
         <div class="badges">
-          <span class="badge">${totalSites} sites</span>
-          <span class="badge">${totalAliases} aliases</span>
+          <span class="badge" id="site-count-badge">${totalSites} sites</span>
+          <span class="badge" id="alias-count-badge">${totalAliases} aliases</span>
           <span class="badge">Symbols: ! ; : .</span>
         </div>
       </div>
@@ -3419,6 +3656,9 @@ function renderHelpPage(requestUrl) {
           <option value="compact">Compact</option>
           <option value="minimalist">Minimalist</option>
         </select>
+        <button class="icon-button" id="settings-backup-button" type="button" aria-haspopup="dialog" aria-controls="settings-backup" aria-label="Import or export settings" title="Import or export settings">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 19h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
         <button class="icon-button" id="bang-builder-button" type="button" aria-haspopup="dialog" aria-controls="bang-builder" aria-label="Add a bang" title="Build a new bang">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11 5a1 1 0 0 1 2 0v6h6a1 1 0 1 1 0 2h-6v6a1 1 0 1 1-2 0v-6H5a1 1 0 1 1 0-2h6V5Z"/></svg>
         </button>
@@ -3473,6 +3713,48 @@ function renderHelpPage(requestUrl) {
       </div>
       <div id="recent-search-list" class="recent-list"></div>
     </section>
+    <dialog class="dialog" id="settings-backup" aria-labelledby="settings-backup-title">
+      <div class="dialog-body">
+        <div class="dialog-heading">
+          <h2 id="settings-backup-title">Settings backup</h2>
+          <button class="dialog-close" type="button" data-close-dialog="settings-backup" aria-label="Close settings backup">Close</button>
+        </div>
+        <p>Export your theme, layout, favorites, local bangs, home engine, and multisearch choices as JSON.</p>
+        <div class="settings-backup-grid">
+          <label class="settings-option" for="settings-include-history">
+            <input id="settings-include-history" type="checkbox">
+            <span>Include recent searches</span>
+          </label>
+          <button class="dialog-button" id="settings-export" type="button">Export settings</button>
+          <label class="settings-import-mode" for="settings-import-mode">Import mode
+            <select id="settings-import-mode">
+              <option value="replace" selected>Replace current settings</option>
+              <option value="merge">Merge with current settings</option>
+            </select>
+          </label>
+          <button class="dialog-button" id="settings-import" type="button">Import settings</button>
+          <button class="dialog-button" id="manage-local-bangs" type="button">Manage local bangs <span id="local-bangs-settings-count"></span></button>
+          <input id="settings-import-file" type="file" accept="application/json,.json" hidden>
+          <p class="builder-status settings-backup-status" id="settings-backup-status" aria-live="polite"></p>
+        </div>
+      </div>
+    </dialog>
+    <dialog class="dialog" id="local-bangs-manager" aria-labelledby="local-bangs-manager-title">
+      <div class="dialog-body">
+        <div class="dialog-heading">
+          <div>
+            <h2 id="local-bangs-manager-title">Local bangs</h2>
+            <p class="builder-note">Saved only in this browser. They also work from its address bar.</p>
+          </div>
+          <button class="dialog-close" type="button" data-close-dialog="local-bangs-manager" aria-label="Close local bang manager">Close</button>
+        </div>
+        <div class="local-bangs-list" id="local-bangs-list"></div>
+        <p class="local-bang-empty" id="local-bangs-empty">No local bangs yet.</p>
+        <div class="builder-actions">
+          <button class="dialog-button builder-primary" id="local-bangs-new" type="button">New local bang</button>
+        </div>
+      </div>
+    </dialog>
     <dialog class="dialog" id="keyboard-shortcuts" aria-labelledby="keyboard-shortcuts-title">
       <div class="dialog-body">
         <div class="dialog-heading">
@@ -3533,6 +3815,12 @@ function renderHelpPage(requestUrl) {
               <input id="builder-aliases" type="text" autocomplete="off" spellcheck="false" placeholder="example, ex">
               <small>Separate with spaces or commas.</small>
             </div>
+            <div class="builder-field">
+              <label for="builder-handler">Handler <span class="builder-note">(optional)</span></label>
+              <input id="builder-handler" type="text" list="builder-handler-options" autocomplete="off" spellcheck="false" placeholder="math">
+              <datalist id="builder-handler-options">${bangBuilderHandlerOptions}</datalist>
+              <small>Existing handler name.</small>
+            </div>
             <div class="builder-field full">
               <label for="builder-description">Description <span class="builder-note">(optional)</span></label>
               <textarea id="builder-description" placeholder="Short directory description."></textarea>
@@ -3568,6 +3856,7 @@ function renderHelpPage(requestUrl) {
           </div>
           <div class="builder-actions">
             <button class="dialog-button" id="builder-reset-bottom" type="button">Clear</button>
+            <button class="dialog-button" id="builder-add-local" type="button">Add locally</button>
             <button class="dialog-button builder-primary" id="builder-copy-bottom" type="button">Copy code</button>
             <a class="dialog-button" id="builder-open-github" href="${escapeAttribute(PROJECT.editMain)}" target="_blank" rel="noopener noreferrer">Open GitHub</a>
           </div>
@@ -3603,7 +3892,16 @@ function renderHelpPage(requestUrl) {
       </div>
     </details>
     <div id="empty" class="empty">No bangs match that filter.</div>
-    <div id="groups">${groups}</div>
+    <div id="groups">
+      <details class="group" id="local-bangs-group" data-group="local bangs" open hidden>
+        <summary class="group-title">
+          <h2>Local Bangs</h2>
+          <span id="local-bangs-count">0</span>
+        </summary>
+        <div class="site-grid" id="local-bangs-grid"></div>
+      </details>
+      ${groups}
+    </div>
     <p class="footer">Click a bang to place it in the search box. Click ☆ to save a favorite. Your theme, layout, home search engine, favorites, search history, and default-search selection stay private on this browser.</p>
   </main>
   <button class="minimalist-exit" id="exit-minimalist" type="button" aria-label="Return to compact mode" title="Return to compact mode">
@@ -3624,6 +3922,8 @@ function renderHelpPage(requestUrl) {
     const BANG_DATA = ${browserBangDataJson};
     const GITHUB_EDITOR_URL = ${JSON.stringify(PROJECT.editMain)};
     const BANG_BUILDER_ALIAS_OWNERS = ${bangBuilderAliasOwnersJson};
+    BANG_BUILDER_ALIAS_OWNERS.xvideos ||= { id: "reserved:xvideos", name: "Reserved safety hint" };
+    const BANG_BUILDER_HANDLERS = ${bangBuilderHandlersJson};
     const BANG_BUILDER_EXISTING_SITES = ${bangBuilderExistingSitesJson};
     const filter = document.getElementById("filter");
     const searchForm = document.getElementById("search-form");
@@ -3636,6 +3936,25 @@ function renderHelpPage(requestUrl) {
     const clearRecentSearchesButton = document.getElementById("clear-recent-searches");
     const disableHistoryButton = document.getElementById("disable-history");
     const keyboardShortcutsButton = document.getElementById("keyboard-shortcuts-button");
+    const settingsBackupButton = document.getElementById("settings-backup-button");
+    const settingsBackupDialog = document.getElementById("settings-backup");
+    const settingsIncludeHistory = document.getElementById("settings-include-history");
+    const settingsExportButton = document.getElementById("settings-export");
+    const settingsImportButton = document.getElementById("settings-import");
+    const settingsImportFile = document.getElementById("settings-import-file");
+    const settingsImportMode = document.getElementById("settings-import-mode");
+    const settingsBackupStatus = document.getElementById("settings-backup-status");
+    const manageLocalBangsButton = document.getElementById("manage-local-bangs");
+    const localBangsSettingsCount = document.getElementById("local-bangs-settings-count");
+    const localBangsManagerDialog = document.getElementById("local-bangs-manager");
+    const localBangsList = document.getElementById("local-bangs-list");
+    const localBangsEmpty = document.getElementById("local-bangs-empty");
+    const localBangsNewButton = document.getElementById("local-bangs-new");
+    const localBangsGroup = document.getElementById("local-bangs-group");
+    const localBangsGrid = document.getElementById("local-bangs-grid");
+    const localBangsCount = document.getElementById("local-bangs-count");
+    const siteCountBadge = document.getElementById("site-count-badge");
+    const aliasCountBadge = document.getElementById("alias-count-badge");
     const headerActions = document.getElementById("header-actions");
     const headerMenuButton = document.getElementById("header-menu-button");
     const compactThemeButton = document.getElementById("compact-theme-button");
@@ -3649,6 +3968,7 @@ function renderHelpPage(requestUrl) {
     const builderDescription = document.getElementById("builder-description");
     const builderHome = document.getElementById("builder-home");
     const builderSearch = document.getElementById("builder-search");
+    const builderHandler = document.getElementById("builder-handler");
     const builderIcon = document.getElementById("builder-icon");
     const builderFindIcon = document.getElementById("builder-find-icon");
     const builderIconCandidates = document.getElementById("builder-icon-candidates");
@@ -3665,6 +3985,7 @@ function renderHelpPage(requestUrl) {
     const builderCode = document.getElementById("builder-code");
     const builderCopyInline = document.getElementById("builder-copy-inline");
     const builderCopyBottom = document.getElementById("builder-copy-bottom");
+    const builderAddLocal = document.getElementById("builder-add-local");
     const builderOpenGithub = document.getElementById("builder-open-github");
     const builderReset = document.getElementById("builder-reset");
     const builderResetBottom = document.getElementById("builder-reset-bottom");
@@ -3681,16 +4002,23 @@ function renderHelpPage(requestUrl) {
       filter.placeholder = "Filter bangs or search " + engineName + "…";
     }
     const defaults = document.getElementById("defaults");
-    const groups = [...document.querySelectorAll("#groups .group")];
-    const sourceCards = [...document.querySelectorAll("#groups .site-card")];
-    const cardsByGroup = new Map(
-      groups.map((group) => [group, [...group.querySelectorAll(".site-card")]])
-    );
-    const sourceCardByKey = new Map(sourceCards.map((card) => [card.dataset.siteKey, card]));
+    let groups = [];
+    let sourceCards = [];
+    let cardsByGroup = new Map();
+    let sourceCardByKey = new Map();
+    function refreshCardIndexes() {
+      groups = [...document.querySelectorAll("#groups .group")];
+      sourceCards = [...document.querySelectorAll("#groups .site-card")];
+      cardsByGroup = new Map(groups.map((group) => [group, [...group.querySelectorAll(".site-card")]]));
+      sourceCardByKey = new Map(sourceCards.map((card) => [card.dataset.siteKey, card]));
+    }
+    refreshCardIndexes();
     document.addEventListener("error", (event) => {
       const image = event.target;
       if (image instanceof HTMLImageElement && image.matches("[data-site-favicon]")) {
         image.hidden = true;
+        const editButton = image.closest(".site-favicon-edit");
+        if (editButton) editButton.classList.add("uses-fallback");
       }
     }, true);
     const favoritesSection = document.getElementById("favorites");
@@ -3714,7 +4042,7 @@ function renderHelpPage(requestUrl) {
     }
     const BANG_BUILDER_STORAGE_KEY = "search-bang-builder-draft-v2";
     const BUILDER_ICON_INITIAL_LIMIT = 6;
-    const bangBuilderFields = [builderHome, builderName, builderAliases, builderDescription, builderSearch, builderIcon];
+    const bangBuilderFields = [builderHome, builderName, builderAliases, builderDescription, builderSearch, builderHandler, builderIcon];
     let discoveredIconPreviewUrl = "";
     let builderIconChoices = [];
     let builderIconPreferredIndex = -1;
@@ -3747,6 +4075,255 @@ function renderHelpPage(requestUrl) {
     function parseBuilderAliases(value) {
       return [...new Set(String(value || "").toLowerCase().split(/[\\s,]+/).map((alias) => alias.trim()).filter(Boolean))];
     }
+    const LOCAL_BANGS_STORAGE_KEY = "search-local-bangs-v1";
+    const LOCAL_BANG_LIMIT = 100;
+    const BUILTIN_SITE_TOTAL = ${totalSites};
+    const BUILTIN_ALIAS_TOTAL = ${totalAliases};
+    function makeLocalBangId() {
+      if (crypto.randomUUID) return crypto.randomUUID();
+      return Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 10);
+    }
+    function normalizeLocalBang(raw, fallbackId = "") {
+      if (!raw || typeof raw !== "object") return null;
+      const aliases = [...new Set((Array.isArray(raw.aliases) ? raw.aliases : [])
+        .map((alias) => String(alias).trim().toLowerCase())
+        .filter((alias) => /^[a-z0-9_-]+$/.test(alias)))].slice(0, 20);
+      if (!aliases.length) return null;
+      let home = "", search = "", icon = "";
+      try { home = normalizeBuilderHttpUrl(raw.home); } catch { return null; }
+      try { search = normalizeBuilderSearchUrl(raw.search); } catch { search = ""; }
+      try { icon = normalizeBuilderHttpUrl(raw.icon); } catch { icon = ""; }
+      if (!home || (search && !search.includes("{q}"))) return null;
+      const name = String(raw.name || aliases[0]).trim().slice(0, 80) || aliases[0];
+      return {
+        id: String(raw.id || fallbackId || makeLocalBangId()).slice(0, 100),
+        name,
+        description: String(raw.description || "").replace(/\\s+/g, " ").trim().slice(0, 240),
+        aliases,
+        home,
+        search,
+        icon,
+        enabled: raw.enabled !== false,
+        createdAt: String(raw.createdAt || new Date().toISOString()),
+        updatedAt: String(raw.updatedAt || new Date().toISOString())
+      };
+    }
+    function readLocalBangs() {
+      try {
+        const parsed = JSON.parse(readStorage(LOCAL_BANGS_STORAGE_KEY, "[]"));
+        if (!Array.isArray(parsed)) return [];
+        const result = [];
+        const usedAliases = new Set(Object.keys(BANG_BUILDER_ALIAS_OWNERS));
+        for (const item of parsed.slice(0, LOCAL_BANG_LIMIT)) {
+          const bang = normalizeLocalBang(item);
+          if (!bang || bang.aliases.some((alias) => usedAliases.has(alias))) continue;
+          bang.aliases.forEach((alias) => usedAliases.add(alias));
+          result.push(bang);
+        }
+        return result;
+      } catch { return []; }
+    }
+    function saveLocalBangs() {
+      writeStorage(LOCAL_BANGS_STORAGE_KEY, JSON.stringify(localBangs.slice(0, LOCAL_BANG_LIMIT)));
+    }
+    let localBangs = readLocalBangs();
+    function localBuilderSite(bang) {
+      return {
+        ...bang,
+        id: "local:" + bang.id,
+        category: "Local Bangs",
+        handler: "",
+        isLocal: true
+      };
+    }
+    function findLocalBangByAlias(alias, includeDisabled = false) {
+      const normalized = String(alias || "").toLowerCase();
+      return localBangs.find((bang) =>
+        (includeDisabled || bang.enabled) && bang.aliases.includes(normalized)
+      ) || null;
+    }
+    function getBuilderAliasOwner(alias) {
+      const builtIn = BANG_BUILDER_ALIAS_OWNERS[alias];
+      if (builtIn) return { ...builtIn, isLocal: false };
+      const local = findLocalBangByAlias(alias, true);
+      return local ? { id: "local:" + local.id, name: local.name, isLocal: true } : null;
+    }
+    function getLocalBangFavicon(bang) {
+      const explicit = String(bang?.icon || "").trim();
+      if (explicit) return explicit;
+      try { return new URL("/favicon.ico", bang.home).href; } catch { return ""; }
+    }
+    function appendFaviconEditButton(heading, imageUrl, siteId, siteName) {
+      const button = document.createElement("button");
+      button.className = "site-favicon-edit";
+      button.type = "button";
+      button.dataset.builderEditSite = siteId;
+      button.setAttribute("aria-label", "Edit " + siteName + " in Bang Builder");
+      button.title = "Edit in Bang Builder";
+      const fallback = document.createElement("span");
+      fallback.className = "site-favicon-fallback";
+      fallback.setAttribute("aria-hidden", "true");
+      button.append(fallback);
+      if (imageUrl) {
+        const image = document.createElement("img");
+        image.className = "site-favicon";
+        image.src = imageUrl;
+        image.alt = "";
+        image.width = 20;
+        image.height = 20;
+        image.loading = "lazy";
+        image.decoding = "async";
+        image.referrerPolicy = "no-referrer";
+        image.dataset.siteFavicon = "";
+        button.append(image);
+      }
+      const pencil = document.createElement("span");
+      pencil.className = "site-favicon-pencil";
+      pencil.setAttribute("aria-hidden", "true");
+      pencil.innerHTML = '<svg viewBox="0 0 24 24"><path d="m16.9 3.6 3.5 3.5-11 11-4.4.9.9-4.4 11-11ZM4 20l1.5-7.1L15.8 2.6a2 2 0 0 1 2.8 0l2.8 2.8a2 2 0 0 1 0 2.8L11.1 18.5 4 20Z"/></svg>';
+      button.append(pencil);
+      heading.append(button);
+    }
+    function buildLocalBangCard(bang) {
+      const card = document.createElement("article");
+      card.className = "site-card local-site-card";
+      card.dataset.siteKey = "local:" + bang.id;
+      card.dataset.localBangId = bang.id;
+      card.dataset.search = [bang.name, bang.description, "Local Bangs", ...bang.aliases, bang.home, bang.search].join(" ").toLowerCase();
+      card.title = bang.home;
+
+      const top = document.createElement("div");
+      top.className = "site-top";
+      const heading = document.createElement("div");
+      heading.className = "site-heading";
+      appendFaviconEditButton(heading, getLocalBangFavicon(bang), "local:" + bang.id, bang.name);
+      const name = document.createElement("a");
+      name.className = "site-name";
+      name.href = bang.home;
+      name.target = "_blank";
+      name.rel = "noreferrer";
+      name.title = bang.name;
+      name.textContent = bang.name;
+      heading.append(name);
+      const actions = document.createElement("div");
+      actions.className = "site-actions";
+      const type = document.createElement("span");
+      type.className = "type " + (bang.search ? "search" : "open");
+      type.setAttribute("role", "img");
+      type.setAttribute("aria-label", bang.search ? "Local search" : "Local link");
+      type.title = bang.search ? "Local search" : "Local link";
+      const favorite = document.createElement("button");
+      favorite.className = "favorite-button";
+      favorite.type = "button";
+      favorite.dataset.favorite = "local:" + bang.id;
+      favorite.setAttribute("aria-label", "Add to favorites");
+      favorite.setAttribute("aria-pressed", "false");
+      favorite.title = "Add to favorites";
+      favorite.textContent = "☆";
+      const remove = document.createElement("button");
+      remove.className = "local-delete-button";
+      remove.type = "button";
+      remove.dataset.localCardDelete = bang.id;
+      remove.setAttribute("aria-label", "Delete local bang " + bang.name);
+      remove.title = "Delete local bang";
+      remove.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6l1 2h4v2h-1l-1 14H6L5 7H4V5h4l1-2Zm-1.9 4 .9 12h8l.9-12H7.1ZM10 9h2v8h-2V9Zm4 0h2v8h-2V9Z"/></svg>';
+      actions.append(type, favorite, remove);
+      top.append(heading, actions);
+      card.append(top);
+      if (bang.description) {
+        const description = document.createElement("p");
+        description.className = "site-description";
+        description.textContent = bang.description;
+        card.append(description);
+      }
+      const aliases = document.createElement("div");
+      aliases.className = "aliases";
+      bang.aliases.forEach((alias) => {
+        const button = document.createElement("button");
+        button.className = "alias";
+        button.type = "button";
+        button.dataset.bang = "!" + alias;
+        button.title = "Use !" + alias + " in the search box";
+        button.textContent = "!" + alias;
+        aliases.append(button);
+      });
+      card.append(aliases);
+      const url = document.createElement("a");
+      url.className = "site-url";
+      url.href = bang.home;
+      url.target = "_blank";
+      url.rel = "noreferrer";
+      url.textContent = bang.home;
+      card.append(url);
+      return card;
+    }
+    function updateLocalBangCounts() {
+      const aliasCount = localBangs.reduce((total, bang) => total + bang.aliases.length, 0);
+      localBangsCount.textContent = String(localBangs.length);
+      localBangsSettingsCount.textContent = localBangs.length ? "(" + localBangs.length + ")" : "";
+      siteCountBadge.textContent = (BUILTIN_SITE_TOTAL + localBangs.length) + " sites";
+      aliasCountBadge.textContent = (BUILTIN_ALIAS_TOTAL + aliasCount) + " aliases";
+    }
+    function renderLocalBangCards() {
+      localBangsGrid.replaceChildren();
+      localBangs.filter((bang) => bang.enabled).forEach((bang) => localBangsGrid.append(buildLocalBangCard(bang)));
+      localBangsGroup.hidden = !localBangs.some((bang) => bang.enabled);
+      updateLocalBangCounts();
+      refreshCardIndexes();
+    }
+    function renderLocalBangManager() {
+      localBangsList.replaceChildren();
+      localBangsEmpty.hidden = localBangs.length > 0;
+      localBangs.forEach((bang) => {
+        const item = document.createElement("article");
+        item.className = "local-bang-item";
+        const main = document.createElement("div");
+        main.className = "local-bang-main";
+        const name = document.createElement("strong");
+        name.textContent = bang.name;
+        const aliases = document.createElement("code");
+        aliases.textContent = bang.aliases.map((alias) => "!" + alias).join(" · ");
+        main.append(name, aliases);
+        if (bang.description) {
+          const description = document.createElement("small");
+          description.textContent = bang.description;
+          main.append(description);
+        }
+        const actions = document.createElement("div");
+        actions.className = "local-bang-actions";
+        const toggleLabel = document.createElement("label");
+        toggleLabel.className = "local-bang-toggle";
+        const toggle = document.createElement("input");
+        toggle.type = "checkbox";
+        toggle.checked = bang.enabled;
+        toggle.dataset.localToggle = bang.id;
+        toggleLabel.append(toggle, document.createTextNode("Enabled"));
+        const edit = document.createElement("button");
+        edit.className = "dialog-button";
+        edit.type = "button";
+        edit.dataset.localEdit = bang.id;
+        edit.textContent = "Edit";
+        const remove = document.createElement("button");
+        remove.className = "dialog-button";
+        remove.type = "button";
+        remove.dataset.localDelete = bang.id;
+        remove.textContent = "Delete";
+        actions.append(toggleLabel, edit, remove);
+        item.append(main, actions);
+        localBangsList.append(item);
+      });
+      updateLocalBangCounts();
+    }
+    function refreshLocalBangUi() {
+      renderLocalBangCards();
+      renderLocalBangManager();
+      if (typeof favorites !== "undefined") {
+        favorites = favorites.filter((key) => sourceCardByKey.has(key));
+        saveFavorites();
+        renderFavorites();
+        applyFilter();
+      }
+    }
     function builderHomeKey(value) {
       try {
         const url = new URL(normalizeBuilderHttpUrl(value));
@@ -3768,10 +4345,11 @@ function renderHelpPage(requestUrl) {
       const homeKey = builderHomeKey(builderHome.value);
       const searchKey = builderSearchKey(builderSearch.value);
       if (!homeKey && !searchKey) return null;
-      return BANG_BUILDER_EXISTING_SITES.find((site) =>
+      const matches = [...BANG_BUILDER_EXISTING_SITES, ...localBangs.map(localBuilderSite)].filter((site) =>
         (homeKey && builderHomeKey(site.home) === homeKey) ||
         (searchKey && site.search && builderSearchKey(site.search) === searchKey)
-      ) || null;
+      );
+      return matches.find((site) => site.id === builderEditingId) || matches[0] || null;
     }
     function updateExistingBuilderMatch() {
       const match = findExistingBuilderSite();
@@ -3786,7 +4364,15 @@ function renderHelpPage(requestUrl) {
       if (builderEditingId === match.id) {
         builderExisting.hidden = false;
         builderExistingTitle.textContent = "Editing " + match.name;
-        builderExistingText.textContent = "Generated code replaces the existing entry in " + match.category + ".";
+        builderExistingText.textContent = match.isLocal
+          ? "Saving locally will update this browser’s bang."
+          : "Generated code replaces the existing entry in " + match.category + ".";
+        builderEditExisting.hidden = true;
+        builderKeepNew.hidden = true;
+        return;
+      }
+      if (builderDuplicateAllowed) {
+        builderExisting.hidden = true;
         builderEditExisting.hidden = true;
         builderKeepNew.hidden = true;
         return;
@@ -3807,24 +4393,45 @@ function renderHelpPage(requestUrl) {
       builderAliases.value = (site.aliases || []).join(", ");
       builderDescription.value = site.description || "";
       builderSearch.value = site.search || "";
+      builderHandler.value = site.handler || "";
       builderIcon.value = site.icon || "";
       setBuilderIconPreview(builderIcon.value);
       updateExistingBuilderMatch();
       renderBangBuilderCode();
     }
+    function openBuilderForSiteId(siteId) {
+      const normalizedId = String(siteId || "");
+      const site = normalizedId.startsWith("local:")
+        ? localBangs.map(localBuilderSite).find((item) => item.id === normalizedId)
+        : BANG_BUILDER_EXISTING_SITES.find((item) => item.id === normalizedId);
+      if (!site) return;
+      builderExistingMatch = site;
+      builderEditingId = site.id;
+      builderDuplicateAllowed = false;
+      builderHome.value = site.home || "";
+      builderName.value = site.name || "";
+      builderAliases.value = (site.aliases || []).join(", ");
+      builderDescription.value = site.description || "";
+      builderSearch.value = site.search || "";
+      builderHandler.value = site.handler || "";
+      builderIcon.value = site.icon || "";
+      setBuilderIconPreview(builderIcon.value || getLocalBangFavicon(site));
+      updateExistingBuilderMatch();
+      renderBangBuilderCode();
+      if (localBangsManagerDialog.open) localBangsManagerDialog.close();
+      openBangBuilder();
+    }
     function keepDuplicateBang() {
       builderEditingId = "";
       builderDuplicateAllowed = true;
-      builderExistingTitle.textContent = "Creating another bang for this URL";
-      builderExistingText.textContent = "Alias conflicts still need to be resolved.";
-      builderEditExisting.hidden = true;
-      builderKeepNew.hidden = true;
+      builderExisting.hidden = true;
       renderBangBuilderCode();
+      setBuilderStatus(builderValidationStatus, "Duplicate URL allowed. Use unique aliases for the new bang.", "good");
     }
     function saveBangBuilderDraft() {
       writeStorage(BANG_BUILDER_STORAGE_KEY, JSON.stringify({
         name: builderName.value, aliases: builderAliases.value, description: builderDescription.value,
-        home: builderHome.value, search: builderSearch.value, icon: builderIcon.value,
+        home: builderHome.value, search: builderSearch.value, handler: builderHandler.value, icon: builderIcon.value,
         editingId: builderEditingId, duplicateAllowed: builderDuplicateAllowed
       }));
     }
@@ -3836,6 +4443,7 @@ function renderHelpPage(requestUrl) {
         builderDescription.value = typeof draft.description === "string" ? draft.description : "";
         builderHome.value = typeof draft.home === "string" ? draft.home : "";
         builderSearch.value = typeof draft.search === "string" ? draft.search : "";
+        builderHandler.value = typeof draft.handler === "string" ? draft.handler : "";
         builderIcon.value = typeof draft.icon === "string" ? draft.icon : "";
         builderEditingId = typeof draft.editingId === "string" ? draft.editingId : "";
         builderDuplicateAllowed = Boolean(draft.duplicateAllowed);
@@ -3856,7 +4464,9 @@ function renderHelpPage(requestUrl) {
       const name = builderName.value.trim();
       const aliases = parseBuilderAliases(builderAliases.value);
       const description = builderDescription.value.trim();
+      const handler = builderHandler.value.trim().toLowerCase();
       const errors = [];
+      const warnings = [];
       let home = "", search = "", icon = "";
       try { home = normalizeBuilderHttpUrl(builderHome.value); } catch (error) { errors.push(error.message || "Invalid home URL."); }
       try { search = normalizeBuilderSearchUrl(builderSearch.value); } catch (error) { errors.push(error.message || "Invalid search URL."); }
@@ -3865,8 +4475,11 @@ function renderHelpPage(requestUrl) {
       if (!aliases.length) errors.push("Add an alias.");
       const invalidAliases = aliases.filter((alias) => !/^[a-z0-9_-]+$/.test(alias));
       if (invalidAliases.length) errors.push("Invalid aliases: " + invalidAliases.join(", ") + ".");
+      if (handler && !/^[a-z0-9_-]+$/.test(handler)) errors.push("Handler names may use lowercase letters, numbers, underscores, and hyphens.");
+      if (handler && !BANG_BUILDER_HANDLERS.includes(handler)) warnings.push("Custom handler: add matching Worker logic.");
+      if (builderDuplicateAllowed) warnings.push("Duplicate URL allowed; use unique aliases.");
       const conflicts = aliases.flatMap((alias) => {
-        const owner = BANG_BUILDER_ALIAS_OWNERS[alias];
+        const owner = getBuilderAliasOwner(alias);
         if (!owner || owner.id === builderEditingId) return [];
         return [alias + " (" + owner.name + ")"];
       });
@@ -3876,25 +4489,38 @@ function renderHelpPage(requestUrl) {
       if (builderExistingMatch && builderExistingMatch.id !== builderEditingId && !builderDuplicateAllowed) {
         errors.push("This URL already has a bang. Edit it or choose Create another anyway.");
       }
-      const lines = [];
-      lines.push("{");
-      lines.push("  name: " + JSON.stringify(name || "Example") + ",");
-      if (description) lines.push("  description: " + JSON.stringify(description) + ",");
-      lines.push("  aliases: " + JSON.stringify(aliases.length ? aliases : ["example"]) + ",");
-      lines.push("  home: " + JSON.stringify(home || "https://example.com/") + (search || icon ? "," : ""));
-      if (search) lines.push("  search: " + JSON.stringify(search) + (icon ? "," : ""));
-      if (icon) lines.push("  icon: " + JSON.stringify(icon));
-      lines.push("},");
-      builderCode.value = lines.join("\\n");
-      // Keep copy actions available even when validation warnings are shown.
-      // The generated textarea is always copyable; validation remains advisory.
+      const properties = [
+        "name: " + JSON.stringify(name || "Example"),
+        ...(description ? ["description: " + JSON.stringify(description)] : []),
+        "aliases: " + JSON.stringify(aliases.length ? aliases : ["example"]),
+        "home: " + JSON.stringify(home || "https://example.com/"),
+        ...(search ? ["search: " + JSON.stringify(search)] : []),
+        ...(icon ? ["icon: " + JSON.stringify(icon)] : []),
+        ...(handler ? ["handler: " + JSON.stringify(handler)] : [])
+      ];
+      const objectIndent = "\\t\\t\\t";
+      const propertyIndent = objectIndent + "\\t";
+      builderCode.value = [
+        objectIndent + "{",
+        ...properties.map((property, index) => propertyIndent + property + (index < properties.length - 1 ? "," : "")),
+        objectIndent + "},"
+      ].join("\\n");
       builderCopyInline.disabled = false;
       builderCopyBottom.disabled = false;
+      const editingLocalBang = builderEditingId.startsWith("local:");
+      builderAddLocal.textContent = editingLocalBang ? "Update local bang" : "Add locally";
+      builderAddLocal.disabled = Boolean(handler);
+      builderAddLocal.title = handler ? "Handlers require Worker source code and cannot be stored locally." : "Save this bang in this browser";
       builderOpenGithub.href = GITHUB_EDITOR_URL;
       builderCodeHint.textContent = builderEditingId && builderExistingMatch
         ? "Replace the existing " + builderExistingMatch.name + " object in " + builderExistingMatch.category + "."
-        : "Paste this object into the appropriate SITE_GROUPS sites array.";
-      setBuilderStatus(builderValidationStatus, errors.length ? errors.join(" ") : "Ready to copy.", errors.length ? "danger" : "good");
+        : "Paste directly into the appropriate SITE_GROUPS sites array.";
+      const messages = [...errors, ...warnings];
+      setBuilderStatus(
+        builderValidationStatus,
+        messages.length ? messages.join(" ") : "Ready to copy.",
+        errors.length ? "danger" : warnings.length ? "warn" : "good"
+      );
       saveBangBuilderDraft();
     }
     function paintBuilderIconChoices() {
@@ -4091,6 +4717,91 @@ function renderHelpPage(requestUrl) {
         setBuilderStatus(builderValidationStatus, "Automatic copy was blocked. The code is selected; press Ctrl+C or Command+C.", "warn");
       }
     }
+    function getLocalBangCandidate() {
+      const errors = [];
+      const name = builderName.value.trim();
+      const aliases = parseBuilderAliases(builderAliases.value);
+      const description = builderDescription.value.trim();
+      const handler = builderHandler.value.trim().toLowerCase();
+      let home = "", search = "", icon = "";
+      try { home = normalizeBuilderHttpUrl(builderHome.value); } catch (error) { errors.push(error.message || "Invalid home URL."); }
+      try { search = normalizeBuilderSearchUrl(builderSearch.value); } catch (error) { errors.push(error.message || "Invalid search URL."); }
+      try { icon = normalizeBuilderHttpUrl(builderIcon.value); } catch (error) { errors.push(error.message || "Invalid icon URL."); }
+      if (!name) errors.push("Add a name.");
+      if (!aliases.length) errors.push("Add an alias.");
+      if (aliases.some((alias) => !/^[a-z0-9_-]+$/.test(alias))) errors.push("Use only letters, numbers, underscores, and hyphens in aliases.");
+      if (!home) errors.push("Add a home URL.");
+      if (search && !search.includes("{q}")) errors.push('Search URL needs "{q}".');
+      if (handler) errors.push("Handlers require Worker source code and cannot be added locally.");
+      const editingLocalId = builderEditingId.startsWith("local:") ? builderEditingId.slice(6) : "";
+      const conflicts = aliases.flatMap((alias) => {
+        const owner = getBuilderAliasOwner(alias);
+        if (!owner || (owner.isLocal && owner.id === "local:" + editingLocalId)) return [];
+        return [alias + " (" + owner.name + ")"];
+      });
+      if (conflicts.length) errors.push("Aliases in use: " + conflicts.join(", ") + ".");
+      if (builderExistingMatch && !builderExistingMatch.isLocal && !builderDuplicateAllowed) {
+        errors.push("This URL already has a built-in bang. Choose Create another anyway to save a local version.");
+      }
+      return { errors, editingLocalId, bang: { name, aliases, description, home, search, icon } };
+    }
+    function addBangLocally() {
+      const { errors, editingLocalId, bang } = getLocalBangCandidate();
+      if (errors.length) {
+        setBuilderStatus(builderValidationStatus, errors.join(" "), "danger");
+        return;
+      }
+      const now = new Date().toISOString();
+      const existing = editingLocalId ? localBangs.find((item) => item.id === editingLocalId) : null;
+      const saved = normalizeLocalBang({
+        ...bang,
+        id: existing?.id || makeLocalBangId(),
+        enabled: existing?.enabled !== false,
+        createdAt: existing?.createdAt || now,
+        updatedAt: now
+      });
+      if (!saved) {
+        setBuilderStatus(builderValidationStatus, "Could not save that local bang.", "danger");
+        return;
+      }
+      if (existing) localBangs = localBangs.map((item) => item.id === existing.id ? saved : item);
+      else localBangs = [saved, ...localBangs].slice(0, LOCAL_BANG_LIMIT);
+      saveLocalBangs();
+      builderEditingId = "local:" + saved.id;
+      builderExistingMatch = localBuilderSite(saved);
+      builderDuplicateAllowed = false;
+      refreshLocalBangUi();
+      renderBangBuilderCode();
+      setBuilderStatus(builderValidationStatus, existing ? "Local bang updated." : "Added locally. It now works from this browser’s address bar.", "good");
+    }
+    function editLocalBang(id) {
+      openBuilderForSiteId("local:" + id);
+    }
+    function deleteLocalBang(id) {
+      const bang = localBangs.find((item) => item.id === id);
+      if (!bang || !window.confirm("Delete local bang “" + bang.name + "”?")) return;
+      localBangs = localBangs.filter((item) => item.id !== id);
+      favorites = favorites.filter((key) => key !== "local:" + id);
+      saveFavorites();
+      saveLocalBangs();
+      if (builderEditingId === "local:" + id) resetBangBuilder();
+      refreshLocalBangUi();
+    }
+    function toggleLocalBang(id, enabled) {
+      localBangs = localBangs.map((bang) => bang.id === id ? { ...bang, enabled, updatedAt: new Date().toISOString() } : bang);
+      saveLocalBangs();
+      refreshLocalBangUi();
+    }
+    function navigateToLocalBang(bang, query = "") {
+      if (!bang?.enabled) return false;
+      const trimmed = String(query || "").trim();
+      const destination = trimmed && bang.search
+        ? bang.search.replaceAll("{q}", encodeURIComponent(trimmed))
+        : bang.home;
+      if (!destination) return false;
+      window.location.assign(destination);
+      return true;
+    }
     function resetBangBuilder() {
       bangBuilderForm.reset();
       builderIconCandidates.replaceChildren();
@@ -4110,7 +4821,7 @@ function renderHelpPage(requestUrl) {
       builderHome.focus();
     }
     function openBangBuilder() {
-      if (!bangBuilderDialog.open) bangBuilderDialog.showModal();
+      showDialog(bangBuilderDialog);
       window.setTimeout(() => {
         const firstEmpty = [builderHome, builderName, builderAliases].find((field) => !field.value.trim());
         (firstEmpty || builderHome).focus();
@@ -4179,10 +4890,187 @@ function renderHelpPage(requestUrl) {
         return [];
       }
     }
+    renderLocalBangCards();
+    renderLocalBangManager();
     let historyDisabled = readStorage(STORAGE.historyDisabled, "false") === "true";
     let recentSearches = historyDisabled ? [] : readRecentSearches();
     let favorites = readFavorites();
     let keyboardSelection = -1;
+    const MULTISEARCH_STORAGE_PREFIX = "search-multisearch-selected:";
+    function setSettingsBackupStatus(message, tone = "") {
+      setBuilderStatus(settingsBackupStatus, message, tone);
+    }
+    function collectMultisearchSettings() {
+      const selections = {};
+      try {
+        for (let index = 0; index < localStorage.length; index += 1) {
+          const key = localStorage.key(index);
+          if (!key || !key.startsWith(MULTISEARCH_STORAGE_PREFIX)) continue;
+          const id = key.slice(MULTISEARCH_STORAGE_PREFIX.length);
+          const value = JSON.parse(localStorage.getItem(key) || "null");
+          if (id && Array.isArray(value)) selections[id] = value.filter((item) => typeof item === "string");
+        }
+      } catch {}
+      return selections;
+    }
+    function buildSettingsExport() {
+      const payload = {
+        version: 1,
+        exportedAt: new Date().toISOString(),
+        settings: {
+          theme: readStorage(STORAGE.theme, "auto"),
+          layout: readStorage(STORAGE.layout, "comfortable"),
+          homeEngine: readStorage(STORAGE.homeEngine, ""),
+          defaultsOpen: readStorage(STORAGE.defaultsOpen, "true") === "true",
+          favorites: [...favorites],
+          historyDisabled,
+          multisearchSelections: collectMultisearchSettings(),
+          localBangs: localBangs.map((bang) => ({ ...bang }))
+        }
+      };
+      if (settingsIncludeHistory.checked && !historyDisabled) payload.recentSearches = [...recentSearches];
+      return payload;
+    }
+    function exportSettings() {
+      const payload = buildSettingsExport();
+      const blob = new Blob([JSON.stringify(payload, null, 2) + "\\n"], { type: "application/json" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "micah-search-settings-" + new Date().toISOString().slice(0, 10) + ".json";
+      document.body.append(link);
+      link.click();
+      link.remove();
+      window.setTimeout(() => URL.revokeObjectURL(link.href), 0);
+      setSettingsBackupStatus("Settings exported.", "good");
+    }
+    function clearImportableSettings() {
+      Object.values(STORAGE).forEach((key) => {
+        try { localStorage.removeItem(key); } catch {}
+      });
+      try { localStorage.removeItem(LOCAL_BANGS_STORAGE_KEY); } catch {}
+      try {
+        const keys = [];
+        for (let index = 0; index < localStorage.length; index += 1) {
+          const key = localStorage.key(index);
+          if (key?.startsWith(MULTISEARCH_STORAGE_PREFIX)) keys.push(key);
+        }
+        keys.forEach((key) => localStorage.removeItem(key));
+      } catch {}
+    }
+    function importSettingsPayload(payload) {
+      if (!payload || payload.version !== 1 || !payload.settings || typeof payload.settings !== "object") {
+        throw new Error("That is not a supported Search settings file.");
+      }
+      if (settingsImportMode.value === "replace") clearImportableSettings();
+      const settings = payload.settings;
+      if (["auto", "light", "dark", "black"].includes(settings.theme)) writeStorage(STORAGE.theme, settings.theme);
+      if (["comfortable", "compact", "minimalist"].includes(settings.layout)) writeStorage(STORAGE.layout, settings.layout);
+      if (typeof settings.homeEngine === "string" && HOME_ENGINE_PATHS.includes(settings.homeEngine)) writeStorage(STORAGE.homeEngine, settings.homeEngine);
+      if (typeof settings.defaultsOpen === "boolean") writeStorage(STORAGE.defaultsOpen, String(settings.defaultsOpen));
+
+      if (Array.isArray(settings.localBangs)) {
+        const imported = [];
+        const usedAliases = new Set(Object.keys(BANG_BUILDER_ALIAS_OWNERS));
+        if (settingsImportMode.value === "merge") {
+          localBangs.forEach((bang) => {
+            imported.push(bang);
+            bang.aliases.forEach((alias) => usedAliases.add(alias));
+          });
+        }
+        for (const item of settings.localBangs.slice(0, LOCAL_BANG_LIMIT)) {
+          const bang = normalizeLocalBang(item);
+          if (!bang) continue;
+          const existingIndex = imported.findIndex((current) => current.id === bang.id);
+          if (existingIndex >= 0) {
+            imported[existingIndex].aliases.forEach((alias) => usedAliases.delete(alias));
+            if (bang.aliases.some((alias) => usedAliases.has(alias))) {
+              imported[existingIndex].aliases.forEach((alias) => usedAliases.add(alias));
+              continue;
+            }
+            imported[existingIndex] = bang;
+            bang.aliases.forEach((alias) => usedAliases.add(alias));
+            continue;
+          }
+          if (bang.aliases.some((alias) => usedAliases.has(alias))) continue;
+          bang.aliases.forEach((alias) => usedAliases.add(alias));
+          imported.push(bang);
+          if (imported.length >= LOCAL_BANG_LIMIT) break;
+        }
+        localBangs = imported;
+        writeStorage(LOCAL_BANGS_STORAGE_KEY, JSON.stringify(imported));
+      } else if (settingsImportMode.value === "replace") {
+        localBangs = [];
+      }
+
+      if (Array.isArray(settings.favorites)) {
+        const validFavoriteKeys = new Set([
+          ...sourceCardByKey.keys(),
+          ...localBangs.map((bang) => "local:" + bang.id)
+        ]);
+        const importedFavorites = [...new Set(settings.favorites.filter((key) => typeof key === "string" && validFavoriteKeys.has(key)))];
+        const nextFavorites = settingsImportMode.value === "merge"
+          ? [...new Set([...favorites, ...importedFavorites])]
+          : importedFavorites;
+        writeStorage(STORAGE.favorites, JSON.stringify(nextFavorites));
+      }
+      if (typeof settings.historyDisabled === "boolean") {
+        writeStorage(STORAGE.historyDisabled, String(settings.historyDisabled));
+        if (settings.historyDisabled) writeStorage(STORAGE.recentSearches, "[]");
+      }
+      if (Array.isArray(payload.recentSearches) && settings.historyDisabled !== true) {
+        const importedRecent = payload.recentSearches.filter((item) => typeof item === "string").map(normalizeRecentSearch).filter(Boolean).slice(0, RECENT_SEARCH_LIMIT);
+        writeStorage(STORAGE.recentSearches, JSON.stringify(importedRecent));
+      }
+      if (settings.multisearchSelections && typeof settings.multisearchSelections === "object") {
+        for (const [id, selection] of Object.entries(settings.multisearchSelections)) {
+          if (!/^[a-z0-9_-]+$/.test(id) || !Array.isArray(selection)) continue;
+          writeStorage(MULTISEARCH_STORAGE_PREFIX + id, JSON.stringify(selection.filter((item) => typeof item === "string")));
+        }
+      }
+    }
+    async function importSettingsFile(file) {
+      if (!file) return;
+      try {
+        const payload = JSON.parse(await file.text());
+        importSettingsPayload(payload);
+        setSettingsBackupStatus("Settings imported. Reloading…", "good");
+        window.setTimeout(() => window.location.reload(), 250);
+      } catch (error) {
+        setSettingsBackupStatus(error.message || "Could not import that file.", "danger");
+      } finally {
+        settingsImportFile.value = "";
+      }
+    }
+    let lockedScrollY = 0;
+    function lockPageScroll() {
+      if (document.body.dataset.dialogScrollLocked === "true") return;
+      lockedScrollY = window.scrollY;
+      document.body.dataset.dialogScrollLocked = "true";
+      document.body.style.position = "fixed";
+      document.body.style.top = "-" + lockedScrollY + "px";
+      document.body.style.left = "0";
+      document.body.style.right = "0";
+      document.body.style.width = "100%";
+    }
+    function unlockPageScroll() {
+      if (document.body.dataset.dialogScrollLocked !== "true") return;
+      delete document.body.dataset.dialogScrollLocked;
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
+      document.body.style.width = "";
+      window.scrollTo(0, lockedScrollY);
+    }
+    function syncDialogScrollLock() {
+      const anyOpen = [settingsBackupDialog, localBangsManagerDialog, keyboardShortcutsDialog, bangBuilderDialog, disableHistoryDialog].some((dialog) => dialog.open);
+      if (anyOpen) lockPageScroll();
+      else unlockPageScroll();
+    }
+    function showDialog(dialog) {
+      if (!dialog.open) dialog.showModal();
+      syncDialogScrollLock();
+    }
     function resolveTheme(preference) {
       if (preference !== "auto") return preference;
       return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
@@ -4374,7 +5262,11 @@ function renderHelpPage(requestUrl) {
         return;
       }
       const siteIndex = BANG_DATA.aliases[shortcut.bang];
-      const site = Number.isInteger(siteIndex) ? BANG_DATA.sites[siteIndex] : null;
+      let site = Number.isInteger(siteIndex) ? BANG_DATA.sites[siteIndex] : null;
+      if (!site) {
+        const local = findLocalBangByAlias(shortcut.bang);
+        if (local) site = [local.name, "!" + local.aliases[0], local.search ? "search" : "link"];
+      }
       bangPreview.hidden = false;
       if (!site) {
         bangPreview.classList.add("is-unknown");
@@ -4398,6 +5290,12 @@ function renderHelpPage(requestUrl) {
         bangPreviewText.textContent = shortcut.query
           ? 'Open the multisearch page for “' + shortcut.query + '”.'
           : "Open this multisearch page.";
+        return;
+      }
+      if (behavior === "random") {
+        bangPreviewText.textContent = shortcut.query
+          ? 'Search “' + shortcut.query + '” with a random searchable shortcut.'
+          : "Open a random shortcut.";
         return;
       }
       if (!shortcut.query) {
@@ -4517,7 +5415,7 @@ function renderHelpPage(requestUrl) {
       }
       if (!filter.value && event.key === "?") {
         event.preventDefault();
-        keyboardShortcutsDialog.showModal();
+        showDialog(keyboardShortcutsDialog);
         return;
       }
       if (event.key === "Escape") {
@@ -4579,7 +5477,15 @@ function renderHelpPage(requestUrl) {
         openBangBuilder();
         return;
       }
-      const mathResult = parseBangInput(raw) ? null : evaluateMathExpression(raw);
+      const parsedShortcut = parseBangInput(raw);
+      const localBang = parsedShortcut ? findLocalBangByAlias(parsedShortcut.bang) : null;
+      if (localBang) {
+        event.preventDefault();
+        saveRecentSearch(filter.value);
+        navigateToLocalBang(localBang, parsedShortcut.query);
+        return;
+      }
+      const mathResult = parsedShortcut ? null : evaluateMathExpression(raw);
       if (mathResult !== null) {
         event.preventDefault();
         const copied = await copyTextToClipboard(mathResult);
@@ -4628,18 +5534,43 @@ function renderHelpPage(requestUrl) {
     });
     builderCopyInline.addEventListener("click", () => copyBangBuilderCode(builderCopyInline));
     builderCopyBottom.addEventListener("click", () => copyBangBuilderCode(builderCopyBottom));
+    builderAddLocal.addEventListener("click", addBangLocally);
     builderReset.addEventListener("click", resetBangBuilder);
     builderResetBottom.addEventListener("click", resetBangBuilder);
     builderEditExisting.addEventListener("click", loadExistingBang);
     builderKeepNew.addEventListener("click", keepDuplicateBang);
     bangBuilderButton.addEventListener("click", openBangBuilder);
+    settingsBackupButton.addEventListener("click", () => showDialog(settingsBackupDialog));
+    manageLocalBangsButton.addEventListener("click", () => {
+      renderLocalBangManager();
+      settingsBackupDialog.close();
+      showDialog(localBangsManagerDialog);
+    });
+    localBangsNewButton.addEventListener("click", () => {
+      localBangsManagerDialog.close();
+      resetBangBuilder();
+      openBangBuilder();
+    });
+    localBangsList.addEventListener("change", (event) => {
+      const toggle = event.target.closest("[data-local-toggle]");
+      if (toggle) toggleLocalBang(toggle.dataset.localToggle, toggle.checked);
+    });
+    localBangsList.addEventListener("click", (event) => {
+      const edit = event.target.closest("[data-local-edit]");
+      if (edit) { editLocalBang(edit.dataset.localEdit); return; }
+      const remove = event.target.closest("[data-local-delete]");
+      if (remove) deleteLocalBang(remove.dataset.localDelete);
+    });
+    settingsExportButton.addEventListener("click", exportSettings);
+    settingsImportButton.addEventListener("click", () => settingsImportFile.click());
+    settingsImportFile.addEventListener("change", () => importSettingsFile(settingsImportFile.files?.[0]));
     headerMenuButton.addEventListener("click", () => {
       const open = headerActions.classList.toggle("is-menu-open");
       headerMenuButton.setAttribute("aria-expanded", String(open));
     });
     clearRecentSearchesButton.addEventListener("click", clearRecentSearches);
     disableHistoryButton.addEventListener("click", () => {
-      disableHistoryDialog.showModal();
+      showDialog(disableHistoryDialog);
     });
     cancelDisableHistoryButton.addEventListener("click", () => {
       disableHistoryDialog.close();
@@ -4649,10 +5580,10 @@ function renderHelpPage(requestUrl) {
       disableHistoryDialog.close();
     });
     keyboardShortcutsButton.addEventListener("click", () => {
-      keyboardShortcutsDialog.showModal();
+      showDialog(keyboardShortcutsDialog);
     });
     if (requestedAction === "shortcuts") {
-      window.setTimeout(() => keyboardShortcutsDialog.showModal(), 0);
+      window.setTimeout(() => showDialog(keyboardShortcutsDialog), 0);
     } else if (requestedAction === "builder") {
       window.setTimeout(openBangBuilder, 0);
     }
@@ -4662,7 +5593,7 @@ function renderHelpPage(requestUrl) {
         if (dialog) dialog.close();
       });
     });
-    [keyboardShortcutsDialog, bangBuilderDialog, disableHistoryDialog].forEach((dialog) => {
+    [settingsBackupDialog, localBangsManagerDialog, keyboardShortcutsDialog, bangBuilderDialog, disableHistoryDialog].forEach((dialog) => {
       let startedOnBackdrop = false;
       dialog.addEventListener("pointerdown", (event) => {
         startedOnBackdrop = event.target === dialog;
@@ -4672,6 +5603,8 @@ function renderHelpPage(requestUrl) {
         startedOnBackdrop = false;
       });
       dialog.addEventListener("pointercancel", () => { startedOnBackdrop = false; });
+      dialog.addEventListener("close", syncDialogScrollLock);
+      dialog.addEventListener("cancel", () => window.requestAnimationFrame(syncDialogScrollLock));
     });
     document.getElementById("expand-all").addEventListener("click", () => {
       setAllGroups(true);
@@ -4680,7 +5613,7 @@ function renderHelpPage(requestUrl) {
       setAllGroups(false);
     });
     document.addEventListener("keydown", (event) => {
-      if (keyboardShortcutsDialog.open || bangBuilderDialog.open || disableHistoryDialog.open || event.defaultPrevented || event.ctrlKey || event.metaKey || event.altKey) {
+      if (settingsBackupDialog.open || localBangsManagerDialog.open || keyboardShortcutsDialog.open || bangBuilderDialog.open || disableHistoryDialog.open || event.defaultPrevented || event.ctrlKey || event.metaKey || event.altKey) {
         return;
       }
       if (event.key === "Escape") {
@@ -4700,7 +5633,7 @@ function renderHelpPage(requestUrl) {
         filter.select();
       } else if (event.key === "?") {
         event.preventDefault();
-        keyboardShortcutsDialog.showModal();
+        showDialog(keyboardShortcutsDialog);
       } else if (event.key === "+") {
         event.preventDefault();
         openBangBuilder();
@@ -4726,6 +5659,18 @@ function renderHelpPage(requestUrl) {
       if (recentTarget) {
         filter.value = recentTarget.dataset.recentSearch;
         searchForm.requestSubmit();
+        return;
+      }
+      const editFaviconTarget = event.target.closest("[data-builder-edit-site]");
+      if (editFaviconTarget) {
+        event.preventDefault();
+        openBuilderForSiteId(editFaviconTarget.dataset.builderEditSite);
+        return;
+      }
+      const localDeleteTarget = event.target.closest("[data-local-card-delete]");
+      if (localDeleteTarget) {
+        event.preventDefault();
+        deleteLocalBang(localDeleteTarget.dataset.localCardDelete);
         return;
       }
       const favoriteTarget = event.target.closest("[data-favorite]");
@@ -5035,7 +5980,9 @@ function renderMultiSearchPage(multi, query, requestUrl) {
     document.addEventListener("error", (event) => {
       const image = event.target;
       if (image instanceof HTMLImageElement && image.matches("[data-site-favicon]")) {
-        image.hidden = true;
+        const editButton = image.closest(".site-favicon-edit");
+        if (editButton) editButton.hidden = true;
+        else image.hidden = true;
       }
     }, true);
 
@@ -5217,13 +6164,14 @@ function renderSiteCard(site) {
   ].join(" ").toLowerCase();
   const link = site.home || "#";
   const faviconUrl = getFaviconUrl(site);
-  const explicitIconUrl = String(site.icon || "").trim();
+  const iconMask = String(site.iconMask || "").trim();
   const inlineIcon = String(site.iconSvg || "").trim();
-  const favicon = explicitIconUrl || !inlineIcon
-    ? (faviconUrl
-      ? `<img class="site-favicon" src="${escapeAttribute(faviconUrl)}" alt="" width="20" height="20" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer" data-site-favicon>`
-      : "")
-    : `<span class="site-favicon site-favicon-svg" aria-hidden="true">${inlineIcon}</span>`;
+  const visual = iconMask
+    ? `<span class="site-favicon site-favicon-mask" style="--site-icon-mask:url(&quot;${escapeAttribute(iconMask)}&quot;)" aria-hidden="true"></span>`
+    : inlineIcon
+      ? `<span class="site-favicon site-favicon-svg" aria-hidden="true">${inlineIcon}</span>`
+      : `<span class="site-favicon-fallback" aria-hidden="true"></span>${faviconUrl ? `<img class="site-favicon" src="${escapeAttribute(faviconUrl)}" alt="" width="20" height="20" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer" data-site-favicon>` : ""}`;
+  const favicon = `<button class="site-favicon-edit" type="button" data-builder-edit-site="${escapeAttribute(site.id)}" aria-label="Edit ${escapeAttribute(site.name)} in Bang Builder" title="Edit in Bang Builder">${visual}<span class="site-favicon-pencil" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m16.9 3.6 3.5 3.5-11 11-4.4.9.9-4.4 11-11ZM4 20l1.5-7.1L15.8 2.6a2 2 0 0 1 2.8 0l2.8 2.8a2 2 0 0 1 0 2.8L11.1 18.5 4 20Z"/></svg></span></button>`;
   const description = site.description
     ? `<p class="site-description">${escapeHtml(site.description)}</p>`
     : "";
@@ -5248,7 +6196,7 @@ function getSiteType(site) {
   if (site.handler === "multi") {
     return { label: "Multisearch", className: "multi" };
   }
-  if (site.handler === "virustotal" || site.search) {
+  if (site.handler === "virustotal" || site.handler === "random" || site.search) {
     return { label: "Search", className: "search" };
   }
   return { label: "Link", className: "open" };
@@ -5335,6 +6283,7 @@ export default {
       if (reservedHint) {
         return renderReservedBareQueryPage(raw, reservedHint, url);
       }
+      return renderLocalBangResolverPage(shortcut, raw, defaultEngine);
     }
     return redirectTo(defaultEngine.search, raw);
   }
