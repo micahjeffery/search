@@ -2,7 +2,7 @@ const PROJECT = {
   name: "Search",
   repository: "https://github.com/micahjeffery/search",
   editMain: "https://github.com/micahjeffery/search/edit/main/src/index.js",
-  editTest: "https://github.com/micahjeffery/search/edit/test/src/index.js",
+  editTest: "https://gitlab.com/micahjeffery.com/search/-/edit/main/src/index.js?ref_type=heads",
   support: "https://www.micahjeffery.com/financial/referrals" 
 };
 // -----------------------------------------------------------------------------
@@ -64,7 +64,7 @@ const DEFAULT_ENGINES = [
 // -----------------------------------------------------------------------------
 // Every site uses the same format:
 //   name:        Display name used on the help page.
-//   description: Optional descrition of the site.
+//   description: Optional description of the site.
 //   aliases:     Bang words.
 //   home:        Destination for a bang with no query.
 //   search:      Optional destination for a bang with a query.
@@ -100,7 +100,7 @@ const SITE_GROUPS = [
         home: PROJECT.editMain
       },
       {
-        name: "Edit Test Branch",
+        name: "Edit Test Source",
         aliases: ["edittest"],
         home: PROJECT.editTest
       },
@@ -2601,6 +2601,131 @@ function handleSite(site, query, requestUrl) {
   }
   return redirectTo(site.home);
 }
+const MULTI_SEARCH_PAGE_CSS = String.raw`
+    :root {
+      color-scheme: dark;
+      --bg: #101114;
+      --surface: #191b20;
+      --surface-2: #22252c;
+      --input: #13151a;
+      --border: #323640;
+      --border-strong: #4a5160;
+      --text: #eef0f4;
+      --muted: #a7adb9;
+      --accent: #8ab4ff;
+      --accent-contrast: #091525;
+      --good: #83d49b;
+      --warn: #ffca70;
+      --danger: #ff9b9b;
+      --shadow: rgba(0, 0, 0, .22);
+    }
+    :root[data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #101114;
+      --surface: #191b20;
+      --surface-2: #22252c;
+      --input: #13151a;
+      --border: #323640;
+      --border-strong: #4a5160;
+      --text: #eef0f4;
+      --muted: #a7adb9;
+      --accent: #8ab4ff;
+      --accent-contrast: #091525;
+      --good: #83d49b;
+      --warn: #ffca70;
+      --danger: #ff9b9b;
+      --shadow: rgba(0, 0, 0, .22);
+    }
+    :root[data-theme="light"] {
+      color-scheme: light;
+      --bg: #f5f7fb;
+      --surface: #ffffff;
+      --surface-2: #eef2f8;
+      --input: #ffffff;
+      --border: #cdd4e0;
+      --border-strong: #9eabbc;
+      --text: #171a20;
+      --muted: #576274;
+      --accent: #185bc4;
+      --accent-contrast: #ffffff;
+      --good: #137a3d;
+      --warn: #8a5200;
+      --danger: #b42318;
+      --shadow: rgba(29, 43, 68, .10);
+    }
+    :root[data-theme="black"] {
+      color-scheme: dark;
+      --bg: #000000;
+      --surface: #050505;
+      --surface-2: #0d0d0d;
+      --input: #000000;
+      --border: rgba(255,255,255,.16);
+      --border-strong: rgba(255,255,255,.28);
+      --text: #f7f7f7;
+      --muted: #b6b6b6;
+      --accent: #9ec5ff;
+      --accent-contrast: #000000;
+      --good: #83d49b;
+      --warn: #ffca70;
+      --danger: #ff9b9b;
+      --shadow: rgba(0, 0, 0, .60);
+    }
+    * { box-sizing: border-box; }
+    body {
+      min-width: 320px;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 16px/1.45 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    main { max-width: 860px; margin: 0 auto; padding: 36px 20px 64px; }
+    a { color: var(--accent); }
+    h1 { margin: 0; font-size: clamp(2rem, 5vw, 3rem); line-height: 1.05; letter-spacing: -.03em; }
+    .multi-heading { display: flex; align-items: center; gap: 12px; }
+    .multi-heading-icon { display: grid; flex: 0 0 36px; place-items: center; width: 36px; height: 36px; color: var(--accent); object-fit: contain; }
+    .multi-heading-icon svg { display: block; width: 34px; height: 34px; }
+    p { color: var(--muted); margin: 10px 0 0; }
+    .top { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; margin-bottom: 24px; }
+    .multi-title { display: flex; align-items: center; gap: 12px; }
+    .multi-heading-icon { display: inline-grid; width: 34px; height: 34px; flex: 0 0 34px; place-items: center; color: var(--accent); }
+    .multi-heading-icon svg, img.multi-heading-icon { display: block; width: 34px; height: 34px; object-fit: contain; }
+    .back { border: 1px solid var(--border); border-radius: 999px; padding: 8px 11px; text-decoration: none; color: var(--text); background: var(--surface-2); white-space: nowrap; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 8px 24px var(--shadow); padding: 16px; margin-top: 16px; }
+    .search-row { display: flex; gap: 10px; align-items: stretch; }
+    input[type="search"] { flex: 1; min-width: 0; width: 100%; padding: 13px 14px; border: 1px solid var(--border); border-radius: 10px; background: var(--input); color: var(--text); font: inherit; }
+    button, .target-open, input[type="search"] { font: inherit; }
+    button, .target-open { appearance: none; border: 1px solid var(--border); border-radius: 9px; background: var(--surface-2); color: var(--text); padding: 8px 10px; cursor: pointer; text-decoration: none; }
+    button:hover, .target-open:hover, .back:hover { border-color: var(--accent); }
+    button.primary { border-color: var(--accent); background: var(--accent); color: var(--accent-contrast); font-weight: 700; }
+    button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid color-mix(in srgb, var(--accent) 45%, transparent); outline-offset: 2px; }
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .hint { font-size: .92rem; }
+    .status { min-height: 1.4em; margin-top: 10px; color: var(--muted); }
+    .status.good { color: var(--good); }
+    .status.warn { color: var(--warn); }
+    .status.danger { color: var(--danger); }
+    .target-list { display: grid; gap: 8px; margin-top: 14px; }
+    .target-row { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; padding: 12px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-2); }
+    .target-row:has(input:not(:checked)) { opacity: .62; }
+    .target-check { width: 20px; height: 20px; accent-color: var(--accent); }
+    .target-main { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .target-favicon-shell { position: relative; display: grid; width: 22px; height: 22px; flex: 0 0 22px; place-items: center; overflow: hidden; border-radius: 4px; }
+    .target-favicon-fallback { width: 20px; height: 20px; background: var(--muted); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M3 12h18M12 3c2.7 2.5 4.2 5.5 4.2 9S14.7 18.5 12 21M12 3C9.3 5.5 7.8 8.5 7.8 12s1.5 6.5 4.2 9'/%3E%3C/g%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M3 12h18M12 3c2.7 2.5 4.2 5.5 4.2 9S14.7 18.5 12 21M12 3C9.3 5.5 7.8 8.5 7.8 12s1.5 6.5 4.2 9'/%3E%3C/g%3E%3C/svg%3E") center / contain no-repeat; }
+    .target-favicon { position: absolute; inset: 0; width: 22px; height: 22px; object-fit: contain; border-radius: 4px; background: var(--surface-2); }
+    .target-favicon[hidden] { display: none; }
+    :root[data-disable-favicons="true"] .target-favicon { display: none !important; }
+    .target-copy { display: grid; gap: 2px; min-width: 0; }
+    .target-copy span { color: var(--muted); font-size: .86rem; overflow-wrap: anywhere; }
+    .small { color: var(--muted); font-size: .86rem; }
+    code { color: var(--accent); }
+    @media (max-width: 620px) {
+      .top, .search-row { display: block; }
+      .back { display: inline-block; margin-top: 14px; }
+      .search-row button { width: 100%; margin-top: 10px; }
+      .target-row { grid-template-columns: auto 1fr; }
+      .target-open { grid-column: 1 / -1; text-align: center; }
+    }
+`;
 function renderLocalBangResolverPage(shortcut, raw, defaultEngine) {
   const fallbackUrl = defaultEngine.search.replaceAll("{q}", encodeURIComponent(String(raw).trim()));
   const payload = JSON.stringify({
@@ -2608,53 +2733,157 @@ function renderLocalBangResolverPage(shortcut, raw, defaultEngine) {
     query: shortcut.query,
     fallbackUrl
   }).replaceAll("<", "\\u003c");
+  const localMultiIcon = MULTI_ICON_SVGS.web;
   const html = `<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Opening local bang · ${escapeHtml(PROJECT.name)}</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script>
+    (() => {
+      const allowed = ["auto", "dark", "light", "black"];
+      let preference = "auto";
+      try { const saved = localStorage.getItem("search-help-theme"); if (allowed.includes(saved)) preference = saved; } catch {}
+      const resolveAuto = () => window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+      document.documentElement.dataset.theme = preference === "auto" ? resolveAuto() : preference;
+      document.documentElement.dataset.themePreference = preference;
+      try { document.documentElement.dataset.disableFavicons = localStorage.getItem("search-help-disable-favicons") === "true" ? "true" : "false"; } catch { document.documentElement.dataset.disableFavicons = "false"; }
+    })();
+  </script>
   <style>
-    :root { color-scheme: light dark; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #101114; color: #eef0f4; }
-    @media (prefers-color-scheme: light) { :root { background: #f7f8fb; color: #17191f; } }
-    body { min-height: 100vh; margin: 0; display: grid; place-items: center; padding: 24px; box-sizing: border-box; }
-    main { width: min(560px, 100%); text-align: center; }
-    h1 { margin: 0 0 8px; font-size: clamp(1.55rem, 5vw, 2.1rem); }
-    p { margin: 0; opacity: .72; }
-    a { display: inline-block; margin-top: 18px; color: inherit; }
+${MULTI_SEARCH_PAGE_CSS}
+    .resolver { text-align: center; padding-top: 20vh; }
   </style>
 </head>
 <body>
-  <main>
+  <main id="resolver-main" class="resolver">
     <h1 id="resolver-title">Checking local bangs…</h1>
     <p id="resolver-status">This should only take a moment.</p>
-    <a id="resolver-fallback" href="${escapeAttribute(fallbackUrl)}">Continue with the default search</a>
+    <a class="back" id="resolver-fallback" href="${escapeAttribute(fallbackUrl)}">Continue with the default search</a>
   </main>
   <script>
     (() => {
       const request = ${payload};
       const storageKey = "search-local-bangs-v1";
+      const genericMultiIcon = ${JSON.stringify(localMultiIcon)};
+      const escapeHtml = (value) => String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
       const isHttpUrl = (value) => {
-        try {
-          const url = new URL(String(value || ""));
-          return url.protocol === "http:" || url.protocol === "https:";
-        } catch { return false; }
+        try { const url = new URL(String(value || ""), location.href); return url.protocol === "http:" || url.protocol === "https:"; }
+        catch { return false; }
       };
       let localBangs = [];
-      try {
-        const parsed = JSON.parse(localStorage.getItem(storageKey) || "[]");
-        if (Array.isArray(parsed)) localBangs = parsed;
-      } catch {}
-      const target = localBangs.find((bang) =>
-        bang && bang.enabled !== false && Array.isArray(bang.aliases) &&
-        bang.aliases.some((alias) => String(alias).toLowerCase() === request.bang)
-      );
+      try { const parsed = JSON.parse(localStorage.getItem(storageKey) || "[]"); if (Array.isArray(parsed)) localBangs = parsed; } catch {}
+      const target = localBangs.find((bang) => bang && bang.enabled !== false && Array.isArray(bang.aliases) && bang.aliases.some((alias) => String(alias).toLowerCase() === request.bang));
+      const localByAlias = new Map();
+      localBangs.filter((bang) => bang && bang.enabled !== false && Array.isArray(bang.aliases)).forEach((bang) => bang.aliases.forEach((alias) => localByAlias.set(String(alias).toLowerCase(), bang)));
+
+      function resolveLocalMultiTarget(item, index) {
+        if (!item || typeof item !== "object") return null;
+        const type = item.type === "bang" || item.bang ? "bang" : "url";
+        if (type === "bang") {
+          const alias = String(item.bang || item.key || "").trim().toLowerCase().replace(/^[!;:.]+/, "");
+          if (!/^[a-z0-9_-]+$/.test(alias)) return null;
+          const local = localByAlias.get(alias);
+          const icon = String(item.icon || local?.icon || "").trim();
+          return {
+            id: String(item.id || "bang-" + alias),
+            name: String(item.name || local?.name || "!" + alias),
+            detail: "Bang · !" + alias,
+            home: "/?q=" + encodeURIComponent("!" + alias),
+            search: "/?q=" + encodeURIComponent("!" + alias) + "%20{q}",
+            icon
+          };
+        }
+        const search = String(item.search || "").trim();
+        if (!search.includes("{q}") || !isHttpUrl(search.replaceAll("{q}", "example"))) return null;
+        let origin = "";
+        try { origin = new URL(search.replaceAll("{q}", "example")).origin; } catch {}
+        return {
+          id: String(item.id || "url-" + index),
+          name: String(item.name || "Target " + (index + 1)),
+          detail: "Custom target",
+          home: origin ? origin + "/" : search.replaceAll("{q}", ""),
+          search,
+          icon: String(item.icon || (origin ? origin + "/favicon.ico" : ""))
+        };
+      }
+
+      function renderLocalMulti(bang) {
+        const targets = (Array.isArray(bang.targets) ? bang.targets : []).map(resolveLocalMultiTarget).filter(Boolean);
+        const query = String(request.query || "").trim();
+        const primaryAlias = Array.isArray(bang.aliases) && bang.aliases[0] ? bang.aliases[0] : request.bang;
+        const multiId = "local-" + bang.id;
+        const headingIcon = bang.icon
+          ? '<img class="multi-heading-icon" src="' + escapeHtml(bang.icon) + '" alt="" width="34" height="34" referrerpolicy="no-referrer">'
+          : '<span class="multi-heading-icon" aria-hidden="true">' + genericMultiIcon + '</span>';
+        document.title = String(bang.name || "Local multisearch") + " · ${escapeHtml(PROJECT.name)}";
+        document.body.innerHTML = '<main>' +
+          '<div class="top"><div><h1 class="multi-title">' + headingIcon + '<span>' + escapeHtml(bang.name || "Local multisearch") + '</span></h1>' +
+          '<p>' + escapeHtml(bang.description || "Choose targets, then open them together.") + '</p>' +
+          '<p class="small">Shortcut: <code>;' + escapeHtml(primaryAlias) + ' ' + escapeHtml(query || "your search") + '</code></p></div>' +
+          '<a class="back" href="/">All bangs</a></div>' +
+          '<section class="card"><form id="multi-form" action="javascript:void(0)" autocomplete="off"><div class="search-row">' +
+          '<input id="multi-query" type="search" autocomplete="off" spellcheck="false" value="' + escapeHtml(query) + '" placeholder="Search term">' +
+          '<button class="primary" id="search-all" type="button">Search all selected</button></div></form>' +
+          '<div class="actions"><button type="button" id="open-next">Open next</button><button type="button" id="select-all">Select all</button><button type="button" id="select-none">Select none</button><button type="button" id="copy-links">Copy selected links</button></div>' +
+          '<p id="status" class="status" aria-live="polite"></p><p class="hint">Your checked sites are remembered in this browser. If Search all is blocked, allow popups for this site and try again, or use Open next.</p></section>' +
+          '<section class="card"><div class="target-list" id="target-list"></div></section></main>';
+
+        const list = document.getElementById("target-list");
+        targets.forEach((item, index) => {
+          const row = document.createElement("label");
+          row.className = "target-row";
+          row.dataset.targetId = item.id;
+          const shell = '<span class="target-favicon-shell" aria-hidden="true"><span class="target-favicon-fallback"></span>' + (item.icon ? '<img class="target-favicon" data-favicon-src="' + escapeHtml(item.icon) + '" alt="" width="22" height="22" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer" data-site-favicon>' : '') + '</span>';
+          row.innerHTML = '<input class="target-check" type="checkbox" data-target-check="' + index + '" checked><span class="target-main">' + shell + '<span class="target-copy"><strong>' + escapeHtml(item.name) + '</strong><span>' + escapeHtml(item.detail) + '</span></span></span><a class="target-open" href="#" target="_blank" rel="noreferrer" data-target-link="' + index + '">Open</a>';
+          list.append(row);
+        });
+        if (!targets.length) list.innerHTML = '<p>No valid multisearch targets are configured.</p>';
+
+        const themeMedia = window.matchMedia ? window.matchMedia("(prefers-color-scheme: light)") : null;
+        const syncAutoTheme = () => { if (document.documentElement.dataset.themePreference === "auto") document.documentElement.dataset.theme = themeMedia && themeMedia.matches ? "light" : "dark"; };
+        if (themeMedia) { if (themeMedia.addEventListener) themeMedia.addEventListener("change", syncAutoTheme); else if (themeMedia.addListener) themeMedia.addListener(syncAutoTheme); }
+        const selectedKey = "search-multisearch-selected:" + multiId;
+        const form = document.getElementById("multi-form");
+        const searchAllButton = document.getElementById("search-all");
+        const queryInput = document.getElementById("multi-query");
+        const status = document.getElementById("status");
+        const checks = [...document.querySelectorAll("[data-target-check]")];
+        const links = [...document.querySelectorAll("[data-target-link]")];
+        let nextCursor = 0;
+        if (document.documentElement.dataset.disableFavicons !== "true") document.querySelectorAll("img[data-favicon-src]").forEach((image) => { image.src = image.dataset.faviconSrc; });
+        document.addEventListener("error", (event) => { const image = event.target; if (image instanceof HTMLImageElement && image.matches("[data-site-favicon]")) { image.dataset.faviconFailed = "true"; image.hidden = true; } }, true);
+        const setStatus = (message, type = "") => { status.textContent = message; status.className = "status" + (type ? " " + type : ""); };
+        const checkedTargets = () => checks.filter((check) => check.checked).map((check) => targets[Number(check.dataset.targetCheck)]).filter(Boolean);
+        const saveSelection = () => { try { localStorage.setItem(selectedKey, JSON.stringify(checkedTargets().map((item) => item.id))); } catch {} };
+        const restoreSelection = () => { let saved = null; try { const parsed = JSON.parse(localStorage.getItem(selectedKey) || "null"); if (Array.isArray(parsed)) saved = new Set(parsed); } catch {} if (saved) checks.forEach((check) => { const item = targets[Number(check.dataset.targetCheck)]; check.checked = Boolean(item && saved.has(item.id)); }); };
+        const urlFor = (item) => { const q = queryInput.value.trim(); return q && item.search ? item.search.replaceAll("{q}", encodeURIComponent(q)) : item.home; };
+        const updateSearchAllLabel = () => { const count = checkedTargets().length; searchAllButton.textContent = count ? "Search all selected (" + count + ")" : "Search all selected"; };
+        const updateAddressBar = () => { try { const url = new URL(location.href); const q = queryInput.value.trim(); url.searchParams.set("q", "!" + primaryAlias + (q ? " " + q : "")); history.replaceState(null, "", url); } catch {} };
+        const updateLinks = () => links.forEach((link) => { const item = targets[Number(link.dataset.targetLink)]; if (item) link.href = urlFor(item); });
+        const openPopup = (url) => { const opened = window.open(url, "_blank"); if (opened) { opened.opener = null; return true; } return false; };
+        const openTargets = (items) => { if (!items.length) { setStatus("Choose at least one search target first.", "warn"); return; } let blocked = 0; items.forEach((item) => { if (!openPopup(urlFor(item))) blocked += 1; }); setStatus(blocked ? blocked + " tab" + (blocked === 1 ? " was" : "s were") + " blocked. Allow popups for this site, then try again." : "Opened " + items.length + " selected search" + (items.length === 1 ? "" : "es") + ".", blocked ? "danger" : "good"); };
+        const searchAllSelected = (event) => { if (event) event.preventDefault(); updateLinks(); saveSelection(); openTargets(checkedTargets()); };
+        form.addEventListener("submit", searchAllSelected);
+        searchAllButton.addEventListener("click", searchAllSelected);
+        queryInput.addEventListener("keydown", (event) => { if (event.key === "Enter") searchAllSelected(event); else if (event.key === "Escape") { if (queryInput.value) { queryInput.value = ""; updateLinks(); updateAddressBar(); } else queryInput.blur(); event.preventDefault(); } });
+        queryInput.addEventListener("input", () => { updateLinks(); updateAddressBar(); });
+        checks.forEach((check) => check.addEventListener("change", () => { nextCursor = 0; saveSelection(); updateSearchAllLabel(); }));
+        document.getElementById("open-next").addEventListener("click", () => { const selected = checkedTargets(); if (!selected.length) { setStatus("Choose at least one search target first.", "warn"); return; } const item = selected[nextCursor % selected.length]; nextCursor = (nextCursor + 1) % selected.length; const opened = openPopup(urlFor(item)); setStatus(opened ? "Opened " + item.name + "." : "That tab was blocked. Allow popups for this site, then try again.", opened ? "good" : "danger"); });
+        document.getElementById("select-all").addEventListener("click", () => { checks.forEach((check) => { check.checked = true; }); nextCursor = 0; saveSelection(); updateSearchAllLabel(); setStatus("Selected all targets.", "good"); });
+        document.getElementById("select-none").addEventListener("click", () => { checks.forEach((check) => { check.checked = false; }); nextCursor = 0; saveSelection(); updateSearchAllLabel(); setStatus("Deselected all targets.", "warn"); });
+        document.getElementById("copy-links").addEventListener("click", async () => { const urls = checkedTargets().map(urlFor); if (!urls.length) { setStatus("Choose at least one search target first.", "warn"); return; } const text = urls.join("\\n"); try { await navigator.clipboard.writeText(text); setStatus("Copied " + urls.length + " link" + (urls.length === 1 ? "" : "s") + ".", "good"); } catch { window.prompt("Copy these links:", text); } });
+        restoreSelection(); updateLinks(); updateSearchAllLabel(); queryInput.focus(); queryInput.setSelectionRange(queryInput.value.length, queryInput.value.length);
+      }
+
       let destination = request.fallbackUrl;
+      if (target && target.kind === "multi") { renderLocalMulti(target); return; }
       if (target && isHttpUrl(target.home)) {
         const search = String(target.search || "");
-        destination = request.query && search.includes("{q}") && isHttpUrl(search.replaceAll("{q}", "example"))
-          ? search.replaceAll("{q}", encodeURIComponent(request.query.trim()))
-          : target.home;
+        const query = String(request.query || "").trim();
+        destination = query && search.includes("{q}") && isHttpUrl(search.replaceAll("{q}", "example")) ? search.replaceAll("{q}", encodeURIComponent(query)) : target.home;
         document.getElementById("resolver-title").textContent = "Opening " + String(target.name || "local bang") + "…";
         document.getElementById("resolver-status").textContent = "Resolved !" + request.bang + " from this browser.";
       } else {
@@ -2719,8 +2948,8 @@ function renderHelpPage(requestUrl) {
   const homeEnginePaths = DEFAULT_ENGINES.map((engine) => engine.paths[0]);
   const supportIcon = `<img src="https://upload.wikimedia.org/wikipedia/commons/8/86/A_perfect_SVG_heart.svg" alt="" width="19" height="19" referrerpolicy="no-referrer">`;
   const supportControl = PROJECT.support
-    ? `<a class="icon-button support-link" href="${escapeAttribute(PROJECT.support)}" target="_blank" rel="noreferrer" aria-label="Support" title="Support">${supportIcon}</a>`
-    : `<span class="icon-button support" role="img" aria-label="Support" title="Support">${supportIcon}</span>`;
+    ? `<a class="icon-button support-link" id="support-link" href="${escapeAttribute(PROJECT.support)}" target="_blank" rel="noreferrer" aria-label="Support" title="Support">${supportIcon}</a>`
+    : `<span class="icon-button support" id="support-link" role="img" aria-label="Support" title="Support">${supportIcon}</span>`;
   const browserBangSites = [
     ...SITES.map((site) => [
       site.name,
@@ -2754,17 +2983,37 @@ function renderHelpPage(requestUrl) {
   const bangBuilderHandlerOptions = bangBuilderHandlers
     .map((handler) => `<option value="${escapeAttribute(handler)}"></option>`)
     .join("");
-  const bangBuilderExistingSitesJson = JSON.stringify(SITES.map((site) => ({
-    id: site.id,
-    category: site.category,
-    name: site.name,
-    description: site.description || "",
-    aliases: site.aliases,
-    home: site.home,
-    search: site.search || "",
-    icon: site.icon || "",
-    handler: site.handler || ""
-  }))).replaceAll("<", "\u003c");
+  const bangBuilderExistingSitesJson = JSON.stringify([
+    ...SITES.map((site) => ({
+      id: site.id,
+      kind: "bang",
+      category: site.category,
+      name: site.name,
+      description: site.description || "",
+      aliases: site.aliases,
+      home: site.home,
+      search: site.search || "",
+      icon: site.icon || "",
+      handler: site.handler || ""
+    })),
+    ...MULTI_SEARCHES.map((multi) => ({
+      id: `multi:${multi.id}`,
+      kind: "multi",
+      category: "Multisearch",
+      name: multi.name,
+      description: multi.description || "",
+      aliases: multi.aliases,
+      home: `/multi/${multi.id}/`,
+      search: "",
+      icon: multi.icon || "",
+      iconKey: Object.entries(MULTI_ICON_SVGS).find(([, svg]) => svg === multi.iconSvg)?.[0] || "",
+      handler: "multi",
+      targets: multi.targets.map((target) => ({
+        type: "bang",
+        bang: String(target.key || (target.type === "engine" ? "d" : ""))
+      }))
+    }))
+  ]).replaceAll("<", "\u003c");
   const multiSearchDisplayGroup = {
     category: "Multisearch",
     sites: MULTI_SEARCHES.map((multi) => ({
@@ -2826,11 +3075,13 @@ function renderHelpPage(requestUrl) {
         root.dataset.themePreference = themePreference;
         root.dataset.density = layout;
         root.dataset.defaultsOpen = savedDefaultsOpen === "false" ? "false" : "true";
+        root.dataset.disableFavicons = localStorage.getItem("search-help-disable-favicons") === "true" ? "true" : "false";
       } catch {
         root.dataset.theme = resolveAutoTheme();
         root.dataset.themePreference = "auto";
         root.dataset.density = "comfortable";
         root.dataset.defaultsOpen = "true";
+        root.dataset.disableFavicons = "false";
       }
 
       // The main script removes this fallback after it has restored every control.
@@ -2959,6 +3210,9 @@ function renderHelpPage(requestUrl) {
       transform: none;
     }
     .badges { margin-top: 14px; }
+    @media (max-width: 700px) {
+      :root[data-density="compact"] header.menu-open .badges { visibility: hidden; }
+    }
     .badge {
       border: 1px solid var(--border);
       border-radius: 999px;
@@ -3005,7 +3259,7 @@ function renderHelpPage(requestUrl) {
     .toolbar { padding: 14px; margin: 20px 0; }
     .search-row { display: flex; gap: 10px; align-items: stretch; }
     .search-row input { flex: 1; }
-    input, .theme-select, .layout-select, .home-engine-select, .toolbar-button, .engine-card, .alias, .favorite-button, .recent-search, .recent-clear, .history-disable, .dialog-button, .dialog-close, .icon-button, .minimalist-exit {
+    input, .theme-select, .layout-select, .home-engine-select, .toolbar-button, .engine-card, .alias, .favorite-button, .recent-search, .recent-clear, .dialog-button, .dialog-close, .icon-button, .minimalist-exit {
       font: inherit;
     }
     input {
@@ -3018,11 +3272,11 @@ function renderHelpPage(requestUrl) {
       color: var(--text);
     }
     input:focus, .theme-select:focus, .layout-select:focus, .home-engine-select:focus, .toolbar-button:focus-visible, .engine-card:focus-visible,
-    .alias:focus-visible, .favorite-button:focus-visible, .recent-search:focus-visible, .recent-clear:focus-visible, .history-disable:focus-visible, .dialog-button:focus-visible, .dialog-close:focus-visible, .site-name:focus-visible, .github-link:focus-visible, .icon-button:focus-visible, .minimalist-exit:focus-visible {
+    .alias:focus-visible, .favorite-button:focus-visible, .recent-search:focus-visible, .recent-clear:focus-visible, .dialog-button:focus-visible, .dialog-close:focus-visible, .site-name:focus-visible, .github-link:focus-visible, .icon-button:focus-visible, .minimalist-exit:focus-visible {
       outline: 3px solid color-mix(in srgb, var(--accent) 45%, transparent);
       outline-offset: 2px;
     }
-    .search-button, .toolbar-button, .theme-select, .layout-select, .home-engine-select, .recent-search, .recent-clear, .history-disable, .dialog-button, .dialog-close {
+    .search-button, .toolbar-button, .theme-select, .layout-select, .home-engine-select, .recent-search, .recent-clear, .dialog-button, .dialog-close {
       appearance: none;
       border: 1px solid var(--border);
       border-radius: 9px;
@@ -3055,7 +3309,7 @@ function renderHelpPage(requestUrl) {
       gap: 8px;
       margin-left: auto;
     }
-    .toolbar-button:hover, .theme-select:hover, .layout-select:hover, .home-engine-select:hover, .engine-card:hover, .alias:hover, .favorite-button:hover, .recent-search:hover, .recent-clear:hover, .history-disable:hover, .dialog-button:hover, .dialog-close:hover, .github-link:hover, .icon-button:hover, .minimalist-exit:hover {
+    .toolbar-button:hover, .theme-select:hover, .layout-select:hover, .home-engine-select:hover, .engine-card:hover, .alias:hover, .favorite-button:hover, .recent-search:hover, .recent-clear:hover, .dialog-button:hover, .dialog-close:hover, .github-link:hover, .icon-button:hover, .minimalist-exit:hover {
       border-color: var(--accent);
     }
     .theme-select, .layout-select, .home-engine-select, .toolbar-button {
@@ -3140,8 +3394,15 @@ function renderHelpPage(requestUrl) {
     .dialog-button.danger { border-color: var(--danger); color: var(--danger); }
     .builder-dialog {
       width: min(820px, calc(100vw - 32px));
-      max-height: min(900px, calc(100vh - 32px));
-      overflow: auto;
+      max-height: min(900px, calc(100vh - 16px));
+      max-height: min(900px, calc(100dvh - 16px));
+      overflow: hidden;
+    }
+    .builder-dialog > .dialog-body {
+      max-height: inherit;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scrollbar-gutter: stable;
     }
     .builder-form { margin-top: 14px; }
     .builder-grid {
@@ -3162,7 +3423,49 @@ function renderHelpPage(requestUrl) {
       width: 100%; min-width: 0; min-height: 68px; padding: 10px 11px; resize: vertical;
       border: 1px solid var(--border); border-radius: 10px; background: var(--input); color: var(--text); font: inherit;
     }
-    .builder-icon-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+    .builder-icon-row, .builder-search-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+    .builder-search-row { grid-template-columns: minmax(0, 1fr) auto auto; }
+    .builder-small-button { white-space: nowrap; }
+    .builder-title-row { display: flex; align-items: center; gap: 10px; }
+    .builder-title-row h2 { margin: 0; }
+    .builder-type-control { display: inline-flex; align-items: center; }
+    .builder-type-control .builder-select {
+      width: auto;
+      min-width: 128px;
+      min-height: 34px;
+      max-width: 160px;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      font-size: .8rem;
+      font-weight: 700;
+    }
+    .builder-multi-editor { display: grid; gap: 6px; }
+    .builder-multi-row {
+      display: grid;
+      grid-template-columns: 76px minmax(120px, .6fr) minmax(260px, 1.65fr) auto auto;
+      gap: 6px;
+      align-items: center;
+      padding: 6px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: var(--surface-2);
+    }
+    .builder-multi-row input, .builder-multi-row select { min-width: 0; min-height: 34px; }
+    .builder-multi-row select {
+      padding: 5px 26px 5px 8px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--input);
+      color: var(--text);
+      font: inherit;
+      font-size: .84rem;
+    }
+    .builder-multi-row [data-multi-target-bang]:not([hidden]) { grid-column: 2 / 4; }
+    .builder-multi-row[data-alias-state="valid"] [data-multi-target-bang] { border-color: color-mix(in srgb, var(--success) 55%, var(--border)); }
+    .builder-multi-row[data-alias-state="invalid"] [data-multi-target-bang] { border-color: color-mix(in srgb, var(--danger) 55%, var(--border)); }
+    .builder-multi-row .dialog-button { min-height: 34px; padding: 5px 9px; white-space: nowrap; }
+    .builder-multi-remove { color: var(--danger); }
+    .builder-multi-add { justify-self: start; }
     .builder-icon-result { display: flex; align-items: center; gap: 10px; min-height: 42px; }
     .builder-icon-preview {
       display: grid; flex: 0 0 42px; place-items: center; width: 42px; height: 42px;
@@ -3236,6 +3539,37 @@ function renderHelpPage(requestUrl) {
     .builder-primary { border-color: var(--accent); background: var(--accent); color: var(--accent-contrast); font-weight: 700; }
     #settings-backup-button svg, #bang-builder-button svg, #header-menu-button svg, #compact-theme-button svg, #compact-layout-button svg { display: block; width: 19px; height: 19px; }
     .settings-backup-grid { display: grid; gap: 12px; margin-top: 16px; }
+    .settings-dialog {
+      width: min(560px, calc(100vw - 32px));
+      max-height: calc(100dvh - 20px);
+      overflow: auto;
+      overscroll-behavior: contain;
+    }
+    .settings-section { display: grid; gap: 10px; padding: 14px 0; border-top: 1px solid var(--border); }
+    .settings-section:first-of-type { border-top: 0; }
+    .settings-section h3 { margin: 0; font-size: .94rem; }
+    .settings-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; color: var(--muted); font-size: .88rem; }
+    .settings-row select, .builder-select { appearance: none; min-height: 36px; padding: 7px 30px 7px 10px; border: 1px solid var(--border); border-radius: 9px; background: var(--surface-2); color: var(--text); font: inherit; }
+    .settings-data-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .settings-data-actions svg { width: 16px; height: 16px; margin-right: 7px; }
+    .hidden-bangs-list { display: grid; gap: 7px; max-height: min(56vh, 520px); margin-top: 12px; overflow: auto; }
+    .hidden-bang-row {
+      display: grid;
+      grid-template-columns: 18px minmax(0, 1fr);
+      align-items: center;
+      gap: 10px;
+      min-height: 52px;
+      padding: 9px 10px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: var(--surface-2);
+      color: var(--text);
+      cursor: pointer;
+    }
+    .hidden-bang-row input { width: 18px; height: 18px; margin: 0; accent-color: var(--accent); }
+    .hidden-bang-copy { min-width: 0; }
+    .hidden-bang-copy strong, .hidden-bang-copy small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .hidden-bang-copy small { margin-top: 2px; color: var(--muted); font-size: .76rem; }
     .settings-option {
       display: grid;
       grid-template-columns: 18px minmax(0, 1fr);
@@ -3303,7 +3637,51 @@ function renderHelpPage(requestUrl) {
     @media (max-width: 760px) {
       .builder-grid { grid-template-columns: 1fr; }
       .builder-field.full { grid-column: auto; }
-      .builder-icon-row { grid-template-columns: 1fr; }
+      .builder-icon-row, .builder-search-row { grid-template-columns: 1fr; }
+      .builder-title-row { flex-wrap: wrap; gap: 7px; }
+      .builder-multi-row { grid-template-columns: 88px minmax(0, 1fr) auto auto; }
+      .builder-multi-row [data-multi-target-name],
+      .builder-multi-row [data-multi-target-url],
+      .builder-multi-row [data-multi-target-bang] { grid-column: 2 / -1; }
+    }
+    @media (max-width: 620px) {
+      .builder-dialog {
+        width: calc(100vw - 12px);
+        max-height: calc(100vh - 12px);
+        max-height: calc(100dvh - 12px);
+      }
+      .builder-dialog > .dialog-body {
+        padding: 14px;
+        padding-bottom: max(14px, env(safe-area-inset-bottom));
+      }
+      .builder-dialog .dialog-heading {
+        position: sticky;
+        top: -14px;
+        z-index: 4;
+        margin: -14px -14px 0;
+        padding: 14px;
+        border-bottom: 1px solid var(--border);
+        background: var(--surface);
+      }
+      .builder-dialog .builder-actions {
+        position: sticky;
+        bottom: -14px;
+        z-index: 3;
+        margin: 16px -14px -14px;
+        padding: 12px 14px max(12px, env(safe-area-inset-bottom));
+        border-top: 1px solid var(--border);
+        background: var(--surface);
+      }
+      .settings-dialog {
+        width: calc(100vw - 12px);
+        max-height: calc(100dvh - 24px);
+      }
+      .settings-dialog .dialog-body { padding: 14px; }
+      .builder-multi-row { grid-template-columns: minmax(0, 1fr) auto auto; }
+      .builder-multi-row [data-multi-target-type],
+      .builder-multi-row [data-multi-target-name],
+      .builder-multi-row [data-multi-target-url],
+      .builder-multi-row [data-multi-target-bang] { grid-column: 1 / -1; }
     }
     .shortcut-list {
       display: grid;
@@ -3337,6 +3715,19 @@ function renderHelpPage(requestUrl) {
     :root[data-density="compact"] .toolbar { padding: 10px; margin: 12px 0; }
     :root[data-density="compact"] .toolbar-actions { margin-top: 8px; }
     :root[data-density="compact"] .favorites, :root[data-density="compact"] .recent-searches { padding: 12px; margin: 12px 0; }
+    :root[data-hide-descriptions="true"] .site-description { display: none !important; }
+    :root[data-hide-favorites="true"] .favorites,
+    :root[data-hide-favorites="true"] .favorite-button { display: none !important; }
+    :root[data-alias-limit="1"] .aliases .alias:nth-child(n+2),
+    :root[data-alias-limit="2"] .aliases .alias:nth-child(n+3),
+    :root[data-alias-limit="3"] .aliases .alias:nth-child(n+4),
+    :root[data-alias-limit="5"] .aliases .alias:nth-child(n+6) { display: none !important; }
+    :root[data-theme-locked="true"] #theme-select,
+    :root[data-theme-locked="true"] #compact-theme-button { display: none !important; }
+    :root[data-layout-locked="true"] #layout-select,
+    :root[data-layout-locked="true"] #compact-layout-button { display: none !important; }
+    :root[data-hide-support="true"] #support-link { display: none !important; }
+    :root[data-hide-repo="true"] #repo-link { display: none !important; }
     :root[data-density="compact"] .defaults { display: none; }
     :root[data-density="compact"] .group { margin: 16px 0; }
     :root[data-density="compact"] .engine-grid, :root[data-density="compact"] .site-grid { gap: 8px; }
@@ -3393,8 +3784,7 @@ function renderHelpPage(requestUrl) {
     .favorites-count { color: var(--muted); font-size: .84rem; font-weight: 400; }
     .recent-heading h2 { font-size: 1rem; }
     .recent-actions { margin-left: auto; }
-    .recent-clear, .history-disable { padding: 5px 8px; font-size: .8rem; }
-    .history-disable { color: var(--warn); }
+    .recent-clear { padding: 5px 8px; font-size: .8rem; }
     .recent-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
     .recent-search {
       max-width: 100%;
@@ -3495,6 +3885,7 @@ function renderHelpPage(requestUrl) {
       border-radius: 4px;
     }
     .site-favicon[hidden] { display: none; }
+    :root[data-disable-favicons="true"] .site-favicon-edit img.site-favicon { display: none !important; }
     .site-favicon-edit {
       position: relative;
       display: grid;
@@ -3510,12 +3901,14 @@ function renderHelpPage(requestUrl) {
       color: var(--text);
       cursor: pointer;
     }
-    .site-favicon-edit > img.site-favicon {
+    .site-favicon-edit > img.site-favicon,
+    .site-favicon-edit > .site-favicon:not(img) {
       position: absolute;
       inset: 0;
       z-index: 1;
-      background: var(--surface);
     }
+    .site-favicon-edit > img.site-favicon { background: var(--surface); }
+    .site-favicon-edit.has-custom-visual .site-favicon-fallback { opacity: 0; }
     .site-favicon-fallback {
       display: block;
       width: 18px;
@@ -3539,8 +3932,9 @@ function renderHelpPage(requestUrl) {
       pointer-events: none;
     }
     .site-favicon-pencil svg { display: block; width: 11px; height: 11px; fill: currentColor; }
-    .site-favicon-edit:hover .site-favicon-pencil,
-    .site-favicon-edit:focus-visible .site-favicon-pencil { opacity: 1; }
+    .site-favicon-edit:not(.site-favicon-static):hover .site-favicon-pencil,
+    .site-favicon-edit:not(.site-favicon-static):focus-visible .site-favicon-pencil { opacity: 1; }
+    .site-favicon-static { cursor: default; }
     .site-favicon-edit:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; overflow: visible; }
     .site-favicon-svg { display: grid; place-items: center; color: var(--accent); }
     .site-favicon-svg svg { display: block; width: 20px; height: 20px; }
@@ -3553,6 +3947,14 @@ function renderHelpPage(requestUrl) {
     }
     .site-card[data-site-key="random"] .site-favicon-mask,
     .site-card[data-site-key="random"] .site-favicon-svg { color: var(--warn); }
+    .local-multi-favicon {
+      display: block;
+      width: 20px;
+      height: 20px;
+      background: var(--accent);
+      -webkit-mask: url("https://upload.wikimedia.org/wikipedia/commons/8/8a/X_Pinhead_icon.svg") center / 18px 18px no-repeat;
+      mask: url("https://upload.wikimedia.org/wikipedia/commons/8/8a/X_Pinhead_icon.svg") center / 18px 18px no-repeat;
+    }
     .site-name {
       display: block;
       min-width: 0;
@@ -3579,10 +3981,12 @@ function renderHelpPage(requestUrl) {
       font: .78rem ui-monospace, SFMono-Regular, Menlo, monospace;
     }
     .favorite-button {
+      display: grid;
       width: 24px;
       height: 24px;
-      padding: 0;
-      font-size: .98rem;
+      place-items: center;
+      padding: 0 0 1px;
+      font-size: 1rem;
       line-height: 1;
     }
     .favorite-button.is-favorite { color: var(--warn); }
@@ -3595,7 +3999,7 @@ function renderHelpPage(requestUrl) {
       border: 1px solid var(--border);
       border-radius: 7px;
       background: var(--surface-2);
-      color: var(--muted);
+      color: var(--danger);
       cursor: pointer;
     }
     .local-delete-button:hover, .local-delete-button:focus-visible { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 45%, var(--border)); }
@@ -3615,7 +4019,9 @@ function renderHelpPage(requestUrl) {
       main { padding: 25px 14px 48px; }
       header { flex-direction: column; }
       .header-actions { justify-content: flex-start; }
-      :root[data-density="compact"] .header-actions { align-self: flex-end; justify-content: flex-end; }
+      :root[data-density="compact"] header { flex-direction: row; align-items: flex-end; }
+      :root[data-density="compact"] header > div:first-child { min-width: 0; flex: 1; }
+      :root[data-density="compact"] .header-actions { align-self: auto; justify-content: flex-end; }
       .search-row { flex-direction: column; }
       .search-button { width: 100%; }
     }
@@ -3656,9 +4062,6 @@ function renderHelpPage(requestUrl) {
           <option value="compact">Compact</option>
           <option value="minimalist">Minimalist</option>
         </select>
-        <button class="icon-button" id="settings-backup-button" type="button" aria-haspopup="dialog" aria-controls="settings-backup" aria-label="Import or export settings" title="Import or export settings">
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 19h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
         <button class="icon-button" id="bang-builder-button" type="button" aria-haspopup="dialog" aria-controls="bang-builder" aria-label="Add a bang" title="Build a new bang">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11 5a1 1 0 0 1 2 0v6h6a1 1 0 1 1 0 2h-6v6a1 1 0 1 1-2 0v-6H5a1 1 0 1 1 0-2h6V5Z"/></svg>
         </button>
@@ -3666,9 +4069,12 @@ function renderHelpPage(requestUrl) {
           <img src="https://upload.wikimedia.org/wikipedia/commons/4/49/OOjs_UI_icon_keyboard-progressive.svg" alt="" width="19" height="19" referrerpolicy="no-referrer">
         </button>
         ${supportControl}
-        <a class="github-link" href="${escapeAttribute(PROJECT.repository)}" target="_blank" rel="noreferrer" aria-label="Open the GitHub repository" title="Open the GitHub repository">
+        <a class="github-link" id="repo-link" href="${escapeAttribute(PROJECT.repository)}" target="_blank" rel="noreferrer" aria-label="Open the GitHub repository" title="Open the GitHub repository">
           <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="" width="19" height="19" referrerpolicy="no-referrer">
         </a>
+        <button class="icon-button" id="settings-backup-button" type="button" aria-haspopup="dialog" aria-controls="settings-backup" aria-label="Settings" title="Settings">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 8.25A3.75 3.75 0 1 0 12 15.75 3.75 3.75 0 0 0 12 8.25Z" stroke="currentColor" stroke-width="2"/><path d="M19.1 13.45a7.7 7.7 0 0 0 .05-1.45 7.7 7.7 0 0 0-.05-1.45l2-1.55-2-3.46-2.48 1a7.9 7.9 0 0 0-2.5-1.45L13.75 2h-4l-.37 3.09a7.9 7.9 0 0 0-2.5 1.45l-2.48-1-2 3.46 2 1.55A7.7 7.7 0 0 0 4.35 12c0 .49.02.97.05 1.45L2.4 15l2 3.46 2.48-1a7.9 7.9 0 0 0 2.5 1.45L9.75 22h4l.37-3.09a7.9 7.9 0 0 0 2.5-1.45l2.48 1 2-3.46-2-1.55Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        </button>
         </div>
       </div>
     </header>
@@ -3708,35 +4114,55 @@ function renderHelpPage(requestUrl) {
         <h2>Recent searches</h2>
         <div class="recent-actions">
           <button class="recent-clear" id="clear-recent-searches" type="button">Clear</button>
-          <button class="history-disable" id="disable-history" type="button">Disable history</button>
         </div>
       </div>
       <div id="recent-search-list" class="recent-list"></div>
     </section>
-    <dialog class="dialog" id="settings-backup" aria-labelledby="settings-backup-title">
+    <dialog class="dialog settings-dialog" id="settings-backup" aria-labelledby="settings-backup-title">
       <div class="dialog-body">
         <div class="dialog-heading">
-          <h2 id="settings-backup-title">Settings backup</h2>
-          <button class="dialog-close" type="button" data-close-dialog="settings-backup" aria-label="Close settings backup">Close</button>
+          <h2 id="settings-backup-title">Settings</h2>
+          <button class="dialog-close" type="button" data-close-dialog="settings-backup" aria-label="Close settings">Close</button>
         </div>
-        <p>Export your theme, layout, favorites, local bangs, home engine, and multisearch choices as JSON.</p>
-        <div class="settings-backup-grid">
-          <label class="settings-option" for="settings-include-history">
-            <input id="settings-include-history" type="checkbox">
-            <span>Include recent searches</span>
-          </label>
-          <button class="dialog-button" id="settings-export" type="button">Export settings</button>
-          <label class="settings-import-mode" for="settings-import-mode">Import mode
-            <select id="settings-import-mode">
-              <option value="replace" selected>Replace current settings</option>
-              <option value="merge">Merge with current settings</option>
-            </select>
-          </label>
-          <button class="dialog-button" id="settings-import" type="button">Import settings</button>
+        <div class="settings-section">
+          <h3>Display</h3>
+          <label class="settings-option"><input id="settings-hide-descriptions" type="checkbox"><span>Hide descriptions</span></label>
+          <label class="settings-option"><input id="settings-hide-favorites" type="checkbox"><span>Hide favorites</span></label>
+          <label class="settings-option" title="Prevents external site icon image requests."><input id="settings-disable-favicons" type="checkbox"><span>Disable favicons</span></label>
+          <label class="settings-row" for="settings-alias-limit"><span>Aliases shown per bang</span><select id="settings-alias-limit"><option value="0">Show all</option><option value="1">1 alias</option><option value="2">2 aliases</option><option value="3">3 aliases</option><option value="5">5 aliases</option></select></label>
+          <label class="settings-row" for="settings-lock-theme"><span>Theme control</span><select id="settings-lock-theme"><option value="">Unlocked</option><option value="auto">Lock Auto</option><option value="light">Lock Light</option><option value="dark">Lock Dark</option><option value="black">Lock Black</option></select></label>
+          <label class="settings-row" for="settings-lock-layout"><span>Layout control</span><select id="settings-lock-layout"><option value="">Unlocked</option><option value="comfortable">Lock Comfortable</option><option value="compact">Lock Compact</option><option value="minimalist">Lock Minimalist</option></select></label>
+        </div>
+        <div class="settings-section">
+          <h3>Search history</h3>
+          <label class="settings-option"><input id="settings-save-history" type="checkbox"><span>Save recent searches</span></label>
+        </div>
+        <div class="settings-section">
+          <h3>Controls</h3>
+          <label class="settings-option"><input id="settings-disable-shortcuts" type="checkbox"><span>Disable keyboard shortcuts</span></label>
+          <label class="settings-option"><input id="settings-hide-support" type="checkbox"><span>Hide support button</span></label>
+          <label class="settings-option"><input id="settings-hide-repo" type="checkbox"><span>Hide repository button</span></label>
+          <button class="dialog-button" id="manage-hidden-bangs" type="button">Manage hidden bangs <span id="hidden-bangs-settings-count"></span></button>
           <button class="dialog-button" id="manage-local-bangs" type="button">Manage local bangs <span id="local-bangs-settings-count"></span></button>
+        </div>
+        <div class="settings-section">
+          <h3>Import and export</h3>
+          <label class="settings-option" for="settings-include-history"><input id="settings-include-history" type="checkbox"><span>Include recent searches</span></label>
+          <div class="settings-data-actions">
+            <button class="dialog-button" id="settings-export" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21V9m0 0 4 4m-4-4-4 4M5 5h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Export</button>
+            <button class="dialog-button" id="settings-import" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 19h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Import</button>
+          </div>
+          <label class="settings-row" for="settings-import-mode"><span>Import mode</span><select id="settings-import-mode"><option value="replace" selected>Replace current settings</option><option value="merge">Merge with current settings</option></select></label>
           <input id="settings-import-file" type="file" accept="application/json,.json" hidden>
           <p class="builder-status settings-backup-status" id="settings-backup-status" aria-live="polite"></p>
         </div>
+      </div>
+    </dialog>
+    <dialog class="dialog hidden-bangs-dialog" id="hidden-bangs-manager" aria-labelledby="hidden-bangs-manager-title">
+      <div class="dialog-body">
+        <div class="dialog-heading"><div><h2 id="hidden-bangs-manager-title">Hidden bangs</h2><p class="builder-note">Checked entries are hidden from the directory but still work when typed.</p></div><button class="dialog-close" type="button" data-close-dialog="hidden-bangs-manager" aria-label="Close hidden bang manager">Close</button></div>
+        <input id="hidden-bangs-filter" type="search" autocomplete="off" placeholder="Filter bangs…">
+        <div class="hidden-bangs-list" id="hidden-bangs-list"></div>
       </div>
     </dialog>
     <dialog class="dialog" id="local-bangs-manager" aria-labelledby="local-bangs-manager-title">
@@ -3780,8 +4206,17 @@ function renderHelpPage(requestUrl) {
       <div class="dialog-body">
         <div class="dialog-heading">
           <div>
-            <h2 id="bang-builder-title">Bang Builder</h2>
-            <p class="builder-note">Build a copyable bang entry. Nothing is submitted automatically.</p>
+            <div class="builder-title-row">
+              <h2 id="bang-builder-title">Bang Builder</h2>
+              <label class="builder-type-control" for="builder-local-type">
+                <span class="sr-only">Builder type</span>
+                <select class="builder-select" id="builder-local-type" aria-label="Builder type">
+                  <option value="bang">Normal bang</option>
+                  <option value="multi">Multisearch</option>
+                </select>
+              </label>
+            </div>
+            <p class="builder-note">Build a copyable bang entry or save it in this browser.</p>
           </div>
           <div class="dialog-heading-actions">
             <button class="dialog-button" id="builder-reset" type="button">Clear</button>
@@ -3790,7 +4225,7 @@ function renderHelpPage(requestUrl) {
         </div>
         <form id="bang-builder-form" class="builder-form" novalidate>
           <div class="builder-grid">
-            <div class="builder-field full">
+            <div class="builder-field full" id="builder-home-field">
               <label for="builder-home">Home URL</label>
               <div class="builder-icon-row">
                 <input id="builder-home" type="url" inputmode="url" autocomplete="url" spellcheck="false" placeholder="https://example.com/">
@@ -3815,7 +4250,7 @@ function renderHelpPage(requestUrl) {
               <input id="builder-aliases" type="text" autocomplete="off" spellcheck="false" placeholder="example, ex">
               <small>Separate with spaces or commas.</small>
             </div>
-            <div class="builder-field">
+            <div class="builder-field" id="builder-handler-field">
               <label for="builder-handler">Handler <span class="builder-note">(optional)</span></label>
               <input id="builder-handler" type="text" list="builder-handler-options" autocomplete="off" spellcheck="false" placeholder="math">
               <datalist id="builder-handler-options">${bangBuilderHandlerOptions}</datalist>
@@ -3825,10 +4260,22 @@ function renderHelpPage(requestUrl) {
               <label for="builder-description">Description <span class="builder-note">(optional)</span></label>
               <textarea id="builder-description" placeholder="Short directory description."></textarea>
             </div>
-            <div class="builder-field full">
+            <div class="builder-field full" id="builder-search-field">
               <label for="builder-search">Search URL <span class="builder-note">(optional)</span></label>
-              <input id="builder-search" type="text" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://example.com/search?q={q}">
-              <small>Use <code>{q}</code>; <code>%s</code> is converted automatically.</small>
+              <div class="builder-search-row">
+                <input id="builder-search" type="text" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://example.com/search?q={q}">
+                <button class="dialog-button builder-small-button" id="builder-autofill-search" type="button" title="Guess the common /search?q={q} pattern. Many sites use a different URL, so test it before saving.">Autofill</button>
+                <button class="dialog-button builder-small-button" id="builder-test-search" type="button" title="Open this search URL with a sample query">Test</button>
+              </div>
+              <small>Use <code>{q}</code>; <code>%s</code> is converted automatically. Autofill is only a guess and often needs adjustment.</small>
+            </div>
+            <div class="builder-field full" id="builder-multi-targets-field" hidden>
+              <label>Multisearch targets</label>
+              <div class="builder-multi-editor" id="builder-multi-targets-editor"></div>
+              <datalist id="builder-bang-aliases"></datalist>
+              <button class="dialog-button builder-multi-add" id="builder-multi-add" type="button">+ Add target</button>
+              <textarea id="builder-multi-targets" hidden aria-hidden="true"></textarea>
+              <small>Add at least two targets. Choose an existing bang alias or a direct search URL containing <code>{q}</code>.</small>
             </div>
             <div class="builder-field full">
               <label for="builder-icon">Icon override <span class="builder-note">(optional)</span></label>
@@ -3863,20 +4310,7 @@ function renderHelpPage(requestUrl) {
         </form>
       </div>
     </dialog>
-    <dialog class="dialog" id="disable-history-dialog" aria-labelledby="disable-history-title">
-      <div class="dialog-body">
-        <div class="dialog-heading">
-          <h2 id="disable-history-title">Stop saving search history?</h2>
-          <button class="dialog-close" type="button" data-close-dialog="disable-history-dialog" aria-label="Close history warning">Close</button>
-        </div>
-        <p>Search history is stored only in this browser’s local site data. Continuing deletes the saved searches and prevents new searches from being saved.</p>
-        <p>To re-enable history later, you must clear site data for search.micahjeffery.com in your browser. That also clears this page’s theme, layout, favorites, and selected home search engine.</p>
-        <div class="dialog-actions">
-          <button class="dialog-button" id="cancel-disable-history" type="button">Cancel</button>
-          <button class="dialog-button danger" id="confirm-disable-history" type="button">Disable history</button>
-        </div>
-      </div>
-    </dialog>
+
     <section class="favorites" id="favorites" hidden>
       <div class="section-heading">
         <h2>Favorites</h2>
@@ -3902,7 +4336,7 @@ function renderHelpPage(requestUrl) {
       </details>
       ${groups}
     </div>
-    <p class="footer">Click a bang to place it in the search box. Click ☆ to save a favorite. Your theme, layout, home search engine, favorites, search history, and default-search selection stay private on this browser.</p>
+    <p class="footer">Click a bang to place it in the search box. Click ☆ to save a favorite. Your settings, favorites, local bangs, and optional search history stay private on this browser.</p>
   </main>
   <button class="minimalist-exit" id="exit-minimalist" type="button" aria-label="Return to compact mode" title="Return to compact mode">
     <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Back_Arrow.svg" alt="" width="19" height="19" referrerpolicy="no-referrer">
@@ -3915,7 +4349,17 @@ function renderHelpPage(requestUrl) {
       defaultsOpen: "search-help-defaults-open",
       favorites: "search-help-favorites",
       recentSearches: "search-help-recent-searches-v2",
-      historyDisabled: "search-help-history-disabled"
+      historyDisabled: "search-help-history-disabled",
+      hideDescriptions: "search-help-hide-descriptions",
+      hideFavorites: "search-help-hide-favorites",
+      disableFavicons: "search-help-disable-favicons",
+      aliasLimit: "search-help-alias-limit",
+      lockTheme: "search-help-lock-theme",
+      lockLayout: "search-help-lock-layout",
+      shortcutsDisabled: "search-help-shortcuts-disabled",
+      hideSupport: "search-help-hide-support",
+      hideRepo: "search-help-hide-repo",
+      hiddenBangs: "search-help-hidden-bangs"
     };
     const RECENT_SEARCH_LIMIT = 20;
     const HOME_ENGINE_PATHS = ${JSON.stringify(homeEnginePaths)};
@@ -3925,6 +4369,7 @@ function renderHelpPage(requestUrl) {
     BANG_BUILDER_ALIAS_OWNERS.xvideos ||= { id: "reserved:xvideos", name: "Reserved safety hint" };
     const BANG_BUILDER_HANDLERS = ${bangBuilderHandlersJson};
     const BANG_BUILDER_EXISTING_SITES = ${bangBuilderExistingSitesJson};
+    const builderBangAliasesList = document.getElementById("builder-bang-aliases");
     const filter = document.getElementById("filter");
     const searchForm = document.getElementById("search-form");
     const homeEngineSelect = document.getElementById("home-engine-select");
@@ -3934,7 +4379,7 @@ function renderHelpPage(requestUrl) {
     const recentSearchesSection = document.getElementById("recent-searches");
     const recentSearchList = document.getElementById("recent-search-list");
     const clearRecentSearchesButton = document.getElementById("clear-recent-searches");
-    const disableHistoryButton = document.getElementById("disable-history");
+    const settingsSaveHistory = document.getElementById("settings-save-history");
     const keyboardShortcutsButton = document.getElementById("keyboard-shortcuts-button");
     const settingsBackupButton = document.getElementById("settings-backup-button");
     const settingsBackupDialog = document.getElementById("settings-backup");
@@ -3944,6 +4389,20 @@ function renderHelpPage(requestUrl) {
     const settingsImportFile = document.getElementById("settings-import-file");
     const settingsImportMode = document.getElementById("settings-import-mode");
     const settingsBackupStatus = document.getElementById("settings-backup-status");
+    const settingsHideDescriptions = document.getElementById("settings-hide-descriptions");
+    const settingsHideFavorites = document.getElementById("settings-hide-favorites");
+    const settingsDisableFavicons = document.getElementById("settings-disable-favicons");
+    const settingsAliasLimit = document.getElementById("settings-alias-limit");
+    const settingsLockTheme = document.getElementById("settings-lock-theme");
+    const settingsLockLayout = document.getElementById("settings-lock-layout");
+    const settingsDisableShortcuts = document.getElementById("settings-disable-shortcuts");
+    const settingsHideSupport = document.getElementById("settings-hide-support");
+    const settingsHideRepo = document.getElementById("settings-hide-repo");
+    const manageHiddenBangsButton = document.getElementById("manage-hidden-bangs");
+    const hiddenBangsSettingsCount = document.getElementById("hidden-bangs-settings-count");
+    const hiddenBangsManagerDialog = document.getElementById("hidden-bangs-manager");
+    const hiddenBangsFilter = document.getElementById("hidden-bangs-filter");
+    const hiddenBangsList = document.getElementById("hidden-bangs-list");
     const manageLocalBangsButton = document.getElementById("manage-local-bangs");
     const localBangsSettingsCount = document.getElementById("local-bangs-settings-count");
     const localBangsManagerDialog = document.getElementById("local-bangs-manager");
@@ -3956,6 +4415,7 @@ function renderHelpPage(requestUrl) {
     const siteCountBadge = document.getElementById("site-count-badge");
     const aliasCountBadge = document.getElementById("alias-count-badge");
     const headerActions = document.getElementById("header-actions");
+    const pageHeader = document.querySelector("header");
     const headerMenuButton = document.getElementById("header-menu-button");
     const compactThemeButton = document.getElementById("compact-theme-button");
     const compactLayoutButton = document.getElementById("compact-layout-button");
@@ -3967,8 +4427,18 @@ function renderHelpPage(requestUrl) {
     const builderAliases = document.getElementById("builder-aliases");
     const builderDescription = document.getElementById("builder-description");
     const builderHome = document.getElementById("builder-home");
+    const builderHomeField = document.getElementById("builder-home-field");
     const builderSearch = document.getElementById("builder-search");
+    const builderSearchField = document.getElementById("builder-search-field");
+    const builderAutofillSearch = document.getElementById("builder-autofill-search");
+    const builderTestSearch = document.getElementById("builder-test-search");
+    const builderLocalType = document.getElementById("builder-local-type");
+    const builderMultiTargetsField = document.getElementById("builder-multi-targets-field");
+    const builderMultiTargets = document.getElementById("builder-multi-targets");
+    const builderMultiTargetsEditor = document.getElementById("builder-multi-targets-editor");
+    const builderMultiAdd = document.getElementById("builder-multi-add");
     const builderHandler = document.getElementById("builder-handler");
+    const builderHandlerField = document.getElementById("builder-handler-field");
     const builderIcon = document.getElementById("builder-icon");
     const builderFindIcon = document.getElementById("builder-find-icon");
     const builderIconCandidates = document.getElementById("builder-icon-candidates");
@@ -3989,9 +4459,6 @@ function renderHelpPage(requestUrl) {
     const builderOpenGithub = document.getElementById("builder-open-github");
     const builderReset = document.getElementById("builder-reset");
     const builderResetBottom = document.getElementById("builder-reset-bottom");
-    const disableHistoryDialog = document.getElementById("disable-history-dialog");
-    const cancelDisableHistoryButton = document.getElementById("cancel-disable-history");
-    const confirmDisableHistoryButton = document.getElementById("confirm-disable-history");
     const exitMinimalistButton = document.getElementById("exit-minimalist");
     const pageParams = new URLSearchParams(window.location.search);
     const requestedAction = pageParams.get("action") || "";
@@ -4016,6 +4483,7 @@ function renderHelpPage(requestUrl) {
     document.addEventListener("error", (event) => {
       const image = event.target;
       if (image instanceof HTMLImageElement && image.matches("[data-site-favicon]")) {
+        image.dataset.faviconFailed = "true";
         image.hidden = true;
         const editButton = image.closest(".site-favicon-edit");
         if (editButton) editButton.classList.add("uses-fallback");
@@ -4040,10 +4508,26 @@ function renderHelpPage(requestUrl) {
         localStorage.setItem(key, value);
       } catch {}
     }
+    function syncFaviconLoading(root = document) {
+      const disabled = document.documentElement.dataset.disableFavicons === "true";
+      root.querySelectorAll("img[data-favicon-src]").forEach((image) => {
+        if (disabled) {
+          image.removeAttribute("src");
+          image.hidden = true;
+          return;
+        }
+        if (image.dataset.faviconFailed === "true") return;
+        const source = image.dataset.faviconSrc;
+        if (!source) return;
+        image.hidden = false;
+        if (image.getAttribute("src") !== source) image.src = source;
+      });
+    }
     const BANG_BUILDER_STORAGE_KEY = "search-bang-builder-draft-v2";
     const BUILDER_ICON_INITIAL_LIMIT = 6;
-    const bangBuilderFields = [builderHome, builderName, builderAliases, builderDescription, builderSearch, builderHandler, builderIcon];
+    const bangBuilderFields = [builderHome, builderName, builderAliases, builderDescription, builderSearch, builderMultiTargets, builderHandler, builderIcon];
     let discoveredIconPreviewUrl = "";
+    let builderEditingMultiIconKey = "";
     let builderIconChoices = [];
     let builderIconPreferredIndex = -1;
     let builderIconChoicesExpanded = false;
@@ -4089,19 +4573,54 @@ function renderHelpPage(requestUrl) {
         .map((alias) => String(alias).trim().toLowerCase())
         .filter((alias) => /^[a-z0-9_-]+$/.test(alias)))].slice(0, 20);
       if (!aliases.length) return null;
+      const kind = raw.kind === "multi" ? "multi" : "bang";
       let home = "", search = "", icon = "";
-      try { home = normalizeBuilderHttpUrl(raw.home); } catch { return null; }
+      try { home = normalizeBuilderHttpUrl(raw.home); } catch { home = ""; }
       try { search = normalizeBuilderSearchUrl(raw.search); } catch { search = ""; }
       try { icon = normalizeBuilderHttpUrl(raw.icon); } catch { icon = ""; }
-      if (!home || (search && !search.includes("{q}"))) return null;
+      const targets = kind === "multi" && Array.isArray(raw.targets)
+        ? raw.targets.map((target, index) => {
+            const id = String(target?.id || "target-" + index).slice(0, 80);
+            const type = target?.type === "bang" || target?.bang ? "bang" : "url";
+            if (type === "bang") {
+              const bang = String(target?.bang || target?.key || "").trim().toLowerCase().replace(/^[!;:.]+/, "");
+              if (!/^[a-z0-9_-]+$/.test(bang)) return null;
+              return {
+                id,
+                type: "bang",
+                bang,
+                name: String(target?.name || "!" + bang).trim().slice(0, 80),
+                icon: String(target?.icon || "").trim().slice(0, 500)
+              };
+            }
+            try {
+              const targetSearch = normalizeBuilderSearchUrl(target?.search);
+              if (!targetSearch || !targetSearch.includes("{q}")) return null;
+              return {
+                id,
+                type: "url",
+                name: String(target?.name || "Target " + (index + 1)).trim().slice(0, 80),
+                search: targetSearch,
+                icon: String(target?.icon || "").trim().slice(0, 500)
+              };
+            } catch { return null; }
+          }).filter(Boolean).slice(0, 30)
+        : [];
+      if (kind === "multi") {
+        if (targets.length < 2) return null;
+        home = home || "https://search.micahjeffery.com/";
+        search = "";
+      } else if (!home || (search && !search.includes("{q}"))) return null;
       const name = String(raw.name || aliases[0]).trim().slice(0, 80) || aliases[0];
       return {
         id: String(raw.id || fallbackId || makeLocalBangId()).slice(0, 100),
+        kind,
         name,
         description: String(raw.description || "").replace(/\\s+/g, " ").trim().slice(0, 240),
         aliases,
         home,
         search,
+        targets,
         icon,
         enabled: raw.enabled !== false,
         createdAt: String(raw.createdAt || new Date().toISOString()),
@@ -4125,14 +4644,24 @@ function renderHelpPage(requestUrl) {
     }
     function saveLocalBangs() {
       writeStorage(LOCAL_BANGS_STORAGE_KEY, JSON.stringify(localBangs.slice(0, LOCAL_BANG_LIMIT)));
+      refreshBuilderBangAliasesList();
     }
     let localBangs = readLocalBangs();
+    function refreshBuilderBangAliasesList() {
+      if (!builderBangAliasesList) return;
+      const aliases = [...new Set([
+        ...Object.keys(BANG_BUILDER_ALIAS_OWNERS),
+        ...localBangs.flatMap((bang) => bang.aliases || [])
+      ])].sort();
+      builderBangAliasesList.innerHTML = aliases.map((alias) => '<option value="' + alias.replaceAll('&', '&amp;').replaceAll('"', '&quot;') + '"></option>').join("");
+    }
+    refreshBuilderBangAliasesList();
     function localBuilderSite(bang) {
       return {
         ...bang,
         id: "local:" + bang.id,
         category: "Local Bangs",
-        handler: "",
+        handler: bang.kind === "multi" ? "multi" : "",
         isLocal: true
       };
     }
@@ -4167,7 +4696,7 @@ function renderHelpPage(requestUrl) {
       if (imageUrl) {
         const image = document.createElement("img");
         image.className = "site-favicon";
-        image.src = imageUrl;
+        image.dataset.faviconSrc = imageUrl;
         image.alt = "";
         image.width = 20;
         image.height = 20;
@@ -4189,17 +4718,31 @@ function renderHelpPage(requestUrl) {
       card.className = "site-card local-site-card";
       card.dataset.siteKey = "local:" + bang.id;
       card.dataset.localBangId = bang.id;
-      card.dataset.search = [bang.name, bang.description, "Local Bangs", ...bang.aliases, bang.home, bang.search].join(" ").toLowerCase();
+      card.dataset.siteName = bang.name;
+      card.dataset.aliases = bang.aliases.join(" ");
+      card.dataset.category = bang.kind === "multi" ? "Local multisearches" : "Local bangs";
+      card.dataset.search = [bang.name, bang.description, card.dataset.category, ...bang.aliases, bang.home, bang.search].join(" ").toLowerCase();
       card.title = bang.home;
 
       const top = document.createElement("div");
       top.className = "site-top";
       const heading = document.createElement("div");
       heading.className = "site-heading";
-      appendFaviconEditButton(heading, getLocalBangFavicon(bang), "local:" + bang.id, bang.name);
+      if (bang.kind === "multi") {
+        const multiButton = document.createElement("button");
+        multiButton.className = "site-favicon-edit has-custom-visual";
+        multiButton.type = "button";
+        multiButton.dataset.builderEditSite = "local:" + bang.id;
+        multiButton.setAttribute("aria-label", "Edit " + bang.name + " in Multisearch Builder");
+        multiButton.title = "Edit in Multisearch Builder";
+        multiButton.innerHTML = '<span class="site-favicon-fallback" aria-hidden="true"></span><span class="site-favicon local-multi-favicon" aria-hidden="true"></span><span class="site-favicon-pencil" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m16.9 3.6 3.5 3.5-11 11-4.4.9.9-4.4 11-11ZM4 20l1.5-7.1L15.8 2.6a2 2 0 0 1 2.8 0l2.8 2.8a2 2 0 0 1 0 2.8L11.1 18.5 4 20Z"/></svg></span>';
+        heading.append(multiButton);
+      } else {
+        appendFaviconEditButton(heading, getLocalBangFavicon(bang), "local:" + bang.id, bang.name);
+      }
       const name = document.createElement("a");
       name.className = "site-name";
-      name.href = bang.home;
+      name.href = bang.kind === "multi" ? "/?q=" + encodeURIComponent("!" + bang.aliases[0]) : bang.home;
       name.target = "_blank";
       name.rel = "noreferrer";
       name.title = bang.name;
@@ -4208,10 +4751,11 @@ function renderHelpPage(requestUrl) {
       const actions = document.createElement("div");
       actions.className = "site-actions";
       const type = document.createElement("span");
-      type.className = "type " + (bang.search ? "search" : "open");
+      const localType = bang.kind === "multi" ? "multi" : bang.search ? "search" : "open";
+      type.className = "type " + localType;
       type.setAttribute("role", "img");
-      type.setAttribute("aria-label", bang.search ? "Local search" : "Local link");
-      type.title = bang.search ? "Local search" : "Local link";
+      type.setAttribute("aria-label", bang.kind === "multi" ? "Local multisearch" : bang.search ? "Local search" : "Local link");
+      type.title = bang.kind === "multi" ? "Local multisearch" : bang.search ? "Local search" : "Local link";
       const favorite = document.createElement("button");
       favorite.className = "favorite-button";
       favorite.type = "button";
@@ -4317,6 +4861,7 @@ function renderHelpPage(requestUrl) {
     function refreshLocalBangUi() {
       renderLocalBangCards();
       renderLocalBangManager();
+      syncFaviconLoading(localBangsGrid);
       if (typeof favorites !== "undefined") {
         favorites = favorites.filter((key) => sourceCardByKey.has(key));
         saveFavorites();
@@ -4342,6 +4887,7 @@ function renderHelpPage(requestUrl) {
       } catch { return ""; }
     }
     function findExistingBuilderSite() {
+      if (builderLocalType.value === "multi") return null;
       const homeKey = builderHomeKey(builderHome.value);
       const searchKey = builderSearchKey(builderSearch.value);
       if (!homeKey && !searchKey) return null;
@@ -4393,7 +4939,12 @@ function renderHelpPage(requestUrl) {
       builderAliases.value = (site.aliases || []).join(", ");
       builderDescription.value = site.description || "";
       builderSearch.value = site.search || "";
-      builderHandler.value = site.handler || "";
+      builderLocalType.value = site.kind === "multi" ? "multi" : "bang";
+      builderMultiTargets.value = site.kind === "multi" && Array.isArray(site.targets) ? JSON.stringify(site.targets) : "";
+      builderEditingMultiIconKey = site.kind === "multi" ? String(site.iconKey || "") : "";
+      renderBuilderMultiTargetEditor();
+      syncBuilderTypeUi();
+      builderHandler.value = site.handler === "multi" ? "" : (site.handler || "");
       builderIcon.value = site.icon || "";
       setBuilderIconPreview(builderIcon.value);
       updateExistingBuilderMatch();
@@ -4413,7 +4964,12 @@ function renderHelpPage(requestUrl) {
       builderAliases.value = (site.aliases || []).join(", ");
       builderDescription.value = site.description || "";
       builderSearch.value = site.search || "";
-      builderHandler.value = site.handler || "";
+      builderLocalType.value = site.kind === "multi" ? "multi" : "bang";
+      builderMultiTargets.value = site.kind === "multi" && Array.isArray(site.targets) ? JSON.stringify(site.targets) : "";
+      builderEditingMultiIconKey = site.kind === "multi" ? String(site.iconKey || "") : "";
+      renderBuilderMultiTargetEditor();
+      syncBuilderTypeUi();
+      builderHandler.value = site.handler === "multi" ? "" : (site.handler || "");
       builderIcon.value = site.icon || "";
       setBuilderIconPreview(builderIcon.value || getLocalBangFavicon(site));
       updateExistingBuilderMatch();
@@ -4431,8 +4987,8 @@ function renderHelpPage(requestUrl) {
     function saveBangBuilderDraft() {
       writeStorage(BANG_BUILDER_STORAGE_KEY, JSON.stringify({
         name: builderName.value, aliases: builderAliases.value, description: builderDescription.value,
-        home: builderHome.value, search: builderSearch.value, handler: builderHandler.value, icon: builderIcon.value,
-        editingId: builderEditingId, duplicateAllowed: builderDuplicateAllowed
+        home: builderHome.value, search: builderSearch.value, multiTargets: builderMultiTargets.value, localType: builderLocalType.value, handler: builderHandler.value, icon: builderIcon.value,
+        editingId: builderEditingId, duplicateAllowed: builderDuplicateAllowed, multiIconKey: builderEditingMultiIconKey
       }));
     }
     function restoreBangBuilderDraft() {
@@ -4443,10 +4999,13 @@ function renderHelpPage(requestUrl) {
         builderDescription.value = typeof draft.description === "string" ? draft.description : "";
         builderHome.value = typeof draft.home === "string" ? draft.home : "";
         builderSearch.value = typeof draft.search === "string" ? draft.search : "";
+        builderMultiTargets.value = typeof draft.multiTargets === "string" ? draft.multiTargets : "";
+        builderLocalType.value = draft.localType === "multi" ? "multi" : "bang";
         builderHandler.value = typeof draft.handler === "string" ? draft.handler : "";
         builderIcon.value = typeof draft.icon === "string" ? draft.icon : "";
         builderEditingId = typeof draft.editingId === "string" ? draft.editingId : "";
         builderDuplicateAllowed = Boolean(draft.duplicateAllowed);
+        builderEditingMultiIconKey = typeof draft.multiIconKey === "string" ? draft.multiIconKey : "";
       } catch {}
     }
     function setBuilderIconPreview(url) {
@@ -4459,17 +5018,193 @@ function renderHelpPage(requestUrl) {
       builderIconPreview.hidden = false;
       builderIconPreview.src = discoveredIconPreviewUrl;
     }
+    function parseBuilderMultiTargetDraft(value) {
+      const raw = String(value || "").trim();
+      if (!raw) return [];
+      try {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) {
+          return parsed.map((target) => ({
+            type: target?.type === "bang" || target?.bang ? "bang" : "url",
+            bang: String(target?.bang || target?.key || "").trim().toLowerCase().replace(/^[!;:.]+/, ""),
+            name: String(target?.name || "").trim(),
+            url: String(target?.search || target?.url || "").trim(),
+            icon: String(target?.icon || "").trim()
+          }));
+        }
+      } catch {}
+      // Backward compatibility with the earlier Name | URL draft format.
+      return raw.split(/\\r?\\n/).map((line) => {
+        const trimmed = line.trim();
+        if (!trimmed) return null;
+        const separator = trimmed.indexOf("|");
+        return {
+          type: "url",
+          bang: "",
+          name: (separator >= 0 ? trimmed.slice(0, separator) : "").trim(),
+          url: (separator >= 0 ? trimmed.slice(separator + 1) : trimmed).trim(),
+          icon: ""
+        };
+      }).filter(Boolean);
+    }
+    function getBuilderBangTargetMeta(alias) {
+      const normalized = String(alias || "").trim().toLowerCase().replace(/^[!;:.]+/, "");
+      const local = findLocalBangByAlias(normalized, true);
+      if (local) {
+        return {
+          alias: normalized,
+          name: local.name || "!" + normalized,
+          icon: local.kind === "multi" ? String(local.icon || "") : getLocalBangFavicon(local),
+          isLocal: true
+        };
+      }
+      const owner = BANG_BUILDER_ALIAS_OWNERS[normalized];
+      if (!owner) return { alias: normalized, name: normalized ? "!" + normalized : "Unknown bang", icon: "", isLocal: false };
+      const site = BANG_BUILDER_EXISTING_SITES.find((item) => item.id === owner.id);
+      return {
+        alias: normalized,
+        name: site?.name || owner.name || "!" + normalized,
+        icon: site?.icon || "",
+        isLocal: false
+      };
+    }
+    function syncBuilderMultiRowMode(row) {
+      const type = row.querySelector("[data-multi-target-type]").value === "bang" ? "bang" : "url";
+      const bangInput = row.querySelector("[data-multi-target-bang]");
+      const nameInput = row.querySelector("[data-multi-target-name]");
+      const urlInput = row.querySelector("[data-multi-target-url]");
+      bangInput.hidden = type !== "bang";
+      nameInput.hidden = type === "bang";
+      urlInput.hidden = type === "bang";
+      row.dataset.aliasState = "";
+      bangInput.removeAttribute("title");
+      if (type === "bang") {
+        const meta = getBuilderBangTargetMeta(bangInput.value);
+        const known = Boolean(meta.alias && (BANG_BUILDER_ALIAS_OWNERS[meta.alias] || meta.isLocal));
+        if (meta.alias) row.dataset.aliasState = known ? "valid" : "invalid";
+        if (meta.alias) bangInput.title = known ? "Resolves to " + meta.name : "No matching built-in or local bang";
+      }
+    }
+    function addBuilderMultiTargetRow(target = {}) {
+      const type = target.type === "bang" || target.bang ? "bang" : "url";
+      const row = document.createElement("div");
+      row.className = "builder-multi-row";
+      row.innerHTML = '<select data-multi-target-type aria-label="Target type"><option value="bang">Bang</option><option value="url">URL</option></select>' +
+        '<input type="text" autocomplete="off" spellcheck="false" list="builder-bang-aliases" placeholder="Bang alias, e.g. g" aria-label="Bang alias" data-multi-target-bang>' +
+        '<input type="text" autocomplete="off" placeholder="Target name" aria-label="Target name" data-multi-target-name>' +
+        '<input type="text" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://example.com/search?q={q}" aria-label="Target search URL" data-multi-target-url>' +
+        '<button class="dialog-button" type="button" data-multi-target-test title="Test with a sample search">Test</button>' +
+        '<button class="dialog-button builder-multi-remove" type="button" data-multi-target-remove aria-label="Remove target" title="Remove target">Remove</button>';
+      row.querySelector("[data-multi-target-type]").value = type;
+      row.querySelector("[data-multi-target-bang]").value = String(target.bang || "").replace(/^[!;:.]+/, "");
+      row.querySelector("[data-multi-target-name]").value = target.name || "";
+      row.querySelector("[data-multi-target-url]").value = target.url || target.search || "";
+      builderMultiTargetsEditor.append(row);
+      syncBuilderMultiRowMode(row);
+      return row;
+    }
+    function syncBuilderMultiTargetsFromRows() {
+      const targets = [...builderMultiTargetsEditor.querySelectorAll(".builder-multi-row")]
+        .map((row) => {
+          const type = row.querySelector("[data-multi-target-type]").value === "bang" ? "bang" : "url";
+          if (type === "bang") {
+            const bang = row.querySelector("[data-multi-target-bang]").value.trim().toLowerCase().replace(/^[!;:.]+/, "");
+            if (!bang) return null;
+            const meta = getBuilderBangTargetMeta(bang);
+            return { type: "bang", bang, name: meta.name, icon: meta.icon || "" };
+          }
+          const name = row.querySelector("[data-multi-target-name]").value.trim();
+          const url = row.querySelector("[data-multi-target-url]").value.trim();
+          if (!name && !url) return null;
+          return { type: "url", name: name || "Target", url };
+        })
+        .filter(Boolean);
+      builderMultiTargets.value = JSON.stringify(targets);
+      renderBangBuilderCode();
+    }
+    function renderBuilderMultiTargetEditor() {
+      const targets = parseBuilderMultiTargetDraft(builderMultiTargets.value);
+      builderMultiTargetsEditor.replaceChildren();
+      (targets.length ? targets : [{ type: "bang", bang: "" }, { type: "bang", bang: "" }])
+        .forEach((target) => addBuilderMultiTargetRow(target));
+    }
+    function testBuilderMultiTarget(row) {
+      try {
+        const type = row.querySelector("[data-multi-target-type]").value === "bang" ? "bang" : "url";
+        if (type === "bang") {
+          const bang = row.querySelector("[data-multi-target-bang]").value.trim().toLowerCase().replace(/^[!;:.]+/, "");
+          if (!/^[a-z0-9_-]+$/.test(bang)) throw new Error("Enter a valid bang alias.");
+          window.open("/?q=" + encodeURIComponent("!" + bang + " test search"), "_blank", "noopener");
+          return;
+        }
+        const input = row.querySelector("[data-multi-target-url]");
+        const search = normalizeBuilderSearchUrl(input.value);
+        if (!search || !search.includes("{q}")) throw new Error('Target URL needs "{q}".');
+        window.open(search.replaceAll("{q}", encodeURIComponent("test search")), "_blank", "noopener");
+      } catch (error) {
+        setBuilderStatus(builderValidationStatus, error.message || "Could not test that target.", "danger");
+      }
+    }
+    function parseBuilderMultiTargets(value) {
+      return parseBuilderMultiTargetDraft(value).map((target, index) => {
+        if (target.type === "bang") {
+          const bang = String(target.bang || "").trim().toLowerCase().replace(/^[!;:.]+/, "");
+          if (!/^[a-z0-9_-]+$/.test(bang)) return { error: "Target " + (index + 1) + " needs a valid bang alias." };
+          const meta = getBuilderBangTargetMeta(bang);
+          return { id: "target-" + index, type: "bang", bang, name: target.name || meta.name, icon: target.icon || meta.icon || "" };
+        }
+        const name = String(target.name || "Target " + (index + 1)).trim();
+        try {
+          const search = normalizeBuilderSearchUrl(target.url || target.search);
+          if (!search.includes("{q}")) return { error: "Target " + (index + 1) + ' needs "{q}".' };
+          return { id: "target-" + index, type: "url", name: name || "Target " + (index + 1), search };
+        } catch (error) { return { error: error.message || "Invalid target URL." }; }
+      }).filter(Boolean);
+    }
+    function syncBuilderTypeUi() {
+      const isMulti = builderLocalType.value === "multi";
+      builderHomeField.hidden = isMulti;
+      builderSearchField.hidden = isMulti;
+      builderHandlerField.hidden = isMulti;
+      builderMultiTargetsField.hidden = !isMulti;
+      if (isMulti) {
+        builderHandler.value = "";
+        builderExisting.hidden = true;
+        builderExistingMatch = null;
+        builderDuplicateAllowed = false;
+        if (!builderMultiTargetsEditor.children.length) renderBuilderMultiTargetEditor();
+      }
+    }
+    function guessBuilderSearchUrl() {
+      try {
+        const home = new URL(normalizeBuilderHttpUrl(builderHome.value));
+        builderSearch.value = home.origin + "/search?q={q}";
+        renderBangBuilderCode();
+        setBuilderStatus(builderValidationStatus, "Search URL guessed. Test it; many sites use another pattern.", "warn");
+      } catch (error) { setBuilderStatus(builderValidationStatus, error.message || "Enter a valid home URL first.", "danger"); }
+    }
+    function testBuilderSearch() {
+      try {
+        const search = normalizeBuilderSearchUrl(builderSearch.value);
+        if (!search || !search.includes("{q}")) throw new Error('Add a Search URL containing "{q}".');
+        window.open(search.replaceAll("{q}", encodeURIComponent("test search")), "_blank", "noopener");
+      } catch (error) { setBuilderStatus(builderValidationStatus, error.message || "Could not test that URL.", "danger"); }
+    }
     function renderBangBuilderCode() {
       updateExistingBuilderMatch();
       const name = builderName.value.trim();
       const aliases = parseBuilderAliases(builderAliases.value);
       const description = builderDescription.value.trim();
-      const handler = builderHandler.value.trim().toLowerCase();
+      const isMulti = builderLocalType.value === "multi";
+      const handler = isMulti ? "" : builderHandler.value.trim().toLowerCase();
       const errors = [];
       const warnings = [];
       let home = "", search = "", icon = "";
-      try { home = normalizeBuilderHttpUrl(builderHome.value); } catch (error) { errors.push(error.message || "Invalid home URL."); }
-      try { search = normalizeBuilderSearchUrl(builderSearch.value); } catch (error) { errors.push(error.message || "Invalid search URL."); }
+      const multiTargetResults = isMulti ? parseBuilderMultiTargets(builderMultiTargets.value) : [];
+      const multiTargetErrors = multiTargetResults.filter((target) => target.error).map((target) => target.error);
+      const multiTargets = multiTargetResults.filter((target) => !target.error);
+      try { home = normalizeBuilderHttpUrl(builderHome.value); } catch (error) { if (!isMulti) errors.push(error.message || "Invalid home URL."); }
+      try { search = normalizeBuilderSearchUrl(builderSearch.value); } catch (error) { if (!isMulti) errors.push(error.message || "Invalid search URL."); }
       try { icon = normalizeBuilderHttpUrl(builderIcon.value); } catch (error) { errors.push(error.message || "Invalid icon URL."); }
       if (!name) errors.push("Add a name.");
       if (!aliases.length) errors.push("Add an alias.");
@@ -4484,37 +5219,65 @@ function renderHelpPage(requestUrl) {
         return [alias + " (" + owner.name + ")"];
       });
       if (conflicts.length) errors.push("Aliases in use: " + conflicts.join(", ") + ".");
-      if (!home && !errors.some((message) => message.toLowerCase().includes("home url"))) errors.push("Add a home URL.");
-      if (search && !search.includes("{q}")) errors.push('Search URL needs "{q}".');
+      if (isMulti) {
+        errors.push(...multiTargetErrors);
+        if (multiTargets.length < 2) errors.push("Add at least two valid multisearch targets.");
+      } else {
+        if (!home && !errors.some((message) => message.toLowerCase().includes("home url"))) errors.push("Add a home URL.");
+        if (search && !search.includes("{q}")) errors.push('Search URL needs "{q}".');
+      }
       if (builderExistingMatch && builderExistingMatch.id !== builderEditingId && !builderDuplicateAllowed) {
         errors.push("This URL already has a bang. Edit it or choose Create another anyway.");
       }
-      const properties = [
-        "name: " + JSON.stringify(name || "Example"),
-        ...(description ? ["description: " + JSON.stringify(description)] : []),
-        "aliases: " + JSON.stringify(aliases.length ? aliases : ["example"]),
-        "home: " + JSON.stringify(home || "https://example.com/"),
-        ...(search ? ["search: " + JSON.stringify(search)] : []),
-        ...(icon ? ["icon: " + JSON.stringify(icon)] : []),
-        ...(handler ? ["handler: " + JSON.stringify(handler)] : [])
-      ];
-      const objectIndent = "\\t\\t\\t";
-      const propertyIndent = objectIndent + "\\t";
-      builderCode.value = [
-        objectIndent + "{",
-        ...properties.map((property, index) => propertyIndent + property + (index < properties.length - 1 ? "," : "")),
-        objectIndent + "},"
-      ].join("\\n");
+      if (isMulti) {
+        const objectIndent = "  ";
+        const propertyIndent = "    ";
+        const targetIndent = "      ";
+        const multiLines = [
+          objectIndent + "{",
+          propertyIndent + "id: " + JSON.stringify((aliases[0] || "example").replace(/[^a-z0-9_-]+/g, "-")) + ",",
+          propertyIndent + "name: " + JSON.stringify(name || "Example Multisearch") + ",",
+          ...(description ? [propertyIndent + "description: " + JSON.stringify(description) + ","] : []),
+          propertyIndent + "aliases: " + JSON.stringify(aliases.length ? aliases : ["example"]) + ",",
+          propertyIndent + "targets: [",
+          ...multiTargets.map((target) => target.type === "bang"
+            ? targetIndent + "{ type: \\\"bang\\\", key: " + JSON.stringify(target.bang) + ", name: " + JSON.stringify(target.name) + " },"
+            : targetIndent + "{ type: \\\"url\\\", name: " + JSON.stringify(target.name) + ", search: " + JSON.stringify(target.search) + " },"),
+          propertyIndent + "]" + (icon || builderEditingMultiIconKey ? "," : ""),
+          ...(icon ? [propertyIndent + "icon: " + JSON.stringify(icon)] : builderEditingMultiIconKey ? [propertyIndent + "iconSvg: MULTI_ICON_SVGS." + builderEditingMultiIconKey] : []),
+          objectIndent + "},"
+        ];
+        builderCode.value = multiLines.join("\\n");
+      } else {
+        const properties = [
+          "name: " + JSON.stringify(name || "Example"),
+          ...(description ? ["description: " + JSON.stringify(description)] : []),
+          "aliases: " + JSON.stringify(aliases.length ? aliases : ["example"]),
+          "home: " + JSON.stringify(home || "https://example.com/"),
+          ...(search ? ["search: " + JSON.stringify(search)] : []),
+          ...(icon ? ["icon: " + JSON.stringify(icon)] : []),
+          ...(handler ? ["handler: " + JSON.stringify(handler)] : [])
+        ];
+        const objectIndent = "\t\t\t";
+        const propertyIndent = objectIndent + "\t";
+        builderCode.value = [
+          objectIndent + "{",
+          ...properties.map((property, index) => propertyIndent + property + (index < properties.length - 1 ? "," : "")),
+          objectIndent + "},"
+        ].join("\\n");
+      }
       builderCopyInline.disabled = false;
       builderCopyBottom.disabled = false;
       const editingLocalBang = builderEditingId.startsWith("local:");
       builderAddLocal.textContent = editingLocalBang ? "Update local bang" : "Add locally";
-      builderAddLocal.disabled = Boolean(handler);
-      builderAddLocal.title = handler ? "Handlers require Worker source code and cannot be stored locally." : "Save this bang in this browser";
+      builderAddLocal.disabled = Boolean(handler) || conflicts.length > 0;
+      builderAddLocal.title = handler
+        ? "Handlers require Worker source code and cannot be stored locally."
+        : conflicts.length ? "Choose unused aliases before saving locally." : "Save this bang in this browser";
       builderOpenGithub.href = GITHUB_EDITOR_URL;
       builderCodeHint.textContent = builderEditingId && builderExistingMatch
         ? "Replace the existing " + builderExistingMatch.name + " object in " + builderExistingMatch.category + "."
-        : "Paste directly into the appropriate SITE_GROUPS sites array.";
+        : isMulti ? "Paste this complete object directly into the MULTI_SEARCHES array." : "Paste directly into the appropriate SITE_GROUPS sites array.";
       const messages = [...errors, ...warnings];
       setBuilderStatus(
         builderValidationStatus,
@@ -4722,7 +5485,8 @@ function renderHelpPage(requestUrl) {
       const name = builderName.value.trim();
       const aliases = parseBuilderAliases(builderAliases.value);
       const description = builderDescription.value.trim();
-      const handler = builderHandler.value.trim().toLowerCase();
+      const isMulti = builderLocalType.value === "multi";
+      const handler = isMulti ? "" : builderHandler.value.trim().toLowerCase();
       let home = "", search = "", icon = "";
       try { home = normalizeBuilderHttpUrl(builderHome.value); } catch (error) { errors.push(error.message || "Invalid home URL."); }
       try { search = normalizeBuilderSearchUrl(builderSearch.value); } catch (error) { errors.push(error.message || "Invalid search URL."); }
@@ -4730,8 +5494,17 @@ function renderHelpPage(requestUrl) {
       if (!name) errors.push("Add a name.");
       if (!aliases.length) errors.push("Add an alias.");
       if (aliases.some((alias) => !/^[a-z0-9_-]+$/.test(alias))) errors.push("Use only letters, numbers, underscores, and hyphens in aliases.");
-      if (!home) errors.push("Add a home URL.");
-      if (search && !search.includes("{q}")) errors.push('Search URL needs "{q}".');
+      const targetResults = isMulti ? parseBuilderMultiTargets(builderMultiTargets.value) : [];
+      const targets = targetResults.filter((target) => !target.error);
+      targetResults.filter((target) => target.error).forEach((target) => errors.push(target.error));
+      if (isMulti) {
+        if (targets.length < 2) errors.push("Add at least two valid multisearch targets.");
+        home = home || "https://search.micahjeffery.com/";
+        search = "";
+      } else {
+        if (!home) errors.push("Add a home URL.");
+        if (search && !search.includes("{q}")) errors.push('Search URL needs "{q}".');
+      }
       if (handler) errors.push("Handlers require Worker source code and cannot be added locally.");
       const editingLocalId = builderEditingId.startsWith("local:") ? builderEditingId.slice(6) : "";
       const conflicts = aliases.flatMap((alias) => {
@@ -4743,7 +5516,7 @@ function renderHelpPage(requestUrl) {
       if (builderExistingMatch && !builderExistingMatch.isLocal && !builderDuplicateAllowed) {
         errors.push("This URL already has a built-in bang. Choose Create another anyway to save a local version.");
       }
-      return { errors, editingLocalId, bang: { name, aliases, description, home, search, icon } };
+      return { errors, editingLocalId, bang: { kind: isMulti ? "multi" : "bang", name, aliases, description, home, search, targets, icon } };
     }
     function addBangLocally() {
       const { errors, editingLocalId, bang } = getLocalBangCandidate();
@@ -4795,6 +5568,11 @@ function renderHelpPage(requestUrl) {
     function navigateToLocalBang(bang, query = "") {
       if (!bang?.enabled) return false;
       const trimmed = String(query || "").trim();
+      if (bang.kind === "multi") {
+        const request = "!" + bang.aliases[0] + (trimmed ? " " + trimmed : "");
+        window.location.assign("/?q=" + encodeURIComponent(request));
+        return true;
+      }
       const destination = trimmed && bang.search
         ? bang.search.replaceAll("{q}", encodeURIComponent(trimmed))
         : bang.home;
@@ -4803,7 +5581,12 @@ function renderHelpPage(requestUrl) {
       return true;
     }
     function resetBangBuilder() {
+      const retainedType = builderLocalType.value === "multi" ? "multi" : "bang";
       bangBuilderForm.reset();
+      builderLocalType.value = retainedType;
+      builderMultiTargets.value = "";
+      renderBuilderMultiTargetEditor();
+      syncBuilderTypeUi();
       builderIconCandidates.replaceChildren();
       builderIconCandidates.hidden = true;
       builderIconMore.hidden = true;
@@ -4811,6 +5594,7 @@ function renderHelpPage(requestUrl) {
       builderIconPreferredIndex = -1;
       builderIconChoicesExpanded = false;
       builderEditingId = "";
+      builderEditingMultiIconKey = "";
       builderDuplicateAllowed = false;
       builderExistingMatch = null;
       builderExisting.hidden = true;
@@ -4818,7 +5602,7 @@ function renderHelpPage(requestUrl) {
       setBuilderStatus(builderIconStatus, "Inspect the site to find favicon choices.");
       try { localStorage.removeItem(BANG_BUILDER_STORAGE_KEY); } catch {}
       renderBangBuilderCode();
-      builderHome.focus();
+      (retainedType === "multi" ? builderName : builderHome).focus();
     }
     function openBangBuilder() {
       showDialog(bangBuilderDialog);
@@ -4874,11 +5658,16 @@ function renderHelpPage(requestUrl) {
       writeStorage(STORAGE.recentSearches, JSON.stringify(recentSearches));
       renderRecentSearches();
     }
-    function disableSearchHistory() {
-      historyDisabled = true;
-      recentSearches = [];
-      writeStorage(STORAGE.recentSearches, JSON.stringify(recentSearches));
-      writeStorage(STORAGE.historyDisabled, "true");
+    function setSearchHistoryEnabled(enabled) {
+      historyDisabled = !enabled;
+      if (historyDisabled) {
+        recentSearches = [];
+        writeStorage(STORAGE.recentSearches, "[]");
+      }
+      writeStorage(STORAGE.historyDisabled, String(historyDisabled));
+      settingsSaveHistory.checked = enabled;
+      settingsIncludeHistory.disabled = historyDisabled;
+      if (historyDisabled) settingsIncludeHistory.checked = false;
       renderRecentSearches();
     }
     function readFavorites() {
@@ -4925,7 +5714,17 @@ function renderHelpPage(requestUrl) {
           favorites: [...favorites],
           historyDisabled,
           multisearchSelections: collectMultisearchSettings(),
-          localBangs: localBangs.map((bang) => ({ ...bang }))
+          localBangs: localBangs.map((bang) => ({ ...bang })),
+          hideDescriptions: readStorage(STORAGE.hideDescriptions, "false") === "true",
+          hideFavorites: readStorage(STORAGE.hideFavorites, "false") === "true",
+          disableFavicons: readStorage(STORAGE.disableFavicons, "false") === "true",
+          aliasLimit: Number(readStorage(STORAGE.aliasLimit, "0")) || 0,
+          lockTheme: readThemeLock(),
+          lockLayout: readLayoutLock(),
+          shortcutsDisabled: readStorage(STORAGE.shortcutsDisabled, "false") === "true",
+          hideSupport: readStorage(STORAGE.hideSupport, "false") === "true",
+          hideRepo: readStorage(STORAGE.hideRepo, "false") === "true",
+          hiddenBangs: readHiddenBangs()
         }
       };
       if (settingsIncludeHistory.checked && !historyDisabled) payload.recentSearches = [...recentSearches];
@@ -4967,6 +5766,16 @@ function renderHelpPage(requestUrl) {
       if (["comfortable", "compact", "minimalist"].includes(settings.layout)) writeStorage(STORAGE.layout, settings.layout);
       if (typeof settings.homeEngine === "string" && HOME_ENGINE_PATHS.includes(settings.homeEngine)) writeStorage(STORAGE.homeEngine, settings.homeEngine);
       if (typeof settings.defaultsOpen === "boolean") writeStorage(STORAGE.defaultsOpen, String(settings.defaultsOpen));
+      for (const [field, key] of [["hideDescriptions", STORAGE.hideDescriptions], ["hideFavorites", STORAGE.hideFavorites], ["disableFavicons", STORAGE.disableFavicons], ["shortcutsDisabled", STORAGE.shortcutsDisabled], ["hideSupport", STORAGE.hideSupport], ["hideRepo", STORAGE.hideRepo]]) {
+        if (typeof settings[field] === "boolean") writeStorage(key, String(settings[field]));
+      }
+      const importedAliasLimit = Number(settings.aliasLimit ?? 0);
+      if ([0, 1, 2, 3, 5].includes(importedAliasLimit)) writeStorage(STORAGE.aliasLimit, String(importedAliasLimit));
+      if (["", "auto", "light", "dark", "black"].includes(settings.lockTheme)) writeStorage(STORAGE.lockTheme, settings.lockTheme);
+      else if (settings.lockTheme === true) writeStorage(STORAGE.lockTheme, ["auto", "light", "dark", "black"].includes(settings.theme) ? settings.theme : "auto");
+      if (["", "comfortable", "compact", "minimalist"].includes(settings.lockLayout)) writeStorage(STORAGE.lockLayout, settings.lockLayout);
+      else if (settings.lockLayout === true) writeStorage(STORAGE.lockLayout, ["comfortable", "compact", "minimalist"].includes(settings.layout) ? settings.layout : "comfortable");
+      if (Array.isArray(settings.hiddenBangs)) writeStorage(STORAGE.hiddenBangs, JSON.stringify([...new Set(settings.hiddenBangs.filter((key) => typeof key === "string"))]));
 
       if (Array.isArray(settings.localBangs)) {
         const imported = [];
@@ -5063,13 +5872,84 @@ function renderHelpPage(requestUrl) {
       window.scrollTo(0, lockedScrollY);
     }
     function syncDialogScrollLock() {
-      const anyOpen = [settingsBackupDialog, localBangsManagerDialog, keyboardShortcutsDialog, bangBuilderDialog, disableHistoryDialog].some((dialog) => dialog.open);
+      const anyOpen = [settingsBackupDialog, hiddenBangsManagerDialog, localBangsManagerDialog, keyboardShortcutsDialog, bangBuilderDialog].some((dialog) => dialog.open);
       if (anyOpen) lockPageScroll();
       else unlockPageScroll();
     }
     function showDialog(dialog) {
       if (!dialog.open) dialog.showModal();
       syncDialogScrollLock();
+    }
+    let hiddenBangs = readHiddenBangs();
+    function readHiddenBangs() {
+      try { const parsed = JSON.parse(readStorage(STORAGE.hiddenBangs, "[]")); return Array.isArray(parsed) ? [...new Set(parsed.filter((key) => typeof key === "string"))] : []; } catch { return []; }
+    }
+    function saveHiddenBangs() { writeStorage(STORAGE.hiddenBangs, JSON.stringify(hiddenBangs)); }
+    function allDirectoryCards() { return [...document.querySelectorAll("#groups .site-card, #local-bangs-grid .site-card")]; }
+    function renderHiddenBangManager() {
+      const query = hiddenBangsFilter.value.trim().toLowerCase();
+      hiddenBangsList.replaceChildren();
+      allDirectoryCards().forEach((card) => {
+        const key = card.dataset.siteKey;
+        const name = card.dataset.siteName || card.querySelector(".site-name")?.textContent?.trim() || key;
+        const aliases = card.dataset.aliases || "";
+        const category = card.dataset.category || (key.startsWith("local:") ? "Local bangs" : "Bang");
+        if (query && !(name + " " + aliases + " " + category + " " + (card.dataset.search || "")).toLowerCase().includes(query)) return;
+        const row = document.createElement("label"); row.className = "hidden-bang-row";
+        const check = document.createElement("input"); check.type = "checkbox"; check.checked = hiddenBangs.includes(key); check.dataset.hiddenBang = key;
+        const copy = document.createElement("span"); copy.className = "hidden-bang-copy";
+        const title = document.createElement("strong"); title.textContent = name;
+        const detail = document.createElement("small"); detail.textContent = (aliases ? aliases.split(" ").map((alias) => "!" + alias).join(" · ") + " · " : "") + category;
+        copy.append(title, detail);
+        row.append(check, copy); hiddenBangsList.append(row);
+      });
+      hiddenBangsSettingsCount.textContent = hiddenBangs.length ? "(" + hiddenBangs.length + ")" : "";
+    }
+    function readThemeLock() {
+      const value = readStorage(STORAGE.lockTheme, "");
+      if (["auto", "light", "dark", "black"].includes(value)) return value;
+      if (value === "true") return readStorage(STORAGE.theme, "auto");
+      return "";
+    }
+    function readLayoutLock() {
+      const value = readStorage(STORAGE.lockLayout, "");
+      if (["comfortable", "compact", "minimalist"].includes(value)) return value;
+      if (value === "true") return readStorage(STORAGE.layout, "comfortable");
+      return "";
+    }
+    function applyPreferenceSettings() {
+      const hideDescriptions = readStorage(STORAGE.hideDescriptions, "false") === "true";
+      const hideFavorites = readStorage(STORAGE.hideFavorites, "false") === "true";
+      const hideSupport = readStorage(STORAGE.hideSupport, "false") === "true";
+      const disableFavicons = readStorage(STORAGE.disableFavicons, "false") === "true";
+      const hideRepo = readStorage(STORAGE.hideRepo, "false") === "true";
+      const aliasLimit = Number(readStorage(STORAGE.aliasLimit, "0")) || 0;
+      const themeLock = readThemeLock();
+      const layoutLock = readLayoutLock();
+      document.documentElement.dataset.hideDescriptions = String(hideDescriptions);
+      document.documentElement.dataset.hideFavorites = String(hideFavorites);
+      document.documentElement.dataset.hideSupport = String(hideSupport);
+      document.documentElement.dataset.hideRepo = String(hideRepo);
+      document.documentElement.dataset.disableFavicons = String(disableFavicons);
+      document.documentElement.dataset.aliasLimit = String([1, 2, 3, 5].includes(aliasLimit) ? aliasLimit : 0);
+      document.documentElement.dataset.themeLocked = String(Boolean(themeLock));
+      document.documentElement.dataset.layoutLocked = String(Boolean(layoutLock));
+      settingsHideDescriptions.checked = hideDescriptions;
+      settingsHideFavorites.checked = hideFavorites;
+      settingsDisableFavicons.checked = disableFavicons;
+      settingsSaveHistory.checked = !historyDisabled;
+      settingsIncludeHistory.disabled = historyDisabled;
+      if (historyDisabled) settingsIncludeHistory.checked = false;
+      settingsAliasLimit.value = String([1, 2, 3, 5].includes(aliasLimit) ? aliasLimit : 0);
+      settingsLockTheme.value = themeLock;
+      settingsLockLayout.value = layoutLock;
+      settingsDisableShortcuts.checked = readStorage(STORAGE.shortcutsDisabled, "false") === "true";
+      settingsHideSupport.checked = hideSupport;
+      settingsHideRepo.checked = hideRepo;
+      if (themeLock) applyTheme(themeLock, true);
+      if (layoutLock) applyLayout(layoutLock, true);
+      syncFaviconLoading();
+      applyFilter();
     }
     function resolveTheme(preference) {
       if (preference !== "auto") return preference;
@@ -5095,7 +5975,8 @@ function renderHelpPage(requestUrl) {
       compactLayoutButton.setAttribute("aria-label", "Layout: " + layout + ". Change to " + nextLayout);
       compactLayoutButton.title = "Layout: " + layout.charAt(0).toUpperCase() + layout.slice(1) + " · Change to " + nextLayout.charAt(0).toUpperCase() + nextLayout.slice(1);
     }
-    function applyTheme(preference) {
+    function applyTheme(preference, force = false) {
+      if (!force && readThemeLock() && document.documentElement.dataset.preferencesReady === "true") return;
       const nextPreference = ["auto", "dark", "light", "black"].includes(preference) ? preference : "auto";
       document.documentElement.dataset.theme = resolveTheme(nextPreference);
       document.documentElement.dataset.themePreference = nextPreference;
@@ -5103,14 +5984,17 @@ function renderHelpPage(requestUrl) {
       writeStorage(STORAGE.theme, nextPreference);
       syncCompactHeaderControls();
     }
-    function applyLayout(layout) {
+    function applyLayout(layout, force = false) {
+      if (!force && readLayoutLock() && document.documentElement.dataset.preferencesReady === "true") return;
       const nextLayout = ["compact", "minimalist"].includes(layout) ? layout : "comfortable";
       document.documentElement.dataset.density = nextLayout;
       headerActions.classList.remove("is-menu-open");
+      pageHeader.classList.remove("menu-open");
       headerMenuButton.setAttribute("aria-expanded", "false");
       layoutSelect.value = nextLayout;
       writeStorage(STORAGE.layout, nextLayout);
       syncCompactHeaderControls();
+      if (typeof favorites !== "undefined") renderFavorites();
       if (nextLayout === "minimalist") {
         requestAnimationFrame(() => filter.focus());
       }
@@ -5127,6 +6011,7 @@ function renderHelpPage(requestUrl) {
       applyLayout(requestedMode);
     }
     applyHomeEngine(readStorage(STORAGE.homeEngine, ""));
+    applyPreferenceSettings();
     updateSearchPlaceholder();
     themeSelect.addEventListener("change", () => {
       applyTheme(themeSelect.value);
@@ -5152,7 +6037,7 @@ function renderHelpPage(requestUrl) {
       applyLayout(layoutSelect.value === "compact" ? "comfortable" : "compact");
     });
     exitMinimalistButton.addEventListener("click", () => {
-      applyLayout("compact");
+      applyLayout("compact", true);
       filter.focus();
     });
     homeEngineSelect.addEventListener("change", () => {
@@ -5187,7 +6072,8 @@ function renderHelpPage(requestUrl) {
     function renderFavorites() {
       favoritesGrid.replaceChildren();
       favorites = favorites.filter((key) => sourceCardByKey.has(key));
-      favorites.forEach((key) => {
+      favorites.forEach((key, index) => {
+        if (document.documentElement.dataset.density === "compact" && index >= 3) return;
         const card = sourceCardByKey.get(key).cloneNode(true);
         card.hidden = false;
         favoritesGrid.append(card);
@@ -5265,7 +6151,7 @@ function renderHelpPage(requestUrl) {
       let site = Number.isInteger(siteIndex) ? BANG_DATA.sites[siteIndex] : null;
       if (!site) {
         const local = findLocalBangByAlias(shortcut.bang);
-        if (local) site = [local.name, "!" + local.aliases[0], local.search ? "search" : "link"];
+        if (local) site = [local.name, "!" + local.aliases[0], local.kind === "multi" ? "multi" : local.search ? "search" : "link"];
       }
       bangPreview.hidden = false;
       if (!site) {
@@ -5354,7 +6240,7 @@ function renderHelpPage(requestUrl) {
         .replace(/[!;:.]/g, "");
       const queryTokens = query.split(/\\s+/).filter(Boolean);
       const cardMatches = (card) =>
-        queryTokens.length === 0 || queryTokens.every((token) => card.dataset.search.includes(token));
+        !hiddenBangs.includes(card.dataset.siteKey) && (queryTokens.length === 0 || queryTokens.every((token) => card.dataset.search.includes(token)));
       defaults.hidden = queryTokens.length > 0;
       let visible = 0;
       sourceCards.forEach((card) => {
@@ -5408,12 +6294,13 @@ function renderHelpPage(requestUrl) {
     }
     filter.addEventListener("input", scheduleFilter);
     filter.addEventListener("keydown", (event) => {
-      if (!filter.value && event.key === "+") {
+      const shortcutsDisabled = readStorage(STORAGE.shortcutsDisabled, "false") === "true";
+      if (!shortcutsDisabled && !filter.value && event.key === "+") {
         event.preventDefault();
         openBangBuilder();
         return;
       }
-      if (!filter.value && event.key === "?") {
+      if (!shortcutsDisabled && !filter.value && event.key === "?") {
         event.preventDefault();
         showDialog(keyboardShortcutsDialog);
         return;
@@ -5427,7 +6314,7 @@ function renderHelpPage(requestUrl) {
         }
         return;
       }
-      if (!filter.value.trim()) return;
+      if (!filter.value.trim() || shortcutsDisabled) return;
       if (event.key === "ArrowDown") {
         event.preventDefault();
         moveKeyboardSelection(1);
@@ -5497,6 +6384,8 @@ function renderHelpPage(requestUrl) {
       saveRecentSearch(filter.value);
     });
     restoreBangBuilderDraft();
+    renderBuilderMultiTargetEditor();
+    syncBuilderTypeUi();
     updateExistingBuilderMatch();
     renderBangBuilderCode();
     if (builderIcon.value.trim()) setBuilderIconPreview(builderIcon.value);
@@ -5528,6 +6417,41 @@ function renderHelpPage(requestUrl) {
     });
     bangBuilderForm.addEventListener("submit", (event) => event.preventDefault());
     builderFindIcon.addEventListener("click", findBuilderFavicon);
+    builderAutofillSearch.addEventListener("click", guessBuilderSearchUrl);
+    builderTestSearch.addEventListener("click", testBuilderSearch);
+    builderLocalType.addEventListener("change", () => {
+      if (builderLocalType.value !== "multi") builderEditingMultiIconKey = "";
+      syncBuilderTypeUi();
+      renderBangBuilderCode();
+    });
+    builderMultiAdd.addEventListener("click", () => {
+      const row = addBuilderMultiTargetRow({ type: "bang", bang: "" });
+      row.querySelector("[data-multi-target-bang]").focus();
+      syncBuilderMultiTargetsFromRows();
+    });
+    builderMultiTargetsEditor.addEventListener("input", (event) => {
+      const row = event.target.closest(".builder-multi-row");
+      if (row) syncBuilderMultiRowMode(row);
+      syncBuilderMultiTargetsFromRows();
+    });
+    builderMultiTargetsEditor.addEventListener("change", (event) => {
+      const row = event.target.closest(".builder-multi-row");
+      if (row) syncBuilderMultiRowMode(row);
+      syncBuilderMultiTargetsFromRows();
+    });
+    builderMultiTargetsEditor.addEventListener("click", (event) => {
+      const row = event.target.closest(".builder-multi-row");
+      if (!row) return;
+      if (event.target.closest("[data-multi-target-test]")) {
+        testBuilderMultiTarget(row);
+        return;
+      }
+      if (event.target.closest("[data-multi-target-remove]")) {
+        row.remove();
+        while (builderMultiTargetsEditor.children.length < 2) addBuilderMultiTargetRow();
+        syncBuilderMultiTargetsFromRows();
+      }
+    });
     builderIconMore.addEventListener("click", () => {
       builderIconChoicesExpanded = !builderIconChoicesExpanded;
       paintBuilderIconChoices();
@@ -5561,24 +6485,27 @@ function renderHelpPage(requestUrl) {
       const remove = event.target.closest("[data-local-delete]");
       if (remove) deleteLocalBang(remove.dataset.localDelete);
     });
+    const preferenceBindings = [
+      [settingsHideDescriptions, STORAGE.hideDescriptions], [settingsHideFavorites, STORAGE.hideFavorites], [settingsDisableFavicons, STORAGE.disableFavicons],
+      [settingsDisableShortcuts, STORAGE.shortcutsDisabled], [settingsHideSupport, STORAGE.hideSupport], [settingsHideRepo, STORAGE.hideRepo]
+    ];
+    preferenceBindings.forEach(([control, key]) => control.addEventListener("change", () => { writeStorage(key, String(control.checked)); applyPreferenceSettings(); }));
+    settingsSaveHistory.addEventListener("change", () => setSearchHistoryEnabled(settingsSaveHistory.checked));
+    settingsAliasLimit.addEventListener("change", () => { writeStorage(STORAGE.aliasLimit, settingsAliasLimit.value); applyPreferenceSettings(); });
+    settingsLockTheme.addEventListener("change", () => { writeStorage(STORAGE.lockTheme, settingsLockTheme.value); applyPreferenceSettings(); });
+    settingsLockLayout.addEventListener("change", () => { writeStorage(STORAGE.lockLayout, settingsLockLayout.value); applyPreferenceSettings(); });
+    manageHiddenBangsButton.addEventListener("click", () => { renderHiddenBangManager(); settingsBackupDialog.close(); showDialog(hiddenBangsManagerDialog); });
+    hiddenBangsFilter.addEventListener("input", renderHiddenBangManager);
+    hiddenBangsList.addEventListener("change", (event) => { const input = event.target.closest("[data-hidden-bang]"); if (!input) return; const key = input.dataset.hiddenBang; hiddenBangs = input.checked ? [...new Set([...hiddenBangs, key])] : hiddenBangs.filter((item) => item !== key); saveHiddenBangs(); renderHiddenBangManager(); applyFilter(); });
     settingsExportButton.addEventListener("click", exportSettings);
     settingsImportButton.addEventListener("click", () => settingsImportFile.click());
     settingsImportFile.addEventListener("change", () => importSettingsFile(settingsImportFile.files?.[0]));
     headerMenuButton.addEventListener("click", () => {
       const open = headerActions.classList.toggle("is-menu-open");
       headerMenuButton.setAttribute("aria-expanded", String(open));
+      pageHeader.classList.toggle("menu-open", open);
     });
     clearRecentSearchesButton.addEventListener("click", clearRecentSearches);
-    disableHistoryButton.addEventListener("click", () => {
-      showDialog(disableHistoryDialog);
-    });
-    cancelDisableHistoryButton.addEventListener("click", () => {
-      disableHistoryDialog.close();
-    });
-    confirmDisableHistoryButton.addEventListener("click", () => {
-      disableSearchHistory();
-      disableHistoryDialog.close();
-    });
     keyboardShortcutsButton.addEventListener("click", () => {
       showDialog(keyboardShortcutsDialog);
     });
@@ -5593,7 +6520,7 @@ function renderHelpPage(requestUrl) {
         if (dialog) dialog.close();
       });
     });
-    [settingsBackupDialog, localBangsManagerDialog, keyboardShortcutsDialog, bangBuilderDialog, disableHistoryDialog].forEach((dialog) => {
+    [settingsBackupDialog, hiddenBangsManagerDialog, localBangsManagerDialog, keyboardShortcutsDialog, bangBuilderDialog].forEach((dialog) => {
       let startedOnBackdrop = false;
       dialog.addEventListener("pointerdown", (event) => {
         startedOnBackdrop = event.target === dialog;
@@ -5613,7 +6540,7 @@ function renderHelpPage(requestUrl) {
       setAllGroups(false);
     });
     document.addEventListener("keydown", (event) => {
-      if (settingsBackupDialog.open || localBangsManagerDialog.open || keyboardShortcutsDialog.open || bangBuilderDialog.open || disableHistoryDialog.open || event.defaultPrevented || event.ctrlKey || event.metaKey || event.altKey) {
+      if (settingsBackupDialog.open || hiddenBangsManagerDialog.open || localBangsManagerDialog.open || keyboardShortcutsDialog.open || bangBuilderDialog.open || event.defaultPrevented || event.ctrlKey || event.metaKey || event.altKey) {
         return;
       }
       if (event.key === "Escape") {
@@ -5627,6 +6554,7 @@ function renderHelpPage(requestUrl) {
         return;
       }
       if (isTypingTarget(event.target)) return;
+      if (readStorage(STORAGE.shortcutsDisabled, "false") === "true") return;
       if (event.key === "/") {
         event.preventDefault();
         filter.focus();
@@ -5696,6 +6624,7 @@ function renderHelpPage(requestUrl) {
       }
     });
     renderFavorites();
+    renderHiddenBangManager();
     applyFilter();
     document.documentElement.dataset.preferencesReady = "true";
   </script>
@@ -5741,6 +6670,40 @@ function resolveMultiSearchTarget(target) {
       aliases: site.aliases
     };
   }
+  if (target.type === "bang") {
+    const alias = normalizePath(target.key || target.bang);
+    if (!alias) return null;
+    const site = BANGS.get(alias);
+    const displayName = String(target.name || site?.name || `!${alias}`);
+    const encodedBang = encodeURIComponent(`!${alias}`);
+    return {
+      id: `bang:${alias}`,
+      name: displayName,
+      detail: site ? `${site.category} · !${alias}` : `Bang · !${alias}`,
+      home: `/?q=${encodedBang}`,
+      search: `/?q=${encodedBang}%20{q}`,
+      icon: String(target.icon || (site ? getFaviconUrl(site) : "")),
+      aliases: [alias]
+    };
+  }
+  if (target.type === "url") {
+    const search = String(target.search || "").trim();
+    if (!search.includes("{q}")) return null;
+    try {
+      const testUrl = new URL(search.replaceAll("{q}", "example"));
+      if (testUrl.protocol !== "https:" && testUrl.protocol !== "http:") return null;
+      const home = String(target.home || testUrl.origin + "/");
+      return {
+        id: `url:${String(target.id || target.name || search).toLowerCase().replace(/[^a-z0-9_-]+/g, "-").slice(0, 80)}`,
+        name: String(target.name || testUrl.hostname),
+        detail: String(target.detail || "Custom target"),
+        home,
+        search,
+        icon: String(target.icon || testUrl.origin + "/favicon.ico"),
+        aliases: Array.isArray(target.aliases) ? target.aliases : []
+      };
+    } catch { return null; }
+  }
   return null;
 }
 function buildMultiTargetUrl(target, query) {
@@ -5763,7 +6726,7 @@ function renderMultiSearchPage(multi, query, requestUrl) {
       <label class="target-row" data-target-row data-target-id="${escapeAttribute(target.id)}">
         <input class="target-check" type="checkbox" data-target-check="${index}" checked>
         <span class="target-main">
-          ${target.icon ? `<img class="target-favicon" src="${escapeAttribute(target.icon)}" alt="" width="22" height="22" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer" data-site-favicon>` : ""}
+          <span class="target-favicon-shell" aria-hidden="true"><span class="target-favicon-fallback"></span>${target.icon ? `<img class="target-favicon" data-favicon-src="${escapeAttribute(target.icon)}" alt="" width="22" height="22" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer" data-site-favicon>` : ""}</span>
           <span class="target-copy">
             <strong>${escapeHtml(target.name)}</strong>
             <span>${escapeHtml(target.detail)}</span>
@@ -5796,129 +6759,11 @@ function renderMultiSearchPage(multi, query, requestUrl) {
       const resolveAuto = () => window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
       document.documentElement.dataset.theme = preference === "auto" ? resolveAuto() : preference;
       document.documentElement.dataset.themePreference = preference;
+      try { document.documentElement.dataset.disableFavicons = localStorage.getItem("search-help-disable-favicons") === "true" ? "true" : "false"; } catch { document.documentElement.dataset.disableFavicons = "false"; }
     })();
   </script>
   <style>
-    :root {
-      color-scheme: dark;
-      --bg: #101114;
-      --surface: #191b20;
-      --surface-2: #22252c;
-      --input: #13151a;
-      --border: #323640;
-      --border-strong: #4a5160;
-      --text: #eef0f4;
-      --muted: #a7adb9;
-      --accent: #8ab4ff;
-      --accent-contrast: #091525;
-      --good: #83d49b;
-      --warn: #ffca70;
-      --danger: #ff9b9b;
-      --shadow: rgba(0, 0, 0, .22);
-    }
-    :root[data-theme="dark"] {
-      color-scheme: dark;
-      --bg: #101114;
-      --surface: #191b20;
-      --surface-2: #22252c;
-      --input: #13151a;
-      --border: #323640;
-      --border-strong: #4a5160;
-      --text: #eef0f4;
-      --muted: #a7adb9;
-      --accent: #8ab4ff;
-      --accent-contrast: #091525;
-      --good: #83d49b;
-      --warn: #ffca70;
-      --danger: #ff9b9b;
-      --shadow: rgba(0, 0, 0, .22);
-    }
-    :root[data-theme="light"] {
-      color-scheme: light;
-      --bg: #f5f7fb;
-      --surface: #ffffff;
-      --surface-2: #eef2f8;
-      --input: #ffffff;
-      --border: #cdd4e0;
-      --border-strong: #9eabbc;
-      --text: #171a20;
-      --muted: #576274;
-      --accent: #185bc4;
-      --accent-contrast: #ffffff;
-      --good: #137a3d;
-      --warn: #8a5200;
-      --danger: #b42318;
-      --shadow: rgba(29, 43, 68, .10);
-    }
-    :root[data-theme="black"] {
-      color-scheme: dark;
-      --bg: #000000;
-      --surface: #050505;
-      --surface-2: #0d0d0d;
-      --input: #000000;
-      --border: rgba(255,255,255,.16);
-      --border-strong: rgba(255,255,255,.28);
-      --text: #f7f7f7;
-      --muted: #b6b6b6;
-      --accent: #9ec5ff;
-      --accent-contrast: #000000;
-      --good: #83d49b;
-      --warn: #ffca70;
-      --danger: #ff9b9b;
-      --shadow: rgba(0, 0, 0, .60);
-    }
-    * { box-sizing: border-box; }
-    body {
-      min-width: 320px;
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font: 16px/1.45 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
-    main { max-width: 860px; margin: 0 auto; padding: 36px 20px 64px; }
-    a { color: var(--accent); }
-    h1 { margin: 0; font-size: clamp(2rem, 5vw, 3rem); line-height: 1.05; letter-spacing: -.03em; }
-    .multi-heading { display: flex; align-items: center; gap: 12px; }
-    .multi-heading-icon { display: grid; flex: 0 0 36px; place-items: center; width: 36px; height: 36px; color: var(--accent); object-fit: contain; }
-    .multi-heading-icon svg { display: block; width: 34px; height: 34px; }
-    p { color: var(--muted); margin: 10px 0 0; }
-    .top { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; margin-bottom: 24px; }
-    .multi-title { display: flex; align-items: center; gap: 12px; }
-    .multi-heading-icon { display: inline-grid; width: 34px; height: 34px; flex: 0 0 34px; place-items: center; color: var(--accent); }
-    .multi-heading-icon svg, img.multi-heading-icon { display: block; width: 34px; height: 34px; object-fit: contain; }
-    .back { border: 1px solid var(--border); border-radius: 999px; padding: 8px 11px; text-decoration: none; color: var(--text); background: var(--surface-2); white-space: nowrap; }
-    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 8px 24px var(--shadow); padding: 16px; margin-top: 16px; }
-    .search-row { display: flex; gap: 10px; align-items: stretch; }
-    input[type="search"] { flex: 1; min-width: 0; width: 100%; padding: 13px 14px; border: 1px solid var(--border); border-radius: 10px; background: var(--input); color: var(--text); font: inherit; }
-    button, .target-open, input[type="search"] { font: inherit; }
-    button, .target-open { appearance: none; border: 1px solid var(--border); border-radius: 9px; background: var(--surface-2); color: var(--text); padding: 8px 10px; cursor: pointer; text-decoration: none; }
-    button:hover, .target-open:hover, .back:hover { border-color: var(--accent); }
-    button.primary { border-color: var(--accent); background: var(--accent); color: var(--accent-contrast); font-weight: 700; }
-    button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid color-mix(in srgb, var(--accent) 45%, transparent); outline-offset: 2px; }
-    .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-    .hint { font-size: .92rem; }
-    .status { min-height: 1.4em; margin-top: 10px; color: var(--muted); }
-    .status.good { color: var(--good); }
-    .status.warn { color: var(--warn); }
-    .status.danger { color: var(--danger); }
-    .target-list { display: grid; gap: 8px; margin-top: 14px; }
-    .target-row { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; padding: 12px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-2); }
-    .target-row:has(input:not(:checked)) { opacity: .62; }
-    .target-check { width: 20px; height: 20px; accent-color: var(--accent); }
-    .target-main { display: flex; align-items: center; gap: 10px; min-width: 0; }
-    .target-favicon { width: 22px; height: 22px; flex: 0 0 22px; object-fit: contain; border-radius: 4px; }
-    .target-favicon[hidden] { display: none; }
-    .target-copy { display: grid; gap: 2px; min-width: 0; }
-    .target-copy span { color: var(--muted); font-size: .86rem; overflow-wrap: anywhere; }
-    .small { color: var(--muted); font-size: .86rem; }
-    code { color: var(--accent); }
-    @media (max-width: 620px) {
-      .top, .search-row { display: block; }
-      .back { display: inline-block; margin-top: 14px; }
-      .search-row button { width: 100%; margin-top: 10px; }
-      .target-row { grid-template-columns: auto 1fr; }
-      .target-open { grid-column: 1 / -1; text-align: center; }
-    }
+${MULTI_SEARCH_PAGE_CSS}
   </style>
 </head>
 <body>
@@ -5977,12 +6822,16 @@ function renderMultiSearchPage(multi, query, requestUrl) {
     const checks = [...document.querySelectorAll("[data-target-check]")];
     const links = [...document.querySelectorAll("[data-target-link]")];
     let nextCursor = 0;
+    if (document.documentElement.dataset.disableFavicons !== "true") {
+      document.querySelectorAll("img[data-favicon-src]").forEach((image) => {
+        image.src = image.dataset.faviconSrc;
+      });
+    }
     document.addEventListener("error", (event) => {
       const image = event.target;
       if (image instanceof HTMLImageElement && image.matches("[data-site-favicon]")) {
-        const editButton = image.closest(".site-favicon-edit");
-        if (editButton) editButton.hidden = true;
-        else image.hidden = true;
+        image.dataset.faviconFailed = "true";
+        image.hidden = true;
       }
     }, true);
 
@@ -6166,17 +7015,20 @@ function renderSiteCard(site) {
   const faviconUrl = getFaviconUrl(site);
   const iconMask = String(site.iconMask || "").trim();
   const inlineIcon = String(site.iconSvg || "").trim();
-  const visual = iconMask
+  const visual = `<span class="site-favicon-fallback" aria-hidden="true"></span>` + (iconMask
     ? `<span class="site-favicon site-favicon-mask" style="--site-icon-mask:url(&quot;${escapeAttribute(iconMask)}&quot;)" aria-hidden="true"></span>`
     : inlineIcon
       ? `<span class="site-favicon site-favicon-svg" aria-hidden="true">${inlineIcon}</span>`
-      : `<span class="site-favicon-fallback" aria-hidden="true"></span>${faviconUrl ? `<img class="site-favicon" src="${escapeAttribute(faviconUrl)}" alt="" width="20" height="20" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer" data-site-favicon>` : ""}`;
-  const favicon = `<button class="site-favicon-edit" type="button" data-builder-edit-site="${escapeAttribute(site.id)}" aria-label="Edit ${escapeAttribute(site.name)} in Bang Builder" title="Edit in Bang Builder">${visual}<span class="site-favicon-pencil" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m16.9 3.6 3.5 3.5-11 11-4.4.9.9-4.4 11-11ZM4 20l1.5-7.1L15.8 2.6a2 2 0 0 1 2.8 0l2.8 2.8a2 2 0 0 1 0 2.8L11.1 18.5 4 20Z"/></svg></span></button>`;
+      : faviconUrl
+        ? `<img class="site-favicon" data-favicon-src="${escapeAttribute(faviconUrl)}" alt="" width="20" height="20" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer" data-site-favicon>`
+        : "");
+  const faviconClass = `site-favicon-edit${iconMask || inlineIcon ? " has-custom-visual" : ""}`;
+  const favicon = `<button class="${faviconClass}" type="button" data-builder-edit-site="${escapeAttribute(site.id)}" aria-label="Edit ${escapeAttribute(site.name)} in ${site.handler === "multi" ? "Multisearch Builder" : "Bang Builder"}" title="Edit in ${site.handler === "multi" ? "Multisearch Builder" : "Bang Builder"}">${visual}<span class="site-favicon-pencil" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m16.9 3.6 3.5 3.5-11 11-4.4.9.9-4.4 11-11ZM4 20l1.5-7.1L15.8 2.6a2 2 0 0 1 2.8 0l2.8 2.8a2 2 0 0 1 0 2.8L11.1 18.5 4 20Z"/></svg></span></button>`;
   const description = site.description
     ? `<p class="site-description">${escapeHtml(site.description)}</p>`
     : "";
   return `
-    <article class="site-card" data-site-key="${escapeAttribute(site.id)}" data-search="${escapeAttribute(searchText)}"${site.home ? ` title="${escapeAttribute(site.home)}"` : ""}>
+    <article class="site-card" data-site-key="${escapeAttribute(site.id)}" data-site-name="${escapeAttribute(site.name)}" data-aliases="${escapeAttribute(site.aliases.join(" "))}" data-category="${escapeAttribute(site.category || (site.handler === "multi" ? "Multisearch" : "Bang"))}" data-search="${escapeAttribute(searchText)}"${site.home ? ` title="${escapeAttribute(site.home)}"` : ""}>
       <div class="site-top">
         <div class="site-heading">
           ${favicon}
