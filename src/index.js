@@ -69,6 +69,7 @@ const DEFAULT_ENGINES = [
 //   home:        Destination for a bang with no query.
 //   search:      Optional destination for a bang with a query.
 //   icon:        Optional favicon override. Otherwise /favicon.ico is derived from home.
+//   iconBackground: Optional "light" or "dark" contrast tile.
 //   handler:     Optional special behavior.
 const SITE_GROUPS = [
   {
@@ -85,7 +86,8 @@ const SITE_GROUPS = [
         description: "Open a random shortcut, or send a query to a random searchable shortcut.",
         aliases: ["random", "rand"],
         home: "https://search.micahjeffery.com/?q=%21random",
-        iconSvg: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="18" height="18" rx="4" stroke="currentColor" stroke-width="2"/><circle cx="8" cy="8" r="1.4" fill="currentColor"/><circle cx="16" cy="8" r="1.4" fill="currentColor"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/><circle cx="8" cy="16" r="1.4" fill="currentColor"/><circle cx="16" cy="16" r="1.4" fill="currentColor"/></svg>`,
+        icon: "https://www.svgrepo.com/show/83582/random-arrows.svg",
+        iconBackground: "light",
         handler: "random"
       },
       {
@@ -151,7 +153,7 @@ const SITE_GROUPS = [
         name: "Google Maps",
         aliases: ["m", "gm", "gmap", "gmaps", "maps"],
         home: "https://www.google.com/maps",
-        search: "https://www.google.com/maps/search/{q}",
+        search: "https://www.google.com/maps/search/?api=1&query={q}",
         icon: "https://upload.wikimedia.org/wikipedia/commons/a/a3/Google_Maps_icon_%282026%29.svg"
       },
       {
@@ -195,6 +197,13 @@ const SITE_GROUPS = [
         aliases: ["amaps", "applemaps"],
         home: "https://maps.apple.com/",
         search: "https://maps.apple.com/?q={q}"
+      },
+      {
+        name: "Waze",
+        description: "Search an address in Waze or open its live map.",
+        aliases: ["waze", "wz"],
+        home: "https://www.waze.com/live-map",
+        search: "https://waze.com/ul?q={q}"
       },
       {
         name: "DuckDuckGo No AI",
@@ -392,8 +401,8 @@ const SITE_GROUPS = [
         search: "https://en.wikipedia.org/wiki/Special:Search?search={q}"
       },
       {
-        name: "Wikimedia",
-        description: "Open the Wikimedia project directory.",
+        name: "Wikimedia Commons",
+        description: "Search Wikimedia Commons for images and other freely licensed media.",
         aliases: ["wm", "wikimedia"],
         home: "https://commons.wikimedia.org/wiki/Main_Page?vectornightmode=1",
         search: "https://commons.wikimedia.org/w/index.php?search={q}&title=Special%3AMediaSearch&type=image"
@@ -426,7 +435,7 @@ const SITE_GROUPS = [
         search: "https://www.onelook.com/?w={q}"
       },
       {
-        name: "Merriam-Webster dictionary",
+        name: "Merriam-Webster Dictionary",
         description: "Look up definitions, pronunciation, and usage.",
         aliases: ["def", "word", "mw", "definition", "webster", "dict", "dic", "dictionary"],
         home: "https://www.merriam-webster.com/dictionary",
@@ -470,12 +479,20 @@ const SITE_GROUPS = [
         icon: "https://assets.tosdr.org/branding/tosdr-icon-32.svg"
       },
       {
-        name: "23andMe Surname Discovery tool",
+        name: "23andMe Surname Discovery Tool",
         description: "Explore public surname-distribution results.",
         aliases: ["23","surname","sur","dna"],
         home: "https://discover.23andme.com/",
         search: "https://discover.23andme.com/last-name/{q}",
-        icon: "https://icons.duckduckgo.com/ip3/23andme.org.ico"
+        icon: "https://icons.duckduckgo.com/ip3/discover.23andme.com.ico"
+      },
+      {
+        name: "Forebears",
+        description: "Research surname meanings, origins, distribution, and demographics.",
+        aliases: ["forebears", "forebear"],
+        home: "https://forebears.io/surnames",
+        search: "https://forebears.io/surnames/{q}",
+        icon: "https://icons.duckduckgo.com/ip3/forebears.io.ico"
       }
     ]
   },
@@ -505,6 +522,20 @@ const SITE_GROUPS = [
         aliases: ["walmart", "wal", "wmt"],
         home: "https://www.walmart.com/",
         search: "https://www.walmart.com/search?q={q}"
+      },
+      {
+        name: "Target",
+        description: "Search products and store inventory at Target.",
+        aliases: ["target", "tgt"],
+        home: "https://www.target.com/",
+        search: "https://www.target.com/s/{q}"
+      },
+      {
+        name: "Best Buy",
+        description: "Search electronics, appliances, and other products at Best Buy.",
+        aliases: ["bb", "bestbuy", "bbuy"],
+        home: "https://www.bestbuy.com/",
+        search: "https://www.bestbuy.com/site/searchpage.jsp?st={q}"
       },
       {
         name: "Facebook Marketplace",
@@ -539,6 +570,13 @@ const SITE_GROUPS = [
         search: "https://www.homedepot.com/s/{q}"
       },
       {
+        name: "Lowe's",
+        description: "Search home-improvement products at Lowe's.",
+        aliases: ["lowes", "lowe", "lws"],
+        home: "https://www.lowes.com/",
+        search: "https://www.lowes.com/search?searchTerm={q}"
+      },
+      {
         name: "Zillow",
         description: "Home value estimates",
         aliases: ["z", "zillow"],
@@ -554,9 +592,10 @@ const SITE_GROUPS = [
       },
       {
         name: "AppliancePartsPros",
-        description: "Browse appliance parts and repair resources.",
+        description: "Search appliance parts by appliance model number.",
         aliases: ["app", "appliance", "applianceparts", "appliancepartspros"],
-        home: "https://www.appliancepartspros.com/"
+        home: "https://www.appliancepartspros.com/",
+        search: "https://www.appliancepartspros.com/search.aspx?model={q}"
       }
     ]
   },
@@ -714,17 +753,34 @@ const SITE_GROUPS = [
         search: "https://open.spotify.com/search/{q}"
       },
       {
+        name: "Twitch",
+        description: "Search live channels, categories, and videos on Twitch.",
+        aliases: ["twitch", "twi"],
+        home: "https://www.twitch.tv/",
+        search: "https://www.twitch.tv/search?term={q}"
+      },
+      {
+        name: "Bandcamp",
+        description: "Search artists, albums, tracks, and labels on Bandcamp.",
+        aliases: ["bandcamp", "bc"],
+        home: "https://bandcamp.com/",
+        search: "https://bandcamp.com/search?q={q}",
+        icon: "https://s4.bcbits.com/client-bundle/1/PageLayout_1/favicon-78ff127104384a042453aca8d73be7dc.static/favicon/favicon-16x16.png"
+      },
+      {
         name: "Genius Lyrics",
         description: "Search song lyrics and song annotations on Genius.",
         aliases: ["lyr", "lyrics", "lyric", "genius"],
         home: "https://genius.com/",
-        search: "https://genius.com/search?q={q}"
+        search: "https://genius.com/search?q={q}",
+        icon: "https://assets.genius.com/images/apple-touch-icon.png?1784317092"
       },
       {
         name: "AZLyrics",
-        description: "Open the AZLyrics home page.",
+        description: "Search song lyrics by artist or title on AZLyrics.",
         aliases: ["azlyrics", "azl"],
-        home: "https://www.azlyrics.com/"
+        home: "https://www.azlyrics.com/",
+        search: "https://search.azlyrics.com/search.php?q={q}&w=songs"
       },
       {
         name: "IMDb",
@@ -747,7 +803,7 @@ const SITE_GROUPS = [
         search: "https://www.justwatch.com/us/search?q={q}"
       },
       {
-        name: "TubiTV",
+        name: "Tubi",
         description: "Browse or search free streaming titles on Tubi.",
         aliases: ["tubi", "tubitv"],
         home: "https://tubitv.com/movies",
@@ -891,7 +947,7 @@ const SITE_GROUPS = [
       },
       {
         name: "MakerWorld",
-        description: "Search printable 3D models on Bamboo Lab's MakerWorld.",
+        description: "Search printable 3D models on Bambu Lab's MakerWorld.",
         aliases: ["maker", "makerworld"],
         home: "https://makerworld.com/en",
         search: "https://makerworld.com/en/search/models?keyword={q}"
@@ -1171,6 +1227,14 @@ const SITE_GROUPS = [
         icon: "https://www.gstatic.com/images/branding/productlogos/docs_2026/v2/web/192px.svg"
       },
       {
+        name: "Google Calendar",
+        description: "Open Google Calendar or search your events.",
+        aliases: ["gcal", "gcalendar", "googlecalendar"],
+        home: "https://calendar.google.com/calendar/u/0/r",
+        search: "https://calendar.google.com/calendar/u/0/r/search?q={q}",
+        icon: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Google_Calendar_icon_%282026%29.svg"
+      },
+      {
         name: "Google Voice",
         description: "Open Google Voice or search your messages.",
         aliases: ["voice","gvo","gvoice","gvmail"],
@@ -1252,18 +1316,25 @@ const SITE_GROUPS = [
         icon: "https://meet.proton.me/assets/static/favicon.0df442ee78b4350582c6.svg"
       },
       {
+        name: "Mullvad",
+        description: "Open Mullvad or search its help center.",
+        aliases: ["mullvad", "mvpn", "mullvadvpn"],
+        home: "https://mullvad.net/",
+        search: "https://mullvad.net/en/help?q={q}"
+      },
+      {
         name: "GrapheneOS",
-        description: "Open GrapheneOS or search its site.",
+        description: "Open GrapheneOS or jump directly to an official page by slug.",
         aliases: ["gos", "graphene", "grapheneos"],
         home: "https://grapheneos.org/",
         search: "https://grapheneos.org/{q}"
       },
       {
         name: "GrapheneOS Discussion Forum",
-        description: "Open the GrapheneOS community discussion forum.",
+        description: "Open or natively search the official GrapheneOS discussion forum.",
         aliases: ["gosd", "graphened"],
         home: "https://discuss.grapheneos.org/",
-        search: "https://grapheneos.org/{q}"
+        search: "https://discuss.grapheneos.org/all?q={q}"
       },
       {
         name: "Brave Talk",
@@ -1301,7 +1372,7 @@ const SITE_GROUPS = [
       },
       {
         name: "Privacy.com",
-        description: "Private virtual-cards.",
+        description: "Create and manage private virtual payment cards.",
         aliases: ["privacy", "virtualcards", ],
         home: "https://app.privacy.com/home"
       },
@@ -1344,8 +1415,8 @@ const SITE_GROUPS = [
         name: "Tuta Mail",
         description: "Private encrypted Gmail alternative.",
         aliases: ["tuta","tm","tutamail"],
-        home: "https://mail.tutanota.com/",
-        icon: "https://mail.tutanota.com/images/logo-favicon.svg"
+        home: "https://app.tuta.com/",
+        icon: "https://app.tuta.com/images/logo-favicon.svg"
       },
       {
         name: "Guerrilla Mail",
@@ -1400,7 +1471,7 @@ const SITE_GROUPS = [
         name: "Micah Jeffery > referrals",
         description: "Open the referral and savings links page.",
         aliases: ["refer", "mjr", "referral", "referrals"],
-        home: "https://www.micahjeffery.com/financial/hysas",
+        home: PROJECT.support,
         icon: "https://icons.duckduckgo.com/ip3/micahjeffery.com.ico"
       },
       {
@@ -1449,8 +1520,8 @@ const SITE_GROUPS = [
         home: "https://app.mindmup.com/map/new"
       },
       {
-        name: "Diagram.net",
-        description: "Flowchart Maker and Online Diagram Software.",
+        name: "diagrams.net",
+        description: "Create flowcharts and diagrams in the browser.",
         aliases: ["dia", "diagram"],
         home: "https://app.diagrams.net/"
       },
@@ -1488,7 +1559,7 @@ const SITE_GROUPS = [
         home: "https://vectormaker.co/"
       },
       {
-        name: "Image Backgroud Remover",
+        name: "Image Background Remover",
         aliases: ["background", "remove", "bgrm"],
         home: "https://giga.tools/image-tools/background-remover"
       },
@@ -1551,11 +1622,10 @@ const SITE_GROUPS = [
         home: "https://www.onlineocr.net/"
       },
       {
-        name: "TinyWow PDF Tools",
-        description: "Open browser-based PDF tools.",
+        name: "PDF24 Tools",
+        description: "Open free browser-based PDF tools.",
         aliases: ["pdf"],
-        home: "https://tinywow.com/tools/pdf",
-        icon: "https://tinywow.com/v3/img/favicon-tinywow.svg"
+        home: "https://tools.pdf24.org/en/"
       },
       {
         name: "QuickChart QR Generator",
@@ -1566,11 +1636,11 @@ const SITE_GROUPS = [
         icon: "https://quickchart.io/favicon-32x32.png"
       },
       {
-        name: "ZXing QR Decoder",
-        description: "Decode a QR code from an image or image URL.",
+        name: "QR Code Decoder",
+        description: "Scan or upload a QR code with ScanApp, or decode an image URL with ZXing.",
         aliases: ["qrdecode", "qrd"],
-        home: "https://zxing.org/w/decode.jspx", 
-        search: "https://zxing.org/w/decode?u={q}" 
+        home: "https://scanapp.org/",
+        search: "https://zxing.org/w/decode?u={q}"
       },
       {
         name: "Wayback Machine",
@@ -1592,6 +1662,12 @@ const SITE_GROUPS = [
         aliases: ["test","speed","fast"],
         home: "https://fast.com/",
         icon: "https://fast.com/assets/favicons/apple-icon-180x180.png"
+      },
+      {
+        name: "Cloudflare Speed Test",
+        description: "Test connection speed, latency, jitter, and packet loss.",
+        aliases: ["cfspeed", "cfs", "cloudflarespeed"],
+        home: "https://speed.cloudflare.com/"
       },
       {
         name: "Text Statistics",
@@ -1647,7 +1723,7 @@ const SITE_GROUPS = [
       },
       {
         name: "Language Squad",
-        description: "Language Identifying & Guessing Game.",
+        description: "Identify and guess languages from short samples.",
         aliases: ["language", "ls", "languagesquad"],
         home: "https://www.languagesquad.com/"
       },
@@ -1666,7 +1742,7 @@ const SITE_GROUPS = [
         search: "https://www.justinguitar.com/advanced_search?q={q}"
       },
       {
-        name: "OpenCourseWare - MIT courses",
+        name: "MIT OpenCourseWare",
         description: "Search free MIT course materials.",
         aliases: ["mit", "ocw"],
         home: "https://ocw.mit.edu/",
@@ -1739,6 +1815,7 @@ const MULTI_SEARCHES = [
     aliases: ["xv", "vx", "xvideo", "xvid"],
     targets: [
       { type: "site", key: "yt" },
+      { type: "site", key: "twitch" },
       { type: "site", key: "gv" },
       { type: "site", key: "dv" },
       { type: "site", key: "bv" },
@@ -1806,11 +1883,14 @@ const MULTI_SEARCHES = [
       { type: "site", key: "amazon" },
       { type: "site", key: "ebay" },
       { type: "site", key: "walmart" },
+      { type: "site", key: "target" },
+      { type: "site", key: "bb" },
       { type: "site", key: "costco" },
       { type: "site", key: "fbm" },
       { type: "site", key: "ys" },
       { type: "site", key: "camel" },
-      { type: "site", key: "homedepot" }
+      { type: "site", key: "homedepot" },
+      { type: "site", key: "lowes" }
     ]
   },
   {
@@ -1875,7 +1955,8 @@ const MULTI_SEARCHES = [
       { type: "site", key: "gm" },
       { type: "site", key: "dm" },
       { type: "site", key: "osm" },
-      { type: "site", key: "amaps" }
+      { type: "site", key: "amaps" },
+      { type: "site", key: "waze" }
     ]
   }
 ]
@@ -2330,6 +2411,128 @@ function collectLooseIconCandidates(html, baseUrl, candidates) {
     looseCount += 1;
   }
 }
+
+function normalizeSearchTemplate(rawTemplate, baseUrl) {
+  const decoded = decodeHtmlEntities(String(rawTemplate || "").trim());
+  if (!decoded) return "";
+  try {
+    const url = new URL(decoded, baseUrl);
+    if (url.protocol !== "https:" && url.protocol !== "http:") return "";
+    assertPublicDiscoveryUrl(url);
+    let href = url.href
+      .replace(/\{searchTerms\??\}/gi, "{q}")
+      .replace(/%7BsearchTerms(?:%3F)?%7D/gi, "{q}")
+      .replace(/%7Bq%7D/gi, "{q}")
+      .replace(/\{(?:language|inputEncoding|outputEncoding|startIndex|startPage|count)\?\}/gi, "")
+      .replace(/%7B(?:language|inputEncoding|outputEncoding|startIndex|startPage|count)%3F%7D/gi, "");
+    return href.includes("{q}") ? href : "";
+  } catch {
+    return "";
+  }
+}
+function collectOpenSearchDescriptionUrls(html, baseUrl) {
+  const urls = [];
+  const linkTags = html.match(/<link\b[^>]*>/gi) || [];
+  for (const tag of linkTags) {
+    const attributes = parseHtmlAttributes(tag);
+    const relTokens = String(attributes.rel || "").toLowerCase().split(/\s+/).filter(Boolean);
+    const type = String(attributes.type || "").toLowerCase();
+    if (!relTokens.includes("search") || !attributes.href) continue;
+    if (type && !type.includes("opensearchdescription+xml")) continue;
+    const url = resolveHttpCandidate(attributes.href, baseUrl);
+    if (url && !urls.includes(url)) urls.push(url);
+  }
+  return urls.slice(0, 4);
+}
+async function inspectOpenSearchDescription(descriptionUrl) {
+  try {
+    const { response, finalUrl } = await fetchDiscoveryResource(descriptionUrl, {
+      method: "GET",
+      headers: { accept: "application/opensearchdescription+xml,application/xml,text/xml;q=0.9,*/*;q=0.2" }
+    });
+    if (!response.ok) {
+      if (response.body) response.body.cancel().catch(() => {});
+      return [];
+    }
+    const xml = await readTextLimited(response, 256 * 1024);
+    const shortName = extractReadableText(xml, /<ShortName\b[^>]*>([\s\S]*?)<\/ShortName>/i);
+    const candidates = [];
+    const urlPattern = /<Url\b([^>]*)(?:\/>|>([\s\S]*?)<\/Url>)/gi;
+    let match;
+    while ((match = urlPattern.exec(xml)) && candidates.length < 8) {
+      const attributes = parseHtmlAttributes(`<Url ${match[1] || ""}>`);
+      if (String(attributes.type || "").toLowerCase() !== "text/html") continue;
+      let template = String(attributes.template || "");
+      if (!template) continue;
+      try {
+        const url = new URL(decodeHtmlEntities(template), finalUrl);
+        const body = match[2] || "";
+        const paramTags = body.match(/<(?:Param|moz:Param)\b[^>]*>/gi) || [];
+        for (const tag of paramTags) {
+          const param = parseHtmlAttributes(tag);
+          if (param.name && param.value) url.searchParams.set(param.name, decodeHtmlEntities(param.value));
+        }
+        template = url.href;
+      } catch {}
+      const search = normalizeSearchTemplate(template, finalUrl);
+      if (!search || candidates.some((candidate) => candidate.url === search)) continue;
+      candidates.push({
+        url: search,
+        source: shortName ? `OpenSearch · ${shortName}` : "OpenSearch",
+        score: 1000
+      });
+    }
+    return candidates;
+  } catch {
+    return [];
+  }
+}
+function collectGetSearchForms(html, baseUrl) {
+  const candidates = [];
+  const formPattern = /<form\b([^>]*)>([\s\S]*?)<\/form>/gi;
+  let match;
+  let formCount = 0;
+  while ((match = formPattern.exec(html)) && formCount < 60) {
+    formCount += 1;
+    const formAttributes = parseHtmlAttributes(`<form ${match[1] || ""}>`);
+    const method = String(formAttributes.method || "get").toLowerCase();
+    if (method !== "get") continue;
+    const action = resolveHttpCandidate(formAttributes.action || baseUrl.href, baseUrl);
+    if (!action) continue;
+    const inputs = (match[2].match(/<input\b[^>]*>/gi) || []).map(parseHtmlAttributes);
+    const queryInputs = inputs.filter((input) => {
+      const type = String(input.type || "text").toLowerCase();
+      return input.name && ["search", "text", ""].includes(type) && !input.disabled;
+    });
+    if (!queryInputs.length) continue;
+    const rankedInputs = queryInputs.map((input) => {
+      const name = String(input.name || "").toLowerCase();
+      const clue = [name, input.id, input.placeholder, input["aria-label"]].filter(Boolean).join(" ").toLowerCase();
+      let score = String(input.type || "").toLowerCase() === "search" ? 150 : 40;
+      if (["q", "query", "search", "keyword", "keywords", "term", "s"].includes(name)) score += 180;
+      if (/search|find|query|keyword/.test(clue)) score += 90;
+      return { input, score };
+    }).sort((a, b) => b.score - a.score);
+    const selected = rankedInputs[0];
+    if (!selected || selected.score < 80) continue;
+    try {
+      const url = new URL(action);
+      for (const input of inputs) {
+        const type = String(input.type || "text").toLowerCase();
+        if (!input.name || type !== "hidden" || input.disabled) continue;
+        const value = String(input.value || "");
+        if (value.length <= 300) url.searchParams.set(input.name, value);
+      }
+      url.searchParams.set(selected.input.name, "{q}");
+      const search = normalizeSearchTemplate(url.href, baseUrl);
+      if (!search || candidates.some((candidate) => candidate.url === search)) continue;
+      let score = 650 + selected.score;
+      if (/\/search(?:\/|$)/i.test(url.pathname)) score += 80;
+      candidates.push({ url: search, source: "Search form", score });
+    } catch {}
+  }
+  return candidates.sort((a, b) => b.score - a.score).slice(0, 8);
+}
 async function buildFaviconDiscovery(homeUrl) {
   let finalPageUrl = homeUrl;
   let html = "";
@@ -2365,6 +2568,21 @@ async function buildFaviconDiscovery(homeUrl) {
   } catch (error) {
     pageWarning = `Page inspection failed; fallback checks still ran.`;
   }
+  const searchCandidates = [];
+  if (html) {
+    const openSearchUrls = collectOpenSearchDescriptionUrls(html, finalPageUrl);
+    const openSearchResults = await Promise.all(openSearchUrls.map(inspectOpenSearchDescription));
+    for (const candidate of openSearchResults.flat()) {
+      if (!searchCandidates.some((item) => item.url === candidate.url)) searchCandidates.push(candidate);
+    }
+    for (const candidate of collectGetSearchForms(html, finalPageUrl)) {
+      if (!searchCandidates.some((item) => item.url === candidate.url)) searchCandidates.push(candidate);
+    }
+  }
+  const guessedSearchUrl = `${finalPageUrl.origin}/search?q={q}`;
+  searchCandidates.sort((a, b) => b.score - a.score);
+  const recommendedSearch = searchCandidates[0] || null;
+
   const candidates = new Map();
   const defaultIconUrl = new URL("/favicon.ico", finalPageUrl).href;
   addFaviconCandidate(candidates, defaultIconUrl, finalPageUrl, {
@@ -2448,6 +2666,10 @@ async function buildFaviconDiscovery(homeUrl) {
     defaultIconUrl,
     defaultIconWorks,
     recommendedIcon: recommended,
+    recommendedSearchUrl: recommendedSearch?.url || "",
+    guessedSearchUrl,
+    searchSource: recommendedSearch?.source || "",
+    searchCandidates: searchCandidates.slice(0, 8),
     candidates: working.slice(0, 20).map((candidate) => ({
       url: candidate.url,
       source: candidate.source,
@@ -2461,7 +2683,7 @@ async function buildFaviconDiscovery(homeUrl) {
 }
 async function handleFaviconDiscovery(request) {
   if (request.method !== "POST") {
-    return jsonResponse({ ok: false, error: "Use POST for favicon discovery." }, 405);
+    return jsonResponse({ ok: false, error: "Use POST for site inspection." }, 405);
   }
   const requestOrigin = request.headers.get("origin");
   if (requestOrigin && requestOrigin !== new URL(request.url).origin) {
@@ -2483,7 +2705,7 @@ async function handleFaviconDiscovery(request) {
   } catch (error) {
     return jsonResponse({
       ok: false,
-      error: error instanceof Error ? error.message : "Favicon discovery failed."
+      error: error instanceof Error ? error.message : "Site inspection failed."
     }, 400);
   }
 }
@@ -2711,9 +2933,11 @@ const MULTI_SEARCH_PAGE_CSS = String.raw`
     .target-main { display: flex; align-items: center; gap: 10px; min-width: 0; }
     .target-favicon-shell { position: relative; display: grid; width: 22px; height: 22px; flex: 0 0 22px; place-items: center; overflow: hidden; border-radius: 4px; }
     .target-favicon-fallback { width: 20px; height: 20px; background: var(--muted); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M3 12h18M12 3c2.7 2.5 4.2 5.5 4.2 9S14.7 18.5 12 21M12 3C9.3 5.5 7.8 8.5 7.8 12s1.5 6.5 4.2 9'/%3E%3C/g%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M3 12h18M12 3c2.7 2.5 4.2 5.5 4.2 9S14.7 18.5 12 21M12 3C9.3 5.5 7.8 8.5 7.8 12s1.5 6.5 4.2 9'/%3E%3C/g%3E%3C/svg%3E") center / contain no-repeat; }
-    .target-favicon { position: absolute; inset: 0; width: 22px; height: 22px; object-fit: contain; border-radius: 4px; background: var(--surface-2); }
+    .target-favicon-shell.has-favicon:not(.uses-fallback) .target-favicon-fallback { opacity: 0; }
+    .target-favicon { position: absolute; inset: 0; width: 22px; height: 22px; object-fit: contain; border-radius: 4px; }
     .target-favicon[hidden] { display: none; }
     :root[data-disable-favicons="true"] .target-favicon { display: none !important; }
+    :root[data-disable-favicons="true"] .target-favicon-shell.has-favicon .target-favicon-fallback { opacity: 1; }
     .target-copy { display: grid; gap: 2px; min-width: 0; }
     .target-copy span { color: var(--muted); font-size: .86rem; overflow-wrap: anywhere; }
     .small { color: var(--muted); font-size: .86rem; }
@@ -2836,7 +3060,7 @@ ${MULTI_SEARCH_PAGE_CSS}
           const row = document.createElement("label");
           row.className = "target-row";
           row.dataset.targetId = item.id;
-          const shell = '<span class="target-favicon-shell" aria-hidden="true"><span class="target-favicon-fallback"></span>' + (item.icon ? '<img class="target-favicon" data-favicon-src="' + escapeHtml(item.icon) + '" alt="" width="22" height="22" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer" data-site-favicon>' : '') + '</span>';
+          const shell = '<span class="target-favicon-shell' + (item.icon ? ' has-favicon' : '') + '" aria-hidden="true"><span class="target-favicon-fallback"></span>' + (item.icon ? '<img class="target-favicon" data-favicon-src="' + escapeHtml(item.icon) + '" alt="" width="22" height="22" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer" data-site-favicon>' : '') + '</span>';
           row.innerHTML = '<input class="target-check" type="checkbox" data-target-check="' + index + '" checked><span class="target-main">' + shell + '<span class="target-copy"><strong>' + escapeHtml(item.name) + '</strong><span>' + escapeHtml(item.detail) + '</span></span></span><a class="target-open" href="#" target="_blank" rel="noreferrer" data-target-link="' + index + '">Open</a>';
           list.append(row);
         });
@@ -2854,7 +3078,7 @@ ${MULTI_SEARCH_PAGE_CSS}
         const links = [...document.querySelectorAll("[data-target-link]")];
         let nextCursor = 0;
         if (document.documentElement.dataset.disableFavicons !== "true") document.querySelectorAll("img[data-favicon-src]").forEach((image) => { image.src = image.dataset.faviconSrc; });
-        document.addEventListener("error", (event) => { const image = event.target; if (image instanceof HTMLImageElement && image.matches("[data-site-favicon]")) { image.dataset.faviconFailed = "true"; image.hidden = true; } }, true);
+        document.addEventListener("error", (event) => { const image = event.target; if (image instanceof HTMLImageElement && image.matches("[data-site-favicon]")) { image.dataset.faviconFailed = "true"; image.hidden = true; image.closest(".target-favicon-shell")?.classList.add("uses-fallback"); } }, true);
         const setStatus = (message, type = "") => { status.textContent = message; status.className = "status" + (type ? " " + type : ""); };
         const checkedTargets = () => checks.filter((check) => check.checked).map((check) => targets[Number(check.dataset.targetCheck)]).filter(Boolean);
         const saveSelection = () => { try { localStorage.setItem(selectedKey, JSON.stringify(checkedTargets().map((item) => item.id))); } catch {} };
@@ -2994,6 +3218,7 @@ function renderHelpPage(requestUrl) {
       home: site.home,
       search: site.search || "",
       icon: site.icon || "",
+      iconBackground: site.iconBackground || "",
       handler: site.handler || ""
     })),
     ...MULTI_SEARCHES.map((multi) => ({
@@ -3006,6 +3231,7 @@ function renderHelpPage(requestUrl) {
       home: `/multi/${multi.id}/`,
       search: "",
       icon: multi.icon || "",
+      iconBackground: multi.iconBackground || "",
       iconKey: Object.entries(MULTI_ICON_SVGS).find(([, svg]) => svg === multi.iconSvg)?.[0] || "",
       handler: "multi",
       targets: multi.targets.map((target) => ({
@@ -3025,6 +3251,7 @@ function renderHelpPage(requestUrl) {
       id: `multi:${multi.id}`,
       category: "Multisearch",
       icon: multi.icon || "",
+      iconBackground: multi.iconBackground || "",
       iconSvg: multi.iconSvg || "",
       searchTerms: MULTI_SEARCH_CARD_TERMS.get(multi.id) || ""
     }))
@@ -3076,12 +3303,14 @@ function renderHelpPage(requestUrl) {
         root.dataset.density = layout;
         root.dataset.defaultsOpen = savedDefaultsOpen === "false" ? "false" : "true";
         root.dataset.disableFavicons = localStorage.getItem("search-help-disable-favicons") === "true" ? "true" : "false";
+        root.dataset.shortcutsDisabled = localStorage.getItem("search-help-shortcuts-disabled") === "true" ? "true" : "false";
       } catch {
         root.dataset.theme = resolveAutoTheme();
         root.dataset.themePreference = "auto";
         root.dataset.density = "comfortable";
         root.dataset.defaultsOpen = "true";
         root.dataset.disableFavicons = "false";
+        root.dataset.shortcutsDisabled = "false";
       }
 
       // The main script removes this fallback after it has restored every control.
@@ -3466,12 +3695,27 @@ function renderHelpPage(requestUrl) {
     .builder-multi-row .dialog-button { min-height: 34px; padding: 5px 9px; white-space: nowrap; }
     .builder-multi-remove { color: var(--danger); }
     .builder-multi-add { justify-self: start; }
-    .builder-icon-result { display: flex; align-items: center; gap: 10px; min-height: 42px; }
+    .builder-icon-appearance { display: flex; align-items: center; gap: 14px; min-width: 0; width: 100%; }
+    .builder-icon-previews { display: flex; align-items: center; gap: 8px; }
     .builder-icon-preview {
-      display: grid; flex: 0 0 42px; place-items: center; width: 42px; height: 42px;
-      border: 1px solid var(--border); border-radius: 10px; background: var(--surface-2);
+      display: grid; flex: 0 0 46px; place-items: center; width: 46px; height: 46px;
+      border: 1px solid var(--border); border-radius: 10px;
     }
-    .builder-icon-preview img { display: block; max-width: 29px; max-height: 29px; object-fit: contain; }
+    .builder-icon-preview-light { background: #f7f8fa; }
+    .builder-icon-preview-dark { background: #111318; }
+    .builder-icon-preview-frame {
+      display: grid; place-items: center; width: 34px; height: 34px; padding: 2px; border-radius: 7px;
+      transition: background-color .15s ease, box-shadow .15s ease;
+    }
+    .builder-icon-appearance[data-icon-background="light"] .builder-icon-preview-dark .builder-icon-preview-frame {
+      background: #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, .28);
+    }
+    .builder-icon-appearance[data-icon-background="dark"] .builder-icon-preview-light .builder-icon-preview-frame {
+      background: #171a20; box-shadow: 0 1px 3px rgba(0, 0, 0, .18);
+    }
+    .builder-icon-preview img { display: block; max-width: 28px; max-height: 28px; object-fit: contain; }
+    .builder-inline-select { display: inline-grid; grid-template-columns: auto minmax(90px, auto); align-items: center; gap: 8px; margin-left: auto; color: var(--muted); font-size: .82rem; }
+    .builder-inline-select .builder-select { min-width: 94px; min-height: 34px; }
     .builder-candidates { display: grid; gap: 8px; margin-top: 2px; }
     .builder-candidate {
       display: grid;
@@ -3552,24 +3796,106 @@ function renderHelpPage(requestUrl) {
     .settings-row select, .builder-select { appearance: none; min-height: 36px; padding: 7px 30px 7px 10px; border: 1px solid var(--border); border-radius: 9px; background: var(--surface-2); color: var(--text); font: inherit; }
     .settings-data-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .settings-data-actions svg { width: 16px; height: 16px; margin-right: 7px; }
-    .hidden-bangs-list { display: grid; gap: 7px; max-height: min(56vh, 520px); margin-top: 12px; overflow: auto; }
+    .settings-count {
+      display: inline-grid;
+      min-width: 1.55em;
+      min-height: 1.55em;
+      place-items: center;
+      margin-left: 2px;
+      padding: 0 .38em;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--accent) 16%, var(--surface));
+      color: var(--accent);
+      font-size: .76em;
+      font-weight: 800;
+      line-height: 1;
+    }
+    .settings-count:empty { display: none; }
+    .hidden-bangs-list {
+      display: grid;
+      gap: 8px;
+      max-height: min(62vh, 570px);
+      margin-top: 12px;
+      overflow: auto;
+      overscroll-behavior: contain;
+    }
+    .hidden-bang-group {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--surface-2);
+      overflow: clip;
+    }
+    .hidden-bang-group[open] { border-color: var(--border-strong); }
+    .hidden-bang-group-summary {
+      display: grid;
+      grid-template-columns: auto 18px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 9px;
+      min-height: 46px;
+      padding: 9px 11px;
+      color: var(--text);
+      cursor: pointer;
+      list-style: none;
+      user-select: none;
+    }
+    .hidden-bang-group-summary::-webkit-details-marker { display: none; }
+    .hidden-bang-group-summary::before {
+      content: "▾";
+      color: var(--muted);
+      transition: transform .15s ease;
+    }
+    .hidden-bang-group:not([open]) .hidden-bang-group-summary::before { transform: rotate(-90deg); }
+    .hidden-bang-category-check,
+    .hidden-bang-row input {
+      appearance: auto;
+      width: 18px;
+      height: 18px;
+      min-width: 18px;
+      margin: 0;
+      padding: 0;
+      accent-color: var(--accent);
+    }
+    .hidden-bang-category-name {
+      min-width: 0;
+      overflow: hidden;
+      font-size: .88rem;
+      font-weight: 750;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .hidden-bang-category-count {
+      color: var(--muted);
+      font-size: .75rem;
+      white-space: nowrap;
+    }
+    .hidden-bang-group-rows {
+      display: grid;
+      gap: 6px;
+      padding: 0 8px 8px 36px;
+    }
     .hidden-bang-row {
       display: grid;
       grid-template-columns: 18px minmax(0, 1fr);
       align-items: center;
       gap: 10px;
-      min-height: 52px;
-      padding: 9px 10px;
+      min-height: 48px;
+      padding: 8px 10px;
       border: 1px solid var(--border);
-      border-radius: 9px;
-      background: var(--surface-2);
+      border-radius: 8px;
+      background: var(--surface);
       color: var(--text);
       cursor: pointer;
     }
-    .hidden-bang-row input { width: 18px; height: 18px; margin: 0; accent-color: var(--accent); }
+    .hidden-bang-row:has(input:checked) { border-color: color-mix(in srgb, var(--accent) 52%, var(--border)); }
     .hidden-bang-copy { min-width: 0; }
     .hidden-bang-copy strong, .hidden-bang-copy small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .hidden-bang-copy small { margin-top: 2px; color: var(--muted); font-size: .76rem; }
+    .hidden-bangs-empty { margin: 12px 2px; color: var(--muted); }
+    @media (max-width: 520px) {
+      .hidden-bang-group-summary { grid-template-columns: auto 18px minmax(0, 1fr); }
+      .hidden-bang-category-count { grid-column: 3; }
+      .hidden-bang-group-rows { padding-left: 8px; }
+    }
     .settings-option {
       display: grid;
       grid-template-columns: 18px minmax(0, 1fr);
@@ -3728,6 +4054,7 @@ function renderHelpPage(requestUrl) {
     :root[data-layout-locked="true"] #compact-layout-button { display: none !important; }
     :root[data-hide-support="true"] #support-link { display: none !important; }
     :root[data-hide-repo="true"] #repo-link { display: none !important; }
+    :root[data-shortcuts-disabled="true"] #keyboard-shortcuts-button { display: none !important; }
     :root[data-density="compact"] .defaults { display: none; }
     :root[data-density="compact"] .group { margin: 16px 0; }
     :root[data-density="compact"] .engine-grid, :root[data-density="compact"] .site-grid { gap: 8px; }
@@ -3907,8 +4234,13 @@ function renderHelpPage(requestUrl) {
       inset: 0;
       z-index: 1;
     }
-    .site-favicon-edit > img.site-favicon { background: var(--surface); }
-    .site-favicon-edit.has-custom-visual .site-favicon-fallback { opacity: 0; }
+    .site-favicon-edit > img.site-favicon { background: transparent; }
+    :root[data-theme="dark"] .site-favicon-edit.icon-bg-light > img.site-favicon,
+    :root[data-theme="black"] .site-favicon-edit.icon-bg-light > img.site-favicon { padding: 2px; background: #fff; }
+    :root[data-theme="light"] .site-favicon-edit.icon-bg-dark > img.site-favicon { padding: 2px; background: #171a20; }
+    .site-favicon-edit.has-custom-visual .site-favicon-fallback,
+    .site-favicon-edit.has-favicon:not(.uses-fallback) .site-favicon-fallback { opacity: 0; }
+    :root[data-disable-favicons="true"] .site-favicon-edit.has-favicon .site-favicon-fallback { opacity: 1; }
     .site-favicon-fallback {
       display: block;
       width: 18px;
@@ -4062,17 +4394,17 @@ function renderHelpPage(requestUrl) {
           <option value="compact">Compact</option>
           <option value="minimalist">Minimalist</option>
         </select>
-        <button class="icon-button" id="bang-builder-button" type="button" aria-haspopup="dialog" aria-controls="bang-builder" aria-label="Add a bang" title="Build a new bang">
+        <button class="icon-button" id="bang-builder-button" type="button" aria-haspopup="dialog" aria-controls="bang-builder" aria-label="Add a bang" title="Build a new bang (+)">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11 5a1 1 0 0 1 2 0v6h6a1 1 0 1 1 0 2h-6v6a1 1 0 1 1-2 0v-6H5a1 1 0 1 1 0-2h6V5Z"/></svg>
         </button>
-        <button class="icon-button" id="keyboard-shortcuts-button" type="button" aria-haspopup="dialog" aria-controls="keyboard-shortcuts" aria-label="Keyboard shortcuts" title="Keyboard shortcuts">
+        <button class="icon-button" id="keyboard-shortcuts-button" type="button" aria-haspopup="dialog" aria-controls="keyboard-shortcuts" aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)">
           <img src="https://upload.wikimedia.org/wikipedia/commons/4/49/OOjs_UI_icon_keyboard-progressive.svg" alt="" width="19" height="19" referrerpolicy="no-referrer">
         </button>
         ${supportControl}
         <a class="github-link" id="repo-link" href="${escapeAttribute(PROJECT.repository)}" target="_blank" rel="noreferrer" aria-label="Open the GitHub repository" title="Open the GitHub repository">
           <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="" width="19" height="19" referrerpolicy="no-referrer">
         </a>
-        <button class="icon-button" id="settings-backup-button" type="button" aria-haspopup="dialog" aria-controls="settings-backup" aria-label="Settings" title="Settings">
+        <button class="icon-button" id="settings-backup-button" type="button" aria-haspopup="dialog" aria-controls="settings-backup" aria-label="Settings" title="Settings (,)">
           <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 8.25A3.75 3.75 0 1 0 12 15.75 3.75 3.75 0 0 0 12 8.25Z" stroke="currentColor" stroke-width="2"/><path d="M19.1 13.45a7.7 7.7 0 0 0 .05-1.45 7.7 7.7 0 0 0-.05-1.45l2-1.55-2-3.46-2.48 1a7.9 7.9 0 0 0-2.5-1.45L13.75 2h-4l-.37 3.09a7.9 7.9 0 0 0-2.5 1.45l-2.48-1-2 3.46 2 1.55A7.7 7.7 0 0 0 4.35 12c0 .49.02.97.05 1.45L2.4 15l2 3.46 2.48-1a7.9 7.9 0 0 0 2.5 1.45L9.75 22h4l.37-3.09a7.9 7.9 0 0 0 2.5-1.45l2.48 1 2-3.46-2-1.55Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
         </button>
         </div>
@@ -4089,7 +4421,7 @@ function renderHelpPage(requestUrl) {
           autocomplete="off"
           spellcheck="false"
           placeholder="Filter bangs or search DuckDuckGo…"
-          title="Press Escape to clear"
+          title="Press / to focus · Escape to clear"
           autofocus
         >
         <button class="search-button" type="submit">Search</button>
@@ -4142,8 +4474,8 @@ function renderHelpPage(requestUrl) {
           <label class="settings-option"><input id="settings-disable-shortcuts" type="checkbox"><span>Disable keyboard shortcuts</span></label>
           <label class="settings-option"><input id="settings-hide-support" type="checkbox"><span>Hide support button</span></label>
           <label class="settings-option"><input id="settings-hide-repo" type="checkbox"><span>Hide repository button</span></label>
-          <button class="dialog-button" id="manage-hidden-bangs" type="button">Manage hidden bangs <span id="hidden-bangs-settings-count"></span></button>
-          <button class="dialog-button" id="manage-local-bangs" type="button">Manage local bangs <span id="local-bangs-settings-count"></span></button>
+          <button class="dialog-button" id="manage-hidden-bangs" type="button">Manage hidden bangs <span class="settings-count" id="hidden-bangs-settings-count"></span></button>
+          <button class="dialog-button" id="manage-local-bangs" type="button">Manage local bangs <span class="settings-count" id="local-bangs-settings-count"></span></button>
         </div>
         <div class="settings-section">
           <h3>Import and export</h3>
@@ -4161,7 +4493,7 @@ function renderHelpPage(requestUrl) {
     <dialog class="dialog hidden-bangs-dialog" id="hidden-bangs-manager" aria-labelledby="hidden-bangs-manager-title">
       <div class="dialog-body">
         <div class="dialog-heading"><div><h2 id="hidden-bangs-manager-title">Hidden bangs</h2><p class="builder-note">Checked entries are hidden from the directory but still work when typed.</p></div><button class="dialog-close" type="button" data-close-dialog="hidden-bangs-manager" aria-label="Close hidden bang manager">Close</button></div>
-        <input id="hidden-bangs-filter" type="search" autocomplete="off" placeholder="Filter bangs…">
+        <input id="hidden-bangs-filter" type="search" autocomplete="off" placeholder="Filter bangs or categories…">
         <div class="hidden-bangs-list" id="hidden-bangs-list"></div>
       </div>
     </dialog>
@@ -4190,6 +4522,7 @@ function renderHelpPage(requestUrl) {
         <ul class="shortcut-list">
           <li><span>Focus or select the search box</span><kbd>/</kbd></li>
           <li><span>Open this shortcuts popup</span><kbd>?</kbd></li>
+          <li><span>Open Settings</span><kbd>,</kbd></li>
           <li><span>Open Bang Builder</span><kbd>+</kbd></li>
           <li><span>Clear the search box; blur it when empty</span><kbd>Esc</kbd></li>
           <li><span>Comfortable mode</span><kbd>1</kbd></li>
@@ -4264,10 +4597,10 @@ function renderHelpPage(requestUrl) {
               <label for="builder-search">Search URL <span class="builder-note">(optional)</span></label>
               <div class="builder-search-row">
                 <input id="builder-search" type="text" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://example.com/search?q={q}">
-                <button class="dialog-button builder-small-button" id="builder-autofill-search" type="button" title="Guess the common /search?q={q} pattern. Many sites use a different URL, so test it before saving.">Autofill</button>
+                <button class="dialog-button builder-small-button" id="builder-autofill-search" type="button" title="Use a detected search URL or try the common /search?q={q} pattern.">Find</button>
                 <button class="dialog-button builder-small-button" id="builder-test-search" type="button" title="Open this search URL with a sample query">Test</button>
               </div>
-              <small>Use <code>{q}</code>; <code>%s</code> is converted automatically. Autofill is only a guess and often needs adjustment.</small>
+              <small class="builder-status" id="builder-search-status">Find detects a search URL or makes a clearly labeled guess.</small>
             </div>
             <div class="builder-field full" id="builder-multi-targets-field" hidden>
               <label>Multisearch targets</label>
@@ -4280,10 +4613,14 @@ function renderHelpPage(requestUrl) {
             <div class="builder-field full">
               <label for="builder-icon">Icon override <span class="builder-note">(optional)</span></label>
               <input id="builder-icon" type="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="Paste an icon URL or choose one below">
-              <div class="builder-icon-result">
-                <span class="builder-icon-preview" aria-hidden="true"><img id="builder-icon-preview" alt="" hidden></span>
-                <span class="builder-status" id="builder-icon-status">Inspect the site to find favicon choices.</span>
+              <div class="builder-icon-appearance" id="builder-icon-appearance" data-icon-background="" hidden>
+                <div class="builder-icon-previews" aria-label="Icon preview on light and dark backgrounds">
+                  <span class="builder-icon-preview builder-icon-preview-light" aria-hidden="true"><span class="builder-icon-preview-frame"><img id="builder-icon-preview-light" alt="" hidden></span></span>
+                  <span class="builder-icon-preview builder-icon-preview-dark" aria-hidden="true"><span class="builder-icon-preview-frame"><img id="builder-icon-preview-dark" alt="" hidden></span></span>
+                </div>
+                <label class="builder-inline-select" for="builder-icon-background"><span>Background</span><select class="builder-select" id="builder-icon-background"><option value="">None</option><option value="light">Light</option><option value="dark">Dark</option></select></label>
               </div>
+              <span class="builder-status" id="builder-icon-status">Inspect the site to find favicon choices.</span>
               <div class="builder-candidates" id="builder-icon-candidates" aria-label="Discovered favicon choices" hidden></div>
               <button class="dialog-button builder-show-more" id="builder-icon-more" type="button" hidden>Show more</button>
             </div>
@@ -4432,6 +4769,7 @@ function renderHelpPage(requestUrl) {
     const builderSearchField = document.getElementById("builder-search-field");
     const builderAutofillSearch = document.getElementById("builder-autofill-search");
     const builderTestSearch = document.getElementById("builder-test-search");
+    const builderSearchStatus = document.getElementById("builder-search-status");
     const builderLocalType = document.getElementById("builder-local-type");
     const builderMultiTargetsField = document.getElementById("builder-multi-targets-field");
     const builderMultiTargets = document.getElementById("builder-multi-targets");
@@ -4440,10 +4778,14 @@ function renderHelpPage(requestUrl) {
     const builderHandler = document.getElementById("builder-handler");
     const builderHandlerField = document.getElementById("builder-handler-field");
     const builderIcon = document.getElementById("builder-icon");
+    const builderIconBackground = document.getElementById("builder-icon-background");
+    const builderIconAppearance = document.getElementById("builder-icon-appearance");
     const builderFindIcon = document.getElementById("builder-find-icon");
     const builderIconCandidates = document.getElementById("builder-icon-candidates");
     const builderIconMore = document.getElementById("builder-icon-more");
-    const builderIconPreview = document.getElementById("builder-icon-preview");
+    const builderIconPreviewLight = document.getElementById("builder-icon-preview-light");
+    const builderIconPreviewDark = document.getElementById("builder-icon-preview-dark");
+    const builderIconPreviews = [builderIconPreviewLight, builderIconPreviewDark];
     const builderIconStatus = document.getElementById("builder-icon-status");
     const builderExisting = document.getElementById("builder-existing");
     const builderExistingTitle = document.getElementById("builder-existing-title");
@@ -4485,6 +4827,7 @@ function renderHelpPage(requestUrl) {
       if (image instanceof HTMLImageElement && image.matches("[data-site-favicon]")) {
         image.dataset.faviconFailed = "true";
         image.hidden = true;
+        image.closest(".target-favicon-shell")?.classList.add("uses-fallback");
         const editButton = image.closest(".site-favicon-edit");
         if (editButton) editButton.classList.add("uses-fallback");
       }
@@ -4525,7 +4868,7 @@ function renderHelpPage(requestUrl) {
     }
     const BANG_BUILDER_STORAGE_KEY = "search-bang-builder-draft-v2";
     const BUILDER_ICON_INITIAL_LIMIT = 6;
-    const bangBuilderFields = [builderHome, builderName, builderAliases, builderDescription, builderSearch, builderMultiTargets, builderHandler, builderIcon];
+    const bangBuilderFields = [builderHome, builderName, builderAliases, builderDescription, builderSearch, builderMultiTargets, builderHandler, builderIcon, builderIconBackground];
     let discoveredIconPreviewUrl = "";
     let builderEditingMultiIconKey = "";
     let builderIconChoices = [];
@@ -4622,6 +4965,7 @@ function renderHelpPage(requestUrl) {
         search,
         targets,
         icon,
+        iconBackground: ["light", "dark"].includes(raw.iconBackground) ? raw.iconBackground : "",
         enabled: raw.enabled !== false,
         createdAt: String(raw.createdAt || new Date().toISOString()),
         updatedAt: String(raw.updatedAt || new Date().toISOString())
@@ -4682,9 +5026,9 @@ function renderHelpPage(requestUrl) {
       if (explicit) return explicit;
       try { return new URL("/favicon.ico", bang.home).href; } catch { return ""; }
     }
-    function appendFaviconEditButton(heading, imageUrl, siteId, siteName) {
+    function appendFaviconEditButton(heading, imageUrl, siteId, siteName, iconBackground = "") {
       const button = document.createElement("button");
-      button.className = "site-favicon-edit";
+      button.className = "site-favicon-edit" + (imageUrl ? " has-favicon" : "") + (["light", "dark"].includes(iconBackground) ? " icon-bg-" + iconBackground : "");
       button.type = "button";
       button.dataset.builderEditSite = siteId;
       button.setAttribute("aria-label", "Edit " + siteName + " in Bang Builder");
@@ -4738,7 +5082,7 @@ function renderHelpPage(requestUrl) {
         multiButton.innerHTML = '<span class="site-favicon-fallback" aria-hidden="true"></span><span class="site-favicon local-multi-favicon" aria-hidden="true"></span><span class="site-favicon-pencil" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m16.9 3.6 3.5 3.5-11 11-4.4.9.9-4.4 11-11ZM4 20l1.5-7.1L15.8 2.6a2 2 0 0 1 2.8 0l2.8 2.8a2 2 0 0 1 0 2.8L11.1 18.5 4 20Z"/></svg></span>';
         heading.append(multiButton);
       } else {
-        appendFaviconEditButton(heading, getLocalBangFavicon(bang), "local:" + bang.id, bang.name);
+        appendFaviconEditButton(heading, getLocalBangFavicon(bang), "local:" + bang.id, bang.name, bang.iconBackground);
       }
       const name = document.createElement("a");
       name.className = "site-name";
@@ -4804,7 +5148,7 @@ function renderHelpPage(requestUrl) {
     function updateLocalBangCounts() {
       const aliasCount = localBangs.reduce((total, bang) => total + bang.aliases.length, 0);
       localBangsCount.textContent = String(localBangs.length);
-      localBangsSettingsCount.textContent = localBangs.length ? "(" + localBangs.length + ")" : "";
+      localBangsSettingsCount.textContent = localBangs.length ? String(localBangs.length) : "";
       siteCountBadge.textContent = (BUILTIN_SITE_TOTAL + localBangs.length) + " sites";
       aliasCountBadge.textContent = (BUILTIN_ALIAS_TOTAL + aliasCount) + " aliases";
     }
@@ -4930,6 +5274,7 @@ function renderHelpPage(requestUrl) {
       builderKeepNew.hidden = false;
     }
     function loadExistingBang() {
+      clearBuilderIconSuggestions();
       const site = builderExistingMatch;
       if (!site) return;
       builderEditingId = site.id;
@@ -4946,11 +5291,13 @@ function renderHelpPage(requestUrl) {
       syncBuilderTypeUi();
       builderHandler.value = site.handler === "multi" ? "" : (site.handler || "");
       builderIcon.value = site.icon || "";
+      builderIconBackground.value = site.iconBackground || "";
       setBuilderIconPreview(builderIcon.value);
       updateExistingBuilderMatch();
       renderBangBuilderCode();
     }
     function openBuilderForSiteId(siteId) {
+      clearBuilderIconSuggestions();
       const normalizedId = String(siteId || "");
       const site = normalizedId.startsWith("local:")
         ? localBangs.map(localBuilderSite).find((item) => item.id === normalizedId)
@@ -4971,6 +5318,7 @@ function renderHelpPage(requestUrl) {
       syncBuilderTypeUi();
       builderHandler.value = site.handler === "multi" ? "" : (site.handler || "");
       builderIcon.value = site.icon || "";
+      builderIconBackground.value = site.iconBackground || "";
       setBuilderIconPreview(builderIcon.value || getLocalBangFavicon(site));
       updateExistingBuilderMatch();
       renderBangBuilderCode();
@@ -4987,7 +5335,7 @@ function renderHelpPage(requestUrl) {
     function saveBangBuilderDraft() {
       writeStorage(BANG_BUILDER_STORAGE_KEY, JSON.stringify({
         name: builderName.value, aliases: builderAliases.value, description: builderDescription.value,
-        home: builderHome.value, search: builderSearch.value, multiTargets: builderMultiTargets.value, localType: builderLocalType.value, handler: builderHandler.value, icon: builderIcon.value,
+        home: builderHome.value, search: builderSearch.value, multiTargets: builderMultiTargets.value, localType: builderLocalType.value, handler: builderHandler.value, icon: builderIcon.value, iconBackground: builderIconBackground.value,
         editingId: builderEditingId, duplicateAllowed: builderDuplicateAllowed, multiIconKey: builderEditingMultiIconKey
       }));
     }
@@ -5003,20 +5351,33 @@ function renderHelpPage(requestUrl) {
         builderLocalType.value = draft.localType === "multi" ? "multi" : "bang";
         builderHandler.value = typeof draft.handler === "string" ? draft.handler : "";
         builderIcon.value = typeof draft.icon === "string" ? draft.icon : "";
+        builderIconBackground.value = ["light", "dark"].includes(draft.iconBackground) ? draft.iconBackground : "";
         builderEditingId = typeof draft.editingId === "string" ? draft.editingId : "";
         builderDuplicateAllowed = Boolean(draft.duplicateAllowed);
         builderEditingMultiIconKey = typeof draft.multiIconKey === "string" ? draft.multiIconKey : "";
       } catch {}
     }
+    function syncBuilderIconAppearance() {
+      builderIconAppearance.dataset.iconBackground = ["light", "dark"].includes(builderIconBackground.value) ? builderIconBackground.value : "";
+    }
     function setBuilderIconPreview(url) {
       discoveredIconPreviewUrl = String(url || "").trim();
       if (!discoveredIconPreviewUrl) {
-        builderIconPreview.hidden = true;
-        builderIconPreview.removeAttribute("src");
+        builderIconAppearance.hidden = true;
+        builderIconBackground.value = "";
+        syncBuilderIconAppearance();
+        for (const preview of builderIconPreviews) {
+          preview.hidden = true;
+          preview.removeAttribute("src");
+        }
         return;
       }
-      builderIconPreview.hidden = false;
-      builderIconPreview.src = discoveredIconPreviewUrl;
+      syncBuilderIconAppearance();
+      builderIconAppearance.hidden = false;
+      for (const preview of builderIconPreviews) {
+        preview.hidden = false;
+        preview.src = discoveredIconPreviewUrl;
+      }
     }
     function parseBuilderMultiTargetDraft(value) {
       const raw = String(value || "").trim();
@@ -5175,13 +5536,45 @@ function renderHelpPage(requestUrl) {
         if (!builderMultiTargetsEditor.children.length) renderBuilderMultiTargetEditor();
       }
     }
-    function guessBuilderSearchUrl() {
+    function applyBuilderSearchDiscovery(data, { force = false, allowGuess = false } = {}) {
+      const detected = String(data?.recommendedSearchUrl || "").trim();
+      const guessed = allowGuess ? String(data?.guessedSearchUrl || "").trim() : "";
+      const found = detected || guessed;
+      if (!found) {
+        setBuilderStatus(builderSearchStatus, allowGuess ? "No search URL found." : "No verified search URL found.", "warn");
+        return false;
+      }
+      if (force || !builderSearch.value.trim()) builderSearch.value = found;
+      if (detected) {
+        setBuilderStatus(builderSearchStatus, "Detected · " + String(data.searchSource || "site") + ".", "good");
+      } else {
+        setBuilderStatus(builderSearchStatus, "Guessed · test it.", "warn");
+      }
+      renderBangBuilderCode();
+      return true;
+    }
+    async function requestBuilderSiteInspection() {
+      const home = normalizeBuilderHttpUrl(builderHome.value);
+      if (!home) throw new Error("Enter a home URL first.");
+      builderHome.value = home;
+      const response = await fetch("/api/site-inspect", {
+        method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ url: home })
+      });
+      const data = await response.json();
+      if (!response.ok || !data.ok) throw new Error(data.error || "Inspection failed.");
+      return data;
+    }
+    async function findBuilderSearchUrl() {
+      builderAutofillSearch.disabled = true;
+      setBuilderStatus(builderSearchStatus, "Checking site…");
       try {
-        const home = new URL(normalizeBuilderHttpUrl(builderHome.value));
-        builderSearch.value = home.origin + "/search?q={q}";
-        renderBangBuilderCode();
-        setBuilderStatus(builderValidationStatus, "Search URL guessed. Test it; many sites use another pattern.", "warn");
-      } catch (error) { setBuilderStatus(builderValidationStatus, error.message || "Enter a valid home URL first.", "danger"); }
+        const data = await requestBuilderSiteInspection();
+        applyBuilderSearchDiscovery(data, { force: true, allowGuess: true });
+      } catch (error) {
+        setBuilderStatus(builderSearchStatus, error.message || "Search URL lookup failed.", "danger");
+      } finally {
+        builderAutofillSearch.disabled = false;
+      }
     }
     function testBuilderSearch() {
       try {
@@ -5200,12 +5593,15 @@ function renderHelpPage(requestUrl) {
       const errors = [];
       const warnings = [];
       let home = "", search = "", icon = "";
+      const requestedIconBackground = ["light", "dark"].includes(builderIconBackground.value) ? builderIconBackground.value : "";
+      let iconBackground = "";
       const multiTargetResults = isMulti ? parseBuilderMultiTargets(builderMultiTargets.value) : [];
       const multiTargetErrors = multiTargetResults.filter((target) => target.error).map((target) => target.error);
       const multiTargets = multiTargetResults.filter((target) => !target.error);
       try { home = normalizeBuilderHttpUrl(builderHome.value); } catch (error) { if (!isMulti) errors.push(error.message || "Invalid home URL."); }
       try { search = normalizeBuilderSearchUrl(builderSearch.value); } catch (error) { if (!isMulti) errors.push(error.message || "Invalid search URL."); }
       try { icon = normalizeBuilderHttpUrl(builderIcon.value); } catch (error) { errors.push(error.message || "Invalid icon URL."); }
+      iconBackground = requestedIconBackground && (icon || (isMulti && builderEditingMultiIconKey)) ? requestedIconBackground : "";
       if (!name) errors.push("Add a name.");
       if (!aliases.length) errors.push("Add an alias.");
       const invalidAliases = aliases.filter((alias) => !/^[a-z0-9_-]+$/.test(alias));
@@ -5243,8 +5639,9 @@ function renderHelpPage(requestUrl) {
           ...multiTargets.map((target) => target.type === "bang"
             ? targetIndent + "{ type: \\\"bang\\\", key: " + JSON.stringify(target.bang) + ", name: " + JSON.stringify(target.name) + " },"
             : targetIndent + "{ type: \\\"url\\\", name: " + JSON.stringify(target.name) + ", search: " + JSON.stringify(target.search) + " },"),
-          propertyIndent + "]" + (icon || builderEditingMultiIconKey ? "," : ""),
-          ...(icon ? [propertyIndent + "icon: " + JSON.stringify(icon)] : builderEditingMultiIconKey ? [propertyIndent + "iconSvg: MULTI_ICON_SVGS." + builderEditingMultiIconKey] : []),
+          propertyIndent + "]" + (icon || iconBackground || builderEditingMultiIconKey ? "," : ""),
+          ...(icon ? [propertyIndent + "icon: " + JSON.stringify(icon) + (iconBackground ? "," : "")] : builderEditingMultiIconKey ? [propertyIndent + "iconSvg: MULTI_ICON_SVGS." + builderEditingMultiIconKey + (iconBackground ? "," : "")] : []),
+          ...(iconBackground ? [propertyIndent + "iconBackground: " + JSON.stringify(iconBackground)] : []),
           objectIndent + "},"
         ];
         builderCode.value = multiLines.join("\\n");
@@ -5256,6 +5653,7 @@ function renderHelpPage(requestUrl) {
           "home: " + JSON.stringify(home || "https://example.com/"),
           ...(search ? ["search: " + JSON.stringify(search)] : []),
           ...(icon ? ["icon: " + JSON.stringify(icon)] : []),
+          ...(iconBackground ? ["iconBackground: " + JSON.stringify(iconBackground)] : []),
           ...(handler ? ["handler: " + JSON.stringify(handler)] : [])
         ];
         const objectIndent = "\t\t\t";
@@ -5285,6 +5683,15 @@ function renderHelpPage(requestUrl) {
         errors.length ? "danger" : warnings.length ? "warn" : "good"
       );
       saveBangBuilderDraft();
+    }
+    function clearBuilderIconSuggestions(statusMessage = "Inspect the site to find favicon choices.") {
+      builderIconCandidates.replaceChildren();
+      builderIconCandidates.hidden = true;
+      builderIconMore.hidden = true;
+      builderIconChoices = [];
+      builderIconPreferredIndex = -1;
+      builderIconChoicesExpanded = false;
+      setBuilderStatus(builderIconStatus, statusMessage);
     }
     function paintBuilderIconChoices() {
       builderIconCandidates.replaceChildren();
@@ -5382,7 +5789,7 @@ function renderHelpPage(requestUrl) {
       builderIconChoicesExpanded = false;
       setBuilderStatus(builderIconStatus, "Inspecting site…");
       try {
-        const response = await fetch("/api/favicon-discover", {
+        const response = await fetch("/api/site-inspect", {
           method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ url: home })
         });
         const data = await response.json();
@@ -5394,6 +5801,7 @@ function renderHelpPage(requestUrl) {
           const concise = String(data.description).replace(/\\s+/g, " ").trim();
           builderDescription.value = (concise.length > 150 ? concise.slice(0, 147).replace(/\\s+\\S*$/, "") + "…" : concise);
         }
+        applyBuilderSearchDiscovery(data, { force: false, allowGuess: false });
         const choices = [];
         for (const candidate of Array.isArray(data.candidates) ? data.candidates : []) {
           if (!candidate?.url || choices.some((choice) => choice.url === candidate.url)) continue;
@@ -5488,9 +5896,12 @@ function renderHelpPage(requestUrl) {
       const isMulti = builderLocalType.value === "multi";
       const handler = isMulti ? "" : builderHandler.value.trim().toLowerCase();
       let home = "", search = "", icon = "";
+      const requestedIconBackground = ["light", "dark"].includes(builderIconBackground.value) ? builderIconBackground.value : "";
+      let iconBackground = "";
       try { home = normalizeBuilderHttpUrl(builderHome.value); } catch (error) { errors.push(error.message || "Invalid home URL."); }
       try { search = normalizeBuilderSearchUrl(builderSearch.value); } catch (error) { errors.push(error.message || "Invalid search URL."); }
       try { icon = normalizeBuilderHttpUrl(builderIcon.value); } catch (error) { errors.push(error.message || "Invalid icon URL."); }
+      iconBackground = requestedIconBackground && icon ? requestedIconBackground : "";
       if (!name) errors.push("Add a name.");
       if (!aliases.length) errors.push("Add an alias.");
       if (aliases.some((alias) => !/^[a-z0-9_-]+$/.test(alias))) errors.push("Use only letters, numbers, underscores, and hyphens in aliases.");
@@ -5516,7 +5927,7 @@ function renderHelpPage(requestUrl) {
       if (builderExistingMatch && !builderExistingMatch.isLocal && !builderDuplicateAllowed) {
         errors.push("This URL already has a built-in bang. Choose Create another anyway to save a local version.");
       }
-      return { errors, editingLocalId, bang: { kind: isMulti ? "multi" : "bang", name, aliases, description, home, search, targets, icon } };
+      return { errors, editingLocalId, bang: { kind: isMulti ? "multi" : "bang", name, aliases, description, home, search, targets, icon, iconBackground } };
     }
     function addBangLocally() {
       const { errors, editingLocalId, bang } = getLocalBangCandidate();
@@ -5587,12 +5998,7 @@ function renderHelpPage(requestUrl) {
       builderMultiTargets.value = "";
       renderBuilderMultiTargetEditor();
       syncBuilderTypeUi();
-      builderIconCandidates.replaceChildren();
-      builderIconCandidates.hidden = true;
-      builderIconMore.hidden = true;
-      builderIconChoices = [];
-      builderIconPreferredIndex = -1;
-      builderIconChoicesExpanded = false;
+      clearBuilderIconSuggestions();
       builderEditingId = "";
       builderEditingMultiIconKey = "";
       builderDuplicateAllowed = false;
@@ -5600,6 +6006,7 @@ function renderHelpPage(requestUrl) {
       builderExisting.hidden = true;
       setBuilderIconPreview("");
       setBuilderStatus(builderIconStatus, "Inspect the site to find favicon choices.");
+      setBuilderStatus(builderSearchStatus, "Find detects a search URL or makes a clearly labeled guess.");
       try { localStorage.removeItem(BANG_BUILDER_STORAGE_KEY); } catch {}
       renderBangBuilderCode();
       (retainedType === "multi" ? builderName : builderHome).focus();
@@ -5881,6 +6288,7 @@ function renderHelpPage(requestUrl) {
       syncDialogScrollLock();
     }
     let hiddenBangs = readHiddenBangs();
+    const hiddenManagerOpenCategories = new Set();
     function readHiddenBangs() {
       try { const parsed = JSON.parse(readStorage(STORAGE.hiddenBangs, "[]")); return Array.isArray(parsed) ? [...new Set(parsed.filter((key) => typeof key === "string"))] : []; } catch { return []; }
     }
@@ -5888,22 +6296,92 @@ function renderHelpPage(requestUrl) {
     function allDirectoryCards() { return [...document.querySelectorAll("#groups .site-card, #local-bangs-grid .site-card")]; }
     function renderHiddenBangManager() {
       const query = hiddenBangsFilter.value.trim().toLowerCase();
-      hiddenBangsList.replaceChildren();
-      allDirectoryCards().forEach((card) => {
+      const cards = allDirectoryCards();
+      const validKeys = new Set(cards.map((card) => card.dataset.siteKey).filter(Boolean));
+      const hiddenSet = new Set(hiddenBangs);
+      const categories = new Map();
+      for (const card of cards) {
         const key = card.dataset.siteKey;
-        const name = card.dataset.siteName || card.querySelector(".site-name")?.textContent?.trim() || key;
-        const aliases = card.dataset.aliases || "";
+        if (!key) continue;
         const category = card.dataset.category || (key.startsWith("local:") ? "Local bangs" : "Bang");
-        if (query && !(name + " " + aliases + " " + category + " " + (card.dataset.search || "")).toLowerCase().includes(query)) return;
-        const row = document.createElement("label"); row.className = "hidden-bang-row";
-        const check = document.createElement("input"); check.type = "checkbox"; check.checked = hiddenBangs.includes(key); check.dataset.hiddenBang = key;
-        const copy = document.createElement("span"); copy.className = "hidden-bang-copy";
-        const title = document.createElement("strong"); title.textContent = name;
-        const detail = document.createElement("small"); detail.textContent = (aliases ? aliases.split(" ").map((alias) => "!" + alias).join(" · ") + " · " : "") + category;
-        copy.append(title, detail);
-        row.append(check, copy); hiddenBangsList.append(row);
-      });
-      hiddenBangsSettingsCount.textContent = hiddenBangs.length ? "(" + hiddenBangs.length + ")" : "";
+        if (!categories.has(category)) categories.set(category, []);
+        categories.get(category).push(card);
+      }
+      hiddenBangsList.replaceChildren();
+      let visibleCategoryCount = 0;
+      for (const [category, categoryCards] of categories) {
+        const matchingCards = categoryCards.filter((card) => {
+          if (!query) return true;
+          const key = card.dataset.siteKey || "";
+          const name = card.dataset.siteName || card.querySelector(".site-name")?.textContent?.trim() || key;
+          const aliases = card.dataset.aliases || "";
+          return (name + " " + aliases + " " + category + " " + (card.dataset.search || "")).toLowerCase().includes(query);
+        });
+        if (!matchingCards.length) continue;
+        visibleCategoryCount += 1;
+        const keys = categoryCards.map((card) => card.dataset.siteKey).filter(Boolean);
+        const hiddenCount = keys.filter((key) => hiddenSet.has(key)).length;
+        const details = document.createElement("details");
+        details.className = "hidden-bang-group";
+        details.dataset.hiddenCategoryGroup = category;
+        details.open = Boolean(query) || hiddenManagerOpenCategories.has(category) || hiddenCount > 0;
+        details.addEventListener("toggle", () => {
+          if (query) return;
+          if (details.open) hiddenManagerOpenCategories.add(category);
+          else hiddenManagerOpenCategories.delete(category);
+        });
+
+        const summary = document.createElement("summary");
+        summary.className = "hidden-bang-group-summary";
+        const categoryCheck = document.createElement("input");
+        categoryCheck.className = "hidden-bang-category-check";
+        categoryCheck.type = "checkbox";
+        categoryCheck.checked = hiddenCount === keys.length && keys.length > 0;
+        categoryCheck.indeterminate = hiddenCount > 0 && hiddenCount < keys.length;
+        categoryCheck.dataset.hiddenCategory = category;
+        categoryCheck.setAttribute("aria-label", "Hide all bangs in " + category);
+        categoryCheck.addEventListener("click", (event) => event.stopPropagation());
+        const categoryName = document.createElement("span");
+        categoryName.className = "hidden-bang-category-name";
+        categoryName.textContent = category;
+        const categoryCount = document.createElement("span");
+        categoryCount.className = "hidden-bang-category-count";
+        categoryCount.textContent = hiddenCount + "/" + keys.length + " hidden";
+        summary.append(categoryCheck, categoryName, categoryCount);
+
+        const rows = document.createElement("div");
+        rows.className = "hidden-bang-group-rows";
+        for (const card of matchingCards) {
+          const key = card.dataset.siteKey;
+          const name = card.dataset.siteName || card.querySelector(".site-name")?.textContent?.trim() || key;
+          const aliases = card.dataset.aliases || "";
+          const row = document.createElement("label");
+          row.className = "hidden-bang-row";
+          const check = document.createElement("input");
+          check.type = "checkbox";
+          check.checked = hiddenSet.has(key);
+          check.dataset.hiddenBang = key;
+          const copy = document.createElement("span");
+          copy.className = "hidden-bang-copy";
+          const title = document.createElement("strong");
+          title.textContent = name;
+          const detail = document.createElement("small");
+          detail.textContent = aliases ? aliases.split(" ").map((alias) => "!" + alias).join(" · ") : "No aliases";
+          copy.append(title, detail);
+          row.append(check, copy);
+          rows.append(row);
+        }
+        details.append(summary, rows);
+        hiddenBangsList.append(details);
+      }
+      if (!visibleCategoryCount) {
+        const emptyState = document.createElement("p");
+        emptyState.className = "hidden-bangs-empty";
+        emptyState.textContent = "No bangs match that filter.";
+        hiddenBangsList.append(emptyState);
+      }
+      const activeHiddenCount = hiddenBangs.filter((key) => validKeys.has(key)).length;
+      hiddenBangsSettingsCount.textContent = activeHiddenCount ? String(activeHiddenCount) : "";
     }
     function readThemeLock() {
       const value = readStorage(STORAGE.lockTheme, "");
@@ -5943,7 +6421,15 @@ function renderHelpPage(requestUrl) {
       settingsAliasLimit.value = String([1, 2, 3, 5].includes(aliasLimit) ? aliasLimit : 0);
       settingsLockTheme.value = themeLock;
       settingsLockLayout.value = layoutLock;
-      settingsDisableShortcuts.checked = readStorage(STORAGE.shortcutsDisabled, "false") === "true";
+      const shortcutsDisabled = readStorage(STORAGE.shortcutsDisabled, "false") === "true";
+      document.documentElement.dataset.shortcutsDisabled = String(shortcutsDisabled);
+      settingsDisableShortcuts.checked = shortcutsDisabled;
+      bangBuilderButton.title = shortcutsDisabled ? "Build a new bang" : "Build a new bang (+)";
+      keyboardShortcutsButton.title = "Keyboard shortcuts (?)";
+      settingsBackupButton.title = shortcutsDisabled ? "Settings" : "Settings (,)";
+      filter.title = shortcutsDisabled ? "Press Escape to clear" : "Press / to focus · Escape to clear";
+      document.getElementById("collapse-all").title = shortcutsDisabled ? "Collapse all groups" : "Collapse all groups ([)";
+      document.getElementById("expand-all").title = shortcutsDisabled ? "Expand all groups" : "Expand all groups (])";
       settingsHideSupport.checked = hideSupport;
       settingsHideRepo.checked = hideRepo;
       if (themeLock) applyTheme(themeLock, true);
@@ -6305,6 +6791,11 @@ function renderHelpPage(requestUrl) {
         showDialog(keyboardShortcutsDialog);
         return;
       }
+      if (!shortcutsDisabled && !filter.value && event.key === ",") {
+        event.preventDefault();
+        showDialog(settingsBackupDialog);
+        return;
+      }
       if (event.key === "Escape") {
         if (clearSearch()) {
           event.preventDefault();
@@ -6388,17 +6879,21 @@ function renderHelpPage(requestUrl) {
     syncBuilderTypeUi();
     updateExistingBuilderMatch();
     renderBangBuilderCode();
-    if (builderIcon.value.trim()) setBuilderIconPreview(builderIcon.value);
+    setBuilderIconPreview(builderIcon.value);
     bangBuilderFields.forEach((field) => {
       field.addEventListener("input", () => {
         if (field === builderIcon) setBuilderIconPreview(builderIcon.value);
+        if (field === builderIconBackground) syncBuilderIconAppearance();
         if (field === builderHome || field === builderSearch) {
           if (builderEditingId && builderExistingMatch && builderHomeKey(builderHome.value) !== builderHomeKey(builderExistingMatch.home)) builderEditingId = "";
           builderDuplicateAllowed = false;
         }
         renderBangBuilderCode();
       });
-      field.addEventListener("change", renderBangBuilderCode);
+      field.addEventListener("change", () => {
+        if (field === builderIconBackground) syncBuilderIconAppearance();
+        renderBangBuilderCode();
+      });
     });
     builderSearch.addEventListener("blur", () => {
       if (builderSearch.value.includes("%s")) {
@@ -6406,18 +6901,24 @@ function renderHelpPage(requestUrl) {
         renderBangBuilderCode();
       }
     });
-    builderIconPreview.addEventListener("load", () => {
-      if (builderIconPreview.src === discoveredIconPreviewUrl || builderIconPreview.currentSrc === discoveredIconPreviewUrl) {
-        builderIconPreview.hidden = false;
-      }
-    });
-    builderIconPreview.addEventListener("error", () => {
-      builderIconPreview.hidden = true;
-      setBuilderStatus(builderIconStatus, "Preview unavailable; the URL can still be selected or replaced manually.", "warn");
+    builderIconPreviews.forEach((preview) => {
+      preview.addEventListener("load", () => {
+        if (preview.src === discoveredIconPreviewUrl || preview.currentSrc === discoveredIconPreviewUrl) {
+          preview.hidden = false;
+          builderIconAppearance.hidden = false;
+        }
+      });
+      preview.addEventListener("error", () => {
+        preview.hidden = true;
+        if (builderIconPreviews.every((item) => item.hidden)) {
+          builderIconAppearance.hidden = true;
+          setBuilderStatus(builderIconStatus, "Preview unavailable; the URL can still be used.", "warn");
+        }
+      });
     });
     bangBuilderForm.addEventListener("submit", (event) => event.preventDefault());
     builderFindIcon.addEventListener("click", findBuilderFavicon);
-    builderAutofillSearch.addEventListener("click", guessBuilderSearchUrl);
+    builderAutofillSearch.addEventListener("click", findBuilderSearchUrl);
     builderTestSearch.addEventListener("click", testBuilderSearch);
     builderLocalType.addEventListener("change", () => {
       if (builderLocalType.value !== "multi") builderEditingMultiIconKey = "";
@@ -6496,7 +6997,36 @@ function renderHelpPage(requestUrl) {
     settingsLockLayout.addEventListener("change", () => { writeStorage(STORAGE.lockLayout, settingsLockLayout.value); applyPreferenceSettings(); });
     manageHiddenBangsButton.addEventListener("click", () => { renderHiddenBangManager(); settingsBackupDialog.close(); showDialog(hiddenBangsManagerDialog); });
     hiddenBangsFilter.addEventListener("input", renderHiddenBangManager);
-    hiddenBangsList.addEventListener("change", (event) => { const input = event.target.closest("[data-hidden-bang]"); if (!input) return; const key = input.dataset.hiddenBang; hiddenBangs = input.checked ? [...new Set([...hiddenBangs, key])] : hiddenBangs.filter((item) => item !== key); saveHiddenBangs(); renderHiddenBangManager(); applyFilter(); });
+    hiddenBangsList.addEventListener("change", (event) => {
+      const categoryInput = event.target.closest("[data-hidden-category]");
+      if (categoryInput) {
+        const category = categoryInput.dataset.hiddenCategory;
+        const categoryKeys = allDirectoryCards()
+          .filter((card) => (card.dataset.category || (card.dataset.siteKey?.startsWith("local:") ? "Local bangs" : "Bang")) === category)
+          .map((card) => card.dataset.siteKey)
+          .filter(Boolean);
+        const categoryKeySet = new Set(categoryKeys);
+        hiddenManagerOpenCategories.add(category);
+        hiddenBangs = categoryInput.checked
+          ? [...new Set([...hiddenBangs, ...categoryKeys])]
+          : hiddenBangs.filter((key) => !categoryKeySet.has(key));
+        saveHiddenBangs();
+        renderHiddenBangManager();
+        applyFilter();
+        return;
+      }
+      const input = event.target.closest("[data-hidden-bang]");
+      if (!input) return;
+      const key = input.dataset.hiddenBang;
+      const group = input.closest("[data-hidden-category-group]");
+      if (group?.dataset.hiddenCategoryGroup) hiddenManagerOpenCategories.add(group.dataset.hiddenCategoryGroup);
+      hiddenBangs = input.checked
+        ? [...new Set([...hiddenBangs, key])]
+        : hiddenBangs.filter((item) => item !== key);
+      saveHiddenBangs();
+      renderHiddenBangManager();
+      applyFilter();
+    });
     settingsExportButton.addEventListener("click", exportSettings);
     settingsImportButton.addEventListener("click", () => settingsImportFile.click());
     settingsImportFile.addEventListener("change", () => importSettingsFile(settingsImportFile.files?.[0]));
@@ -6562,6 +7092,9 @@ function renderHelpPage(requestUrl) {
       } else if (event.key === "?") {
         event.preventDefault();
         showDialog(keyboardShortcutsDialog);
+      } else if (event.key === ",") {
+        event.preventDefault();
+        showDialog(settingsBackupDialog);
       } else if (event.key === "+") {
         event.preventDefault();
         openBangBuilder();
@@ -6726,7 +7259,7 @@ function renderMultiSearchPage(multi, query, requestUrl) {
       <label class="target-row" data-target-row data-target-id="${escapeAttribute(target.id)}">
         <input class="target-check" type="checkbox" data-target-check="${index}" checked>
         <span class="target-main">
-          <span class="target-favicon-shell" aria-hidden="true"><span class="target-favicon-fallback"></span>${target.icon ? `<img class="target-favicon" data-favicon-src="${escapeAttribute(target.icon)}" alt="" width="22" height="22" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer" data-site-favicon>` : ""}</span>
+          <span class="target-favicon-shell${target.icon ? " has-favicon" : ""}" aria-hidden="true"><span class="target-favicon-fallback"></span>${target.icon ? `<img class="target-favicon" data-favicon-src="${escapeAttribute(target.icon)}" alt="" width="22" height="22" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer" data-site-favicon>` : ""}</span>
           <span class="target-copy">
             <strong>${escapeHtml(target.name)}</strong>
             <span>${escapeHtml(target.detail)}</span>
@@ -6832,6 +7365,7 @@ ${MULTI_SEARCH_PAGE_CSS}
       if (image instanceof HTMLImageElement && image.matches("[data-site-favicon]")) {
         image.dataset.faviconFailed = "true";
         image.hidden = true;
+        image.closest(".target-favicon-shell")?.classList.add("uses-fallback");
       }
     }, true);
 
@@ -7022,7 +7556,8 @@ function renderSiteCard(site) {
       : faviconUrl
         ? `<img class="site-favicon" data-favicon-src="${escapeAttribute(faviconUrl)}" alt="" width="20" height="20" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer" data-site-favicon>`
         : "");
-  const faviconClass = `site-favicon-edit${iconMask || inlineIcon ? " has-custom-visual" : ""}`;
+  const iconBackgroundClass = ["light", "dark"].includes(site.iconBackground) ? ` icon-bg-${site.iconBackground}` : "";
+  const faviconClass = `site-favicon-edit${iconMask || inlineIcon ? " has-custom-visual" : faviconUrl ? " has-favicon" : ""}${iconBackgroundClass}`;
   const favicon = `<button class="${faviconClass}" type="button" data-builder-edit-site="${escapeAttribute(site.id)}" aria-label="Edit ${escapeAttribute(site.name)} in ${site.handler === "multi" ? "Multisearch Builder" : "Bang Builder"}" title="Edit in ${site.handler === "multi" ? "Multisearch Builder" : "Bang Builder"}">${visual}<span class="site-favicon-pencil" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m16.9 3.6 3.5 3.5-11 11-4.4.9.9-4.4 11-11ZM4 20l1.5-7.1L15.8 2.6a2 2 0 0 1 2.8 0l2.8 2.8a2 2 0 0 1 0 2.8L11.1 18.5 4 20Z"/></svg></span></button>`;
   const description = site.description
     ? `<p class="site-description">${escapeHtml(site.description)}</p>`
@@ -7089,7 +7624,7 @@ export default {
     const url = new URL(request.url);
     const route = normalizePath(url.pathname);
     const raw = (url.searchParams.get("q") || "").trim();
-    if (route === "api/favicon-discover") {
+    if (route === "api/site-inspect" || route === "api/favicon-discover") {
       return handleFaviconDiscovery(request);
     }
     if (route === "favicon.svg" || route === "favicon.ico") {
