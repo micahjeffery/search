@@ -1,5 +1,6 @@
 const PROJECT = {
   name: "Search",
+  version: "0.1.0",
   repository: "https://github.com/micahjeffery/search",
   editMain: "https://github.com/micahjeffery/search/edit/main/src/index.js",
   editTest: "https://gitlab.com/micahjeffery.com/search/-/edit/main/src/index.js?ref_type=heads",
@@ -2962,6 +2963,59 @@ function renderLocalBangResolverPage(shortcut, raw, defaultEngine) {
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <script>
+    (() => {
+      const request = ${payload};
+      const storageKey = "search-local-bangs-v1";
+      const isHttpUrl = (value) => {
+        try {
+          const url = new URL(String(value || ""), location.href);
+          return url.protocol === "http:" || url.protocol === "https:";
+        } catch {
+          return false;
+        }
+      };
+      let localBangs = [];
+      try {
+        const parsed = JSON.parse(localStorage.getItem(storageKey) || "[]");
+        if (Array.isArray(parsed)) localBangs = parsed;
+      } catch {}
+      const target = localBangs.find((bang) =>
+        bang &&
+        bang.enabled !== false &&
+        Array.isArray(bang.aliases) &&
+        bang.aliases.some((alias) => String(alias).trim().toLowerCase() === request.bang)
+      ) || null;
+      let destination = request.fallbackUrl;
+      if (target && target.kind !== "multi" && isHttpUrl(target.home)) {
+        const query = String(request.query || "").trim();
+        const search = String(target.search || "").trim();
+        destination = query && search.includes("{q}") && isHttpUrl(search.replaceAll("{q}", "example"))
+          ? search.replaceAll("{q}", encodeURIComponent(query))
+          : target.home;
+      }
+      const previewStorageKey = "search-local-bang-preview-once-v1";
+      let preview = false;
+      try {
+        const queuedPreview = JSON.parse(localStorage.getItem(previewStorageKey) || "null");
+        if (
+          queuedPreview &&
+          String(queuedPreview.alias || "").toLowerCase() === request.bang &&
+          Number(queuedPreview.expiresAt || 0) > Date.now()
+        ) {
+          preview = true;
+        }
+        if (queuedPreview) localStorage.removeItem(previewStorageKey);
+      } catch {
+        try { localStorage.removeItem(previewStorageKey); } catch {}
+      }
+      window.__LOCAL_BANG_RESOLVER__ = { request, localBangs, target, destination, preview, redirectStarted: false };
+      if (!preview && (!target || target.kind !== "multi")) {
+        window.__LOCAL_BANG_RESOLVER__.redirectStarted = true;
+        location.replace(destination);
+      }
+    })();
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Opening local bang · ${escapeHtml(PROJECT.name)}</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -2978,18 +3032,50 @@ function renderLocalBangResolverPage(shortcut, raw, defaultEngine) {
   </script>
   <style>
 ${MULTI_SEARCH_PAGE_CSS}
-    .resolver { text-align: center; padding-top: 20vh; }
+    .resolver { max-width: 760px; padding-top: clamp(28px, 10vh, 92px); }
+    .resolver-card { min-width: 0; padding: clamp(18px, 4vw, 28px); border: 1px solid var(--border); border-radius: 18px; background: var(--surface); box-shadow: 0 12px 34px var(--shadow); }
+    .resolver-kicker { margin: 0 0 8px; color: var(--accent); font-size: .8rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+    .resolver h1 { margin: 0; font-size: clamp(1.7rem, 6vw, 2.7rem); overflow-wrap: anywhere; }
+    .resolver-status { margin-top: 10px; overflow-wrap: anywhere; }
+    .resolver-shortcut { display: inline-block; max-width: 100%; margin-top: 14px; padding: 6px 9px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface-2); overflow-wrap: anywhere; word-break: break-word; }
+    .resolver-destination-wrap { margin-top: 18px; padding: 13px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-2); }
+    .resolver-label { display: block; margin-bottom: 5px; color: var(--muted); font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
+    .resolver-destination { display: block; color: var(--accent); overflow-wrap: anywhere; word-break: break-word; }
+    .resolver-help { margin-top: 16px; line-height: 1.55; }
+    .resolver-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 20px; }
+    .resolver-action { display: inline-flex; align-items: center; justify-content: center; min-height: 40px; padding: 9px 12px; border: 1px solid var(--border); border-radius: 9px; background: var(--surface-2); color: var(--text); text-decoration: none; cursor: pointer; }
+    .resolver-action:hover { border-color: var(--accent); }
+    .resolver-action.primary { border-color: var(--accent); background: var(--accent); color: var(--accent-contrast); font-weight: 750; }
+    @media (max-width: 520px) {
+      .resolver { padding-inline: 12px; }
+      .resolver-actions { display: grid; grid-template-columns: 1fr; }
+      .resolver-action { width: 100%; text-align: center; }
+    }
   </style>
 </head>
 <body>
   <main id="resolver-main" class="resolver">
-    <h1 id="resolver-title">Checking local bangs…</h1>
-    <p id="resolver-status">This should only take a moment.</p>
-    <a class="back" id="resolver-fallback" href="${escapeAttribute(fallbackUrl)}">Continue with the default search</a>
+    <section class="resolver-card">
+      <p class="resolver-kicker" id="resolver-kicker">Local bang redirect</p>
+      <h1 id="resolver-title">Checking local bangs…</h1>
+      <p class="resolver-status" id="resolver-status">Resolving this shortcut from your browser.</p>
+      <code class="resolver-shortcut" id="resolver-shortcut">!${escapeHtml(shortcut.bang)}${shortcut.query ? ` ${escapeHtml(shortcut.query)}` : ""}</code>
+      <div class="resolver-destination-wrap">
+        <span class="resolver-label">Destination</span>
+        <a class="resolver-destination" id="resolver-destination" href="${escapeAttribute(fallbackUrl)}">${escapeHtml(fallbackUrl)}</a>
+      </div>
+      <p class="resolver-help" id="resolver-help">If redirecting takes too long, open the destination or edit the local bang.</p>
+      <div class="resolver-actions">
+        <a class="resolver-action primary" id="resolver-continue" href="${escapeAttribute(fallbackUrl)}">Open destination</a>
+        <a class="resolver-action" id="resolver-edit" href="/" hidden>Edit local bang</a>
+        <a class="resolver-action" href="/">Back to Search</a>
+      </div>
+    </section>
   </main>
   <script>
     (() => {
-      const request = ${payload};
+      const bootstrap = window.__LOCAL_BANG_RESOLVER__ || null;
+      const request = bootstrap?.request || ${payload};
       const storageKey = "search-local-bangs-v1";
       const genericMultiIcon = ${JSON.stringify(localMultiIcon)};
       const escapeHtml = (value) => String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
@@ -2997,9 +3083,11 @@ ${MULTI_SEARCH_PAGE_CSS}
         try { const url = new URL(String(value || ""), location.href); return url.protocol === "http:" || url.protocol === "https:"; }
         catch { return false; }
       };
-      let localBangs = [];
-      try { const parsed = JSON.parse(localStorage.getItem(storageKey) || "[]"); if (Array.isArray(parsed)) localBangs = parsed; } catch {}
-      const target = localBangs.find((bang) => bang && bang.enabled !== false && Array.isArray(bang.aliases) && bang.aliases.some((alias) => String(alias).toLowerCase() === request.bang));
+      let localBangs = Array.isArray(bootstrap?.localBangs) ? bootstrap.localBangs : [];
+      if (!bootstrap) {
+        try { const parsed = JSON.parse(localStorage.getItem(storageKey) || "[]"); if (Array.isArray(parsed)) localBangs = parsed; } catch {}
+      }
+      const target = bootstrap?.target || localBangs.find((bang) => bang && bang.enabled !== false && Array.isArray(bang.aliases) && bang.aliases.some((alias) => String(alias).trim().toLowerCase() === request.bang));
       const localByAlias = new Map();
       localBangs.filter((bang) => bang && bang.enabled !== false && Array.isArray(bang.aliases)).forEach((bang) => bang.aliases.forEach((alias) => localByAlias.set(String(alias).toLowerCase(), bang)));
 
@@ -3102,20 +3190,34 @@ ${MULTI_SEARCH_PAGE_CSS}
         restoreSelection(); updateLinks(); updateSearchAllLabel(); queryInput.focus(); queryInput.setSelectionRange(queryInput.value.length, queryInput.value.length);
       }
 
-      let destination = request.fallbackUrl;
+      const title = document.getElementById("resolver-title");
+      const status = document.getElementById("resolver-status");
+      const destinationLink = document.getElementById("resolver-destination");
+      const continueLink = document.getElementById("resolver-continue");
+      const editLink = document.getElementById("resolver-edit");
+
+      let destination = bootstrap?.destination || request.fallbackUrl;
       if (target && target.kind === "multi") { renderLocalMulti(target); return; }
       if (target && isHttpUrl(target.home)) {
         const search = String(target.search || "");
         const query = String(request.query || "").trim();
         destination = query && search.includes("{q}") && isHttpUrl(search.replaceAll("{q}", "example")) ? search.replaceAll("{q}", encodeURIComponent(query)) : target.home;
-        document.getElementById("resolver-title").textContent = "Opening " + String(target.name || "local bang") + "…";
-        document.getElementById("resolver-status").textContent = "Resolved !" + request.bang + " from this browser.";
+        title.textContent = "Opening " + String(target.name || "local bang") + "…";
+        status.textContent = "Resolved !" + request.bang + " from this browser.";
+        editLink.href = "/?action=edit-local&local=" + encodeURIComponent(String(target.id || ""));
+        editLink.hidden = !target.id;
       } else {
-        document.getElementById("resolver-title").textContent = "Local bang not found";
-        document.getElementById("resolver-status").textContent = "Continuing with your default search.";
+        title.textContent = "Local bang not found";
+        status.textContent = "The shortcut is not saved or is disabled. The destination below uses your default search instead.";
+        document.getElementById("resolver-help").textContent = "Open the fallback destination, or go back to Search and check your local bangs.";
       }
-      document.getElementById("resolver-fallback").href = destination;
-      window.location.replace(destination);
+      destinationLink.href = destination;
+      destinationLink.textContent = destination;
+      continueLink.href = destination;
+
+      if (!bootstrap?.preview && !bootstrap?.redirectStarted) {
+        window.location.replace(destination);
+      }
     })();
   </script>
 </body>
@@ -4340,6 +4442,7 @@ function renderHelpPage(requestUrl) {
     .warning { padding: 12px 14px; color: var(--warn); margin-bottom: 20px; }
     .empty { display: none; color: var(--muted); margin: 30px 0; }
     .footer { margin-top: 42px; color: var(--muted); font-size: .9rem; }
+    .footer-version { white-space: nowrap; }
     .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
     @media (max-width: 700px) {
       .toolbar-actions {
@@ -4363,7 +4466,7 @@ function renderHelpPage(requestUrl) {
   <main>
     <header>
       <div>
-        <h1>Micah ${escapeHtml(PROJECT.name)}</h1>
+        <h1 title="Version v${escapeAttribute(PROJECT.version)}">Micah ${escapeHtml(PROJECT.name)}</h1>
         <div class="badges">
           <span class="badge" id="site-count-badge">${totalSites} sites</span>
           <span class="badge" id="alias-count-badge">${totalAliases} aliases</span>
@@ -4673,7 +4776,7 @@ function renderHelpPage(requestUrl) {
       </details>
       ${groups}
     </div>
-    <p class="footer">Click a bang to place it in the search box. Click ☆ to save a favorite. Your settings, favorites, local bangs, and optional search history stay private on this browser.</p>
+    <p class="footer">Click a bang to place it in the search box. Click ☆ to save a favorite. Your settings, favorites, local bangs, and optional search history stay private on this browser. <span class="footer-version" title=" build">v${escapeHtml(PROJECT.version)}</span></p>
   </main>
   <button class="minimalist-exit" id="exit-minimalist" type="button" aria-label="Return to compact mode" title="Return to compact mode">
     <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Back_Arrow.svg" alt="" width="19" height="19" referrerpolicy="no-referrer">
@@ -4804,6 +4907,7 @@ function renderHelpPage(requestUrl) {
     const exitMinimalistButton = document.getElementById("exit-minimalist");
     const pageParams = new URLSearchParams(window.location.search);
     const requestedAction = pageParams.get("action") || "";
+    const requestedLocalId = pageParams.get("local") || "";
     const requestedMode = pageParams.get("mode") || "";
     function updateSearchPlaceholder() {
       const engineName =
@@ -5159,6 +5263,22 @@ function renderHelpPage(requestUrl) {
       updateLocalBangCounts();
       refreshCardIndexes();
     }
+    function previewLocalBang(id) {
+      const bang = localBangs.find((candidate) => candidate.id === id);
+      const alias = String(bang?.aliases?.[0] || "").trim().toLowerCase();
+      if (!bang || bang.kind === "multi" || !alias) return;
+      try {
+        localStorage.setItem("search-local-bang-preview-once-v1", JSON.stringify({
+          alias,
+          expiresAt: Date.now() + 30000
+        }));
+      } catch {}
+      const previewUrl = "/?q=" + encodeURIComponent("!" + alias);
+      const opened = window.open(previewUrl, "_blank");
+      if (opened) opened.opener = null;
+      else window.location.assign(previewUrl);
+    }
+
     function renderLocalBangManager() {
       localBangsList.replaceChildren();
       localBangsEmpty.hidden = localBangs.length > 0;
@@ -5186,6 +5306,12 @@ function renderHelpPage(requestUrl) {
         toggle.checked = bang.enabled;
         toggle.dataset.localToggle = bang.id;
         toggleLabel.append(toggle, document.createTextNode("Enabled"));
+        const preview = document.createElement("button");
+        preview.className = "dialog-button";
+        preview.type = "button";
+        preview.dataset.localPreview = bang.id;
+        preview.textContent = "Preview redirect";
+        preview.hidden = bang.kind === "multi";
         const edit = document.createElement("button");
         edit.className = "dialog-button";
         edit.type = "button";
@@ -5196,7 +5322,7 @@ function renderHelpPage(requestUrl) {
         remove.type = "button";
         remove.dataset.localDelete = bang.id;
         remove.textContent = "Delete";
-        actions.append(toggleLabel, edit, remove);
+        actions.append(toggleLabel, preview, edit, remove);
         item.append(main, actions);
         localBangsList.append(item);
       });
@@ -6981,6 +7107,8 @@ function renderHelpPage(requestUrl) {
       if (toggle) toggleLocalBang(toggle.dataset.localToggle, toggle.checked);
     });
     localBangsList.addEventListener("click", (event) => {
+      const preview = event.target.closest("[data-local-preview]");
+      if (preview) { previewLocalBang(preview.dataset.localPreview); return; }
       const edit = event.target.closest("[data-local-edit]");
       if (edit) { editLocalBang(edit.dataset.localEdit); return; }
       const remove = event.target.closest("[data-local-delete]");
@@ -7043,6 +7171,15 @@ function renderHelpPage(requestUrl) {
       window.setTimeout(() => showDialog(keyboardShortcutsDialog), 0);
     } else if (requestedAction === "builder") {
       window.setTimeout(openBangBuilder, 0);
+    } else if (requestedAction === "edit-local") {
+      window.setTimeout(() => {
+        const bang = localBangs.find((item) => item.id === requestedLocalId);
+        if (bang) editLocalBang(bang.id);
+        else {
+          renderLocalBangManager();
+          showDialog(localBangsManagerDialog);
+        }
+      }, 0);
     }
     document.querySelectorAll("[data-close-dialog]").forEach((button) => {
       button.addEventListener("click", () => {
