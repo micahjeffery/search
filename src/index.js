@@ -4,7 +4,7 @@ const PROJECT = {
   repository: "https://github.com/micahjeffery/search",
   editMain: "https://github.com/micahjeffery/search/edit/main/src/index.js",
   editTest: "https://gitlab.com/micahjeffery.com/search/-/edit/main/src/index.js?ref_type=heads",
-  support: "https://www.micahjeffery.com/financial/referrals" 
+  support: "https://www.micahjeffery.com/support" 
 };
 // -----------------------------------------------------------------------------
 // 1. DEFAULT SEARCH ENGINES 
