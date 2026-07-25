@@ -1,6 +1,6 @@
 const PROJECT = {
   name: "Search",
-  version: "0.1.0",
+  version: "0.2.0-dev.1",
   repository: "https://github.com/micahjeffery/search",
   editMain: "https://github.com/micahjeffery/search/edit/main/src/index.js",
   editTest: "https://gitlab.com/micahjeffery.com/search/-/edit/main/src/index.js?ref_type=heads",
@@ -335,7 +335,7 @@ const SITE_GROUPS = [
       {
         name: "ChatGPT",
         description: "Open ChatGPT.",
-        aliases: ["chatgpt", "gpt", "openai"],
+        aliases: ["chatgpt", "gpt", "openai", "chat"],
         home: "https://chatgpt.com/"
       },
       {
@@ -1787,6 +1787,7 @@ const MULTI_ICON_SVGS = {
   news: `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 4h12a2 2 0 0 1 2 2v13H7a2 2 0 0 1-2-2V4Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M19 8h2v9a2 2 0 0 1-2 2M8 8h6M8 12h8M8 16h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
   games: `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8.2 8h7.6a5 5 0 0 1 4.75 6.56l-.68 2.08a2.7 2.7 0 0 1-4.48 1.08L13.7 16h-3.4l-1.69 1.72a2.7 2.7 0 0 1-4.48-1.08l-.68-2.08A5 5 0 0 1 8.2 8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8 11v4M6 13h4M16.5 12h.01M18 14h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
   shopping: `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 4h2l2.2 10.2a2 2 0 0 0 1.95 1.58h7.98a2 2 0 0 0 1.94-1.5L21 7H6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="20" r="1.25" fill="currentColor"/><circle cx="18" cy="20" r="1.25" fill="currentColor"/></svg>`,
+  books: `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H11a3 3 0 0 1 3 3v15a3 3 0 0 0-3-3H6.5A2.5 2.5 0 0 1 4 15.5v-10Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M20 5.5A2.5 2.5 0 0 0 17.5 3H14v18a3 3 0 0 1 3-3h.5a2.5 2.5 0 0 0 2.5-2.5v-10Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>`,
   model3d: `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="m4.5 7.8 7.5 4.3 7.5-4.3M12 12v8.5" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>`,
   ai: `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2.8c.65 4.65 2.9 6.9 7.55 7.55-4.65.65-6.9 2.9-7.55 7.55-.65-4.65-2.9-6.9-7.55-7.55C9.1 9.7 11.35 7.45 12 2.8Z" fill="currentColor"/><path d="M19 15.5c.25 1.8 1.2 2.75 3 3-1.8.25-2.75 1.2-3 3-.25-1.8-1.2-2.75-3-3 1.8-.25 2.75-1.2 3-3Z" fill="currentColor" opacity=".75"/></svg>`,
   translate: `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 5h9M8.5 3v2M6 9c1.7 2.5 4 4.4 7 5.5M11 7c-1.1 3.2-3.5 5.8-7 7.5M14 20l3.3-8h1.4l3.3 8M15.2 17h5.6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
@@ -1892,6 +1893,71 @@ const MULTI_SEARCHES = [
       { type: "site", key: "camel" },
       { type: "site", key: "homedepot" },
       { type: "site", key: "lowes" }
+    ]
+  },
+  {
+    id: "xb",
+    name: "Bookstore Multisearch",
+    description: "Compare books across major online bookstores.",
+    iconSvg: MULTI_ICON_SVGS.books,
+    aliases: ["xb", "xbook", "xbooks", "books"],
+    targets: [
+      {
+        type: "url",
+        id: "amazon-books",
+        name: "Amazon Books",
+        detail: "Online bookstore",
+        home: "https://www.amazon.com/books-used-books-textbooks/b/?node=283155",
+        search: "https://www.amazon.com/s?i=stripbooks&k={q}"
+      },
+      {
+        type: "url",
+        id: "barnes-noble",
+        name: "Barnes & Noble",
+        detail: "Online bookstore",
+        home: "https://www.barnesandnoble.com/",
+        search: "https://www.barnesandnoble.com/s/{q}"
+      },
+      {
+        type: "url",
+        id: "bookshop-org",
+        name: "Bookshop.org",
+        detail: "Supports independent bookstores",
+        home: "https://bookshop.org/",
+        search: "https://bookshop.org/beta-search?keywords={q}"
+      },
+      {
+        type: "url",
+        id: "books-a-million",
+        name: "Books-A-Million",
+        detail: "Online bookstore",
+        home: "https://www.booksamillion.com/",
+        search: "https://www.booksamillion.com/search?query={q}"
+      },
+      {
+        type: "url",
+        id: "thriftbooks",
+        name: "ThriftBooks",
+        detail: "Used and new books",
+        home: "https://www.thriftbooks.com/",
+        search: "https://www.thriftbooks.com/browse/?b.search={q}"
+      },
+      {
+        type: "url",
+        id: "abebooks",
+        name: "AbeBooks",
+        detail: "New, used, rare, and collectible books",
+        home: "https://www.abebooks.com/",
+        search: "https://www.abebooks.com/servlet/SearchResults?kn={q}&sts=t"
+      },
+      {
+        type: "url",
+        id: "better-world-books",
+        name: "Better World Books",
+        detail: "New and used books",
+        home: "https://www.betterworldbooks.com/",
+        search: "https://www.betterworldbooks.com/search/results?q={q}"
+      }
     ]
   },
   {
@@ -2994,23 +3060,8 @@ function renderLocalBangResolverPage(shortcut, raw, defaultEngine) {
           ? search.replaceAll("{q}", encodeURIComponent(query))
           : target.home;
       }
-      const previewStorageKey = "search-local-bang-preview-once-v1";
-      let preview = false;
-      try {
-        const queuedPreview = JSON.parse(localStorage.getItem(previewStorageKey) || "null");
-        if (
-          queuedPreview &&
-          String(queuedPreview.alias || "").toLowerCase() === request.bang &&
-          Number(queuedPreview.expiresAt || 0) > Date.now()
-        ) {
-          preview = true;
-        }
-        if (queuedPreview) localStorage.removeItem(previewStorageKey);
-      } catch {
-        try { localStorage.removeItem(previewStorageKey); } catch {}
-      }
-      window.__LOCAL_BANG_RESOLVER__ = { request, localBangs, target, destination, preview, redirectStarted: false };
-      if (!preview && (!target || target.kind !== "multi")) {
+      window.__LOCAL_BANG_RESOLVER__ = { request, localBangs, target, destination, redirectStarted: false };
+      if (!target || target.kind !== "multi") {
         window.__LOCAL_BANG_RESOLVER__.redirectStarted = true;
         location.replace(destination);
       }
@@ -3158,6 +3209,7 @@ ${MULTI_SEARCH_PAGE_CSS}
         const syncAutoTheme = () => { if (document.documentElement.dataset.themePreference === "auto") document.documentElement.dataset.theme = themeMedia && themeMedia.matches ? "light" : "dark"; };
         if (themeMedia) { if (themeMedia.addEventListener) themeMedia.addEventListener("change", syncAutoTheme); else if (themeMedia.addListener) themeMedia.addListener(syncAutoTheme); }
         const selectedKey = "search-multisearch-selected:" + multiId;
+        const copyQueryKey = "search-help-copy-queries";
         const form = document.getElementById("multi-form");
         const searchAllButton = document.getElementById("search-all");
         const queryInput = document.getElementById("multi-query");
@@ -3168,6 +3220,13 @@ ${MULTI_SEARCH_PAGE_CSS}
         if (document.documentElement.dataset.disableFavicons !== "true") document.querySelectorAll("img[data-favicon-src]").forEach((image) => { image.src = image.dataset.faviconSrc; });
         document.addEventListener("error", (event) => { const image = event.target; if (image instanceof HTMLImageElement && image.matches("[data-site-favicon]")) { image.dataset.faviconFailed = "true"; image.hidden = true; image.closest(".target-favicon-shell")?.classList.add("uses-fallback"); } }, true);
         const setStatus = (message, type = "") => { status.textContent = message; status.className = "status" + (type ? " " + type : ""); };
+        const copyQueryWhenSupported = () => {
+          const query = queryInput.value.trim();
+          let enabled = false;
+          try { enabled = localStorage.getItem(copyQueryKey) === "true"; } catch {}
+          if (!enabled || !query) return;
+          try { const result = navigator.clipboard?.writeText(query); if (result?.catch) result.catch(() => {}); } catch {}
+        };
         const checkedTargets = () => checks.filter((check) => check.checked).map((check) => targets[Number(check.dataset.targetCheck)]).filter(Boolean);
         const saveSelection = () => { try { localStorage.setItem(selectedKey, JSON.stringify(checkedTargets().map((item) => item.id))); } catch {} };
         const restoreSelection = () => { let saved = null; try { const parsed = JSON.parse(localStorage.getItem(selectedKey) || "null"); if (Array.isArray(parsed)) saved = new Set(parsed); } catch {} if (saved) checks.forEach((check) => { const item = targets[Number(check.dataset.targetCheck)]; check.checked = Boolean(item && saved.has(item.id)); }); };
@@ -3177,16 +3236,17 @@ ${MULTI_SEARCH_PAGE_CSS}
         const updateLinks = () => links.forEach((link) => { const item = targets[Number(link.dataset.targetLink)]; if (item) link.href = urlFor(item); });
         const openPopup = (url) => { const opened = window.open(url, "_blank"); if (opened) { opened.opener = null; return true; } return false; };
         const openTargets = (items) => { if (!items.length) { setStatus("Choose at least one search target first.", "warn"); return; } let blocked = 0; items.forEach((item) => { if (!openPopup(urlFor(item))) blocked += 1; }); setStatus(blocked ? blocked + " tab" + (blocked === 1 ? " was" : "s were") + " blocked. Allow popups for this site, then try again." : "Opened " + items.length + " selected search" + (items.length === 1 ? "" : "es") + ".", blocked ? "danger" : "good"); };
-        const searchAllSelected = (event) => { if (event) event.preventDefault(); updateLinks(); saveSelection(); openTargets(checkedTargets()); };
+        const searchAllSelected = (event) => { if (event) event.preventDefault(); copyQueryWhenSupported(); updateLinks(); saveSelection(); openTargets(checkedTargets()); };
         form.addEventListener("submit", searchAllSelected);
         searchAllButton.addEventListener("click", searchAllSelected);
         queryInput.addEventListener("keydown", (event) => { if (event.key === "Enter") searchAllSelected(event); else if (event.key === "Escape") { if (queryInput.value) { queryInput.value = ""; updateLinks(); updateAddressBar(); } else queryInput.blur(); event.preventDefault(); } });
         queryInput.addEventListener("input", () => { updateLinks(); updateAddressBar(); });
         checks.forEach((check) => check.addEventListener("change", () => { nextCursor = 0; saveSelection(); updateSearchAllLabel(); }));
-        document.getElementById("open-next").addEventListener("click", () => { const selected = checkedTargets(); if (!selected.length) { setStatus("Choose at least one search target first.", "warn"); return; } const item = selected[nextCursor % selected.length]; nextCursor = (nextCursor + 1) % selected.length; const opened = openPopup(urlFor(item)); setStatus(opened ? "Opened " + item.name + "." : "That tab was blocked. Allow popups for this site, then try again.", opened ? "good" : "danger"); });
+        document.getElementById("open-next").addEventListener("click", () => { copyQueryWhenSupported(); const selected = checkedTargets(); if (!selected.length) { setStatus("Choose at least one search target first.", "warn"); return; } const item = selected[nextCursor % selected.length]; nextCursor = (nextCursor + 1) % selected.length; const opened = openPopup(urlFor(item)); setStatus(opened ? "Opened " + item.name + "." : "That tab was blocked. Allow popups for this site, then try again.", opened ? "good" : "danger"); });
         document.getElementById("select-all").addEventListener("click", () => { checks.forEach((check) => { check.checked = true; }); nextCursor = 0; saveSelection(); updateSearchAllLabel(); setStatus("Selected all targets.", "good"); });
         document.getElementById("select-none").addEventListener("click", () => { checks.forEach((check) => { check.checked = false; }); nextCursor = 0; saveSelection(); updateSearchAllLabel(); setStatus("Deselected all targets.", "warn"); });
         document.getElementById("copy-links").addEventListener("click", async () => { const urls = checkedTargets().map(urlFor); if (!urls.length) { setStatus("Choose at least one search target first.", "warn"); return; } const text = urls.join("\\n"); try { await navigator.clipboard.writeText(text); setStatus("Copied " + urls.length + " link" + (urls.length === 1 ? "" : "s") + ".", "good"); } catch { window.prompt("Copy these links:", text); } });
+        links.forEach((link) => link.addEventListener("click", copyQueryWhenSupported));
         restoreSelection(); updateLinks(); updateSearchAllLabel(); queryInput.focus(); queryInput.setSelectionRange(queryInput.value.length, queryInput.value.length);
       }
 
@@ -3215,7 +3275,7 @@ ${MULTI_SEARCH_PAGE_CSS}
       destinationLink.textContent = destination;
       continueLink.href = destination;
 
-      if (!bootstrap?.preview && !bootstrap?.redirectStarted) {
+      if (!bootstrap?.redirectStarted) {
         window.location.replace(destination);
       }
     })();
@@ -3336,10 +3396,16 @@ function renderHelpPage(requestUrl) {
       iconBackground: multi.iconBackground || "",
       iconKey: Object.entries(MULTI_ICON_SVGS).find(([, svg]) => svg === multi.iconSvg)?.[0] || "",
       handler: "multi",
-      targets: multi.targets.map((target) => ({
-        type: "bang",
-        bang: String(target.key || (target.type === "engine" ? "d" : ""))
-      }))
+      targets: multi.targets.map((target) => target.type === "url"
+        ? {
+            type: "url",
+            name: String(target.name || "Target"),
+            url: String(target.search || "")
+          }
+        : {
+            type: "bang",
+            bang: String(target.key || (target.type === "engine" ? "d" : ""))
+          })
     }))
   ]).replaceAll("<", "\u003c");
   const multiSearchDisplayGroup = {
@@ -4437,7 +4503,14 @@ function renderHelpPage(requestUrl) {
       cursor: pointer;
     }
     .local-delete-button:hover, .local-delete-button:focus-visible { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 45%, var(--border)); }
-    .local-delete-button svg { width: 13px; height: 13px; fill: currentColor; }
+    .local-delete-icon {
+      display: block;
+      width: 14px;
+      height: 14px;
+      background: currentColor;
+      -webkit-mask: url("https://www.svgrepo.com/show/471998/trash-01.svg") center / contain no-repeat;
+      mask: url("https://www.svgrepo.com/show/471998/trash-01.svg") center / contain no-repeat;
+    }
     .site-url { display: block; margin-top: 12px; color: var(--muted); font-size: .77rem; overflow-wrap: anywhere; text-decoration: none; }
     .warning { padding: 12px 14px; color: var(--warn); margin-bottom: 20px; }
     .empty { display: none; color: var(--muted); margin: 30px 0; }
@@ -4574,6 +4647,7 @@ function renderHelpPage(requestUrl) {
         </div>
         <div class="settings-section">
           <h3>Controls</h3>
+          <label class="settings-option" title="Copies the query when a Search-page action provides clipboard permission. Address-bar redirects may not be able to copy."><input id="settings-copy-queries" type="checkbox"><span>Copy bang queries when supported</span></label>
           <label class="settings-option"><input id="settings-disable-shortcuts" type="checkbox"><span>Disable keyboard shortcuts</span></label>
           <label class="settings-option"><input id="settings-hide-support" type="checkbox"><span>Hide support button</span></label>
           <label class="settings-option"><input id="settings-hide-repo" type="checkbox"><span>Hide repository button</span></label>
@@ -4776,7 +4850,7 @@ function renderHelpPage(requestUrl) {
       </details>
       ${groups}
     </div>
-    <p class="footer">Click a bang to place it in the search box. Click ☆ to save a favorite. Your settings, favorites, local bangs, and optional search history stay private on this browser. <span class="footer-version" title=" build">v${escapeHtml(PROJECT.version)}</span></p>
+    <p class="footer">Click a bang to place it in the search box. Click ☆ to save a favorite. Your settings, favorites, local bangs, and optional search history stay private on this browser. <span class="footer-version" title="Version v${escapeAttribute(PROJECT.version)}">v${escapeHtml(PROJECT.version)}</span></p>
   </main>
   <button class="minimalist-exit" id="exit-minimalist" type="button" aria-label="Return to compact mode" title="Return to compact mode">
     <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Back_Arrow.svg" alt="" width="19" height="19" referrerpolicy="no-referrer">
@@ -4799,7 +4873,8 @@ function renderHelpPage(requestUrl) {
       shortcutsDisabled: "search-help-shortcuts-disabled",
       hideSupport: "search-help-hide-support",
       hideRepo: "search-help-hide-repo",
-      hiddenBangs: "search-help-hidden-bangs"
+      hiddenBangs: "search-help-hidden-bangs",
+      copyQueries: "search-help-copy-queries"
     };
     const RECENT_SEARCH_LIMIT = 20;
     const HOME_ENGINE_PATHS = ${JSON.stringify(homeEnginePaths)};
@@ -4835,6 +4910,7 @@ function renderHelpPage(requestUrl) {
     const settingsAliasLimit = document.getElementById("settings-alias-limit");
     const settingsLockTheme = document.getElementById("settings-lock-theme");
     const settingsLockLayout = document.getElementById("settings-lock-layout");
+    const settingsCopyQueries = document.getElementById("settings-copy-queries");
     const settingsDisableShortcuts = document.getElementById("settings-disable-shortcuts");
     const settingsHideSupport = document.getElementById("settings-hide-support");
     const settingsHideRepo = document.getElementById("settings-hide-repo");
@@ -5218,7 +5294,7 @@ function renderHelpPage(requestUrl) {
       remove.dataset.localCardDelete = bang.id;
       remove.setAttribute("aria-label", "Delete local bang " + bang.name);
       remove.title = "Delete local bang";
-      remove.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6l1 2h4v2h-1l-1 14H6L5 7H4V5h4l1-2Zm-1.9 4 .9 12h8l.9-12H7.1ZM10 9h2v8h-2V9Zm4 0h2v8h-2V9Z"/></svg>';
+      remove.innerHTML = '<span class="local-delete-icon" aria-hidden="true"></span>';
       actions.append(type, favorite, remove);
       top.append(heading, actions);
       card.append(top);
@@ -5263,22 +5339,6 @@ function renderHelpPage(requestUrl) {
       updateLocalBangCounts();
       refreshCardIndexes();
     }
-    function previewLocalBang(id) {
-      const bang = localBangs.find((candidate) => candidate.id === id);
-      const alias = String(bang?.aliases?.[0] || "").trim().toLowerCase();
-      if (!bang || bang.kind === "multi" || !alias) return;
-      try {
-        localStorage.setItem("search-local-bang-preview-once-v1", JSON.stringify({
-          alias,
-          expiresAt: Date.now() + 30000
-        }));
-      } catch {}
-      const previewUrl = "/?q=" + encodeURIComponent("!" + alias);
-      const opened = window.open(previewUrl, "_blank");
-      if (opened) opened.opener = null;
-      else window.location.assign(previewUrl);
-    }
-
     function renderLocalBangManager() {
       localBangsList.replaceChildren();
       localBangsEmpty.hidden = localBangs.length > 0;
@@ -5306,12 +5366,6 @@ function renderHelpPage(requestUrl) {
         toggle.checked = bang.enabled;
         toggle.dataset.localToggle = bang.id;
         toggleLabel.append(toggle, document.createTextNode("Enabled"));
-        const preview = document.createElement("button");
-        preview.className = "dialog-button";
-        preview.type = "button";
-        preview.dataset.localPreview = bang.id;
-        preview.textContent = "Preview redirect";
-        preview.hidden = bang.kind === "multi";
         const edit = document.createElement("button");
         edit.className = "dialog-button";
         edit.type = "button";
@@ -5322,7 +5376,7 @@ function renderHelpPage(requestUrl) {
         remove.type = "button";
         remove.dataset.localDelete = bang.id;
         remove.textContent = "Delete";
-        actions.append(toggleLabel, preview, edit, remove);
+        actions.append(toggleLabel, edit, remove);
         item.append(main, actions);
         localBangsList.append(item);
       });
@@ -6077,12 +6131,9 @@ function renderHelpPage(requestUrl) {
       if (existing) localBangs = localBangs.map((item) => item.id === existing.id ? saved : item);
       else localBangs = [saved, ...localBangs].slice(0, LOCAL_BANG_LIMIT);
       saveLocalBangs();
-      builderEditingId = "local:" + saved.id;
-      builderExistingMatch = localBuilderSite(saved);
-      builderDuplicateAllowed = false;
       refreshLocalBangUi();
-      renderBangBuilderCode();
-      setBuilderStatus(builderValidationStatus, existing ? "Local bang updated." : "Added locally. It now works from this browser’s address bar.", "good");
+      resetBangBuilder(false);
+      bangBuilderDialog.close();
     }
     function editLocalBang(id) {
       openBuilderForSiteId("local:" + id);
@@ -6117,7 +6168,7 @@ function renderHelpPage(requestUrl) {
       window.location.assign(destination);
       return true;
     }
-    function resetBangBuilder() {
+    function resetBangBuilder(shouldFocus = true) {
       const retainedType = builderLocalType.value === "multi" ? "multi" : "bang";
       bangBuilderForm.reset();
       builderLocalType.value = retainedType;
@@ -6135,7 +6186,7 @@ function renderHelpPage(requestUrl) {
       setBuilderStatus(builderSearchStatus, "Find detects a search URL or makes a clearly labeled guess.");
       try { localStorage.removeItem(BANG_BUILDER_STORAGE_KEY); } catch {}
       renderBangBuilderCode();
-      (retainedType === "multi" ? builderName : builderHome).focus();
+      if (shouldFocus !== false) (retainedType === "multi" ? builderName : builderHome).focus();
     }
     function openBangBuilder() {
       showDialog(bangBuilderDialog);
@@ -6257,7 +6308,8 @@ function renderHelpPage(requestUrl) {
           shortcutsDisabled: readStorage(STORAGE.shortcutsDisabled, "false") === "true",
           hideSupport: readStorage(STORAGE.hideSupport, "false") === "true",
           hideRepo: readStorage(STORAGE.hideRepo, "false") === "true",
-          hiddenBangs: readHiddenBangs()
+          hiddenBangs: readHiddenBangs(),
+          copyQueries: readStorage(STORAGE.copyQueries, "false") === "true"
         }
       };
       if (settingsIncludeHistory.checked && !historyDisabled) payload.recentSearches = [...recentSearches];
@@ -6299,7 +6351,7 @@ function renderHelpPage(requestUrl) {
       if (["comfortable", "compact", "minimalist"].includes(settings.layout)) writeStorage(STORAGE.layout, settings.layout);
       if (typeof settings.homeEngine === "string" && HOME_ENGINE_PATHS.includes(settings.homeEngine)) writeStorage(STORAGE.homeEngine, settings.homeEngine);
       if (typeof settings.defaultsOpen === "boolean") writeStorage(STORAGE.defaultsOpen, String(settings.defaultsOpen));
-      for (const [field, key] of [["hideDescriptions", STORAGE.hideDescriptions], ["hideFavorites", STORAGE.hideFavorites], ["disableFavicons", STORAGE.disableFavicons], ["shortcutsDisabled", STORAGE.shortcutsDisabled], ["hideSupport", STORAGE.hideSupport], ["hideRepo", STORAGE.hideRepo]]) {
+      for (const [field, key] of [["hideDescriptions", STORAGE.hideDescriptions], ["hideFavorites", STORAGE.hideFavorites], ["disableFavicons", STORAGE.disableFavicons], ["shortcutsDisabled", STORAGE.shortcutsDisabled], ["hideSupport", STORAGE.hideSupport], ["hideRepo", STORAGE.hideRepo], ["copyQueries", STORAGE.copyQueries]]) {
         if (typeof settings[field] === "boolean") writeStorage(key, String(settings[field]));
       }
       const importedAliasLimit = Number(settings.aliasLimit ?? 0);
@@ -6527,6 +6579,7 @@ function renderHelpPage(requestUrl) {
       const hideSupport = readStorage(STORAGE.hideSupport, "false") === "true";
       const disableFavicons = readStorage(STORAGE.disableFavicons, "false") === "true";
       const hideRepo = readStorage(STORAGE.hideRepo, "false") === "true";
+      const copyQueries = readStorage(STORAGE.copyQueries, "false") === "true";
       const aliasLimit = Number(readStorage(STORAGE.aliasLimit, "0")) || 0;
       const themeLock = readThemeLock();
       const layoutLock = readLayoutLock();
@@ -6541,6 +6594,7 @@ function renderHelpPage(requestUrl) {
       settingsHideDescriptions.checked = hideDescriptions;
       settingsHideFavorites.checked = hideFavorites;
       settingsDisableFavicons.checked = disableFavicons;
+      settingsCopyQueries.checked = copyQueries;
       settingsSaveHistory.checked = !historyDisabled;
       settingsIncludeHistory.disabled = historyDisabled;
       if (historyDisabled) settingsIncludeHistory.checked = false;
@@ -6961,6 +7015,14 @@ function renderHelpPage(requestUrl) {
       textarea.remove();
       return copied;
     }
+    function copyBangQueryWhenSupported(query) {
+      const text = String(query || "").trim();
+      if (!text || readStorage(STORAGE.copyQueries, "false") !== "true") return;
+      try {
+        const result = navigator.clipboard?.writeText(text);
+        if (result?.catch) result.catch(() => {});
+      } catch {}
+    }
     function showMathCopyStatus(result, copied) {
       bangPreview.hidden = false;
       bangPreview.classList.remove("is-unknown");
@@ -6983,6 +7045,7 @@ function renderHelpPage(requestUrl) {
       }
       const parsedShortcut = parseBangInput(raw);
       const localBang = parsedShortcut ? findLocalBangByAlias(parsedShortcut.bang) : null;
+      if (parsedShortcut?.query) copyBangQueryWhenSupported(parsedShortcut.query);
       if (localBang) {
         event.preventDefault();
         saveRecentSearch(filter.value);
@@ -7107,8 +7170,6 @@ function renderHelpPage(requestUrl) {
       if (toggle) toggleLocalBang(toggle.dataset.localToggle, toggle.checked);
     });
     localBangsList.addEventListener("click", (event) => {
-      const preview = event.target.closest("[data-local-preview]");
-      if (preview) { previewLocalBang(preview.dataset.localPreview); return; }
       const edit = event.target.closest("[data-local-edit]");
       if (edit) { editLocalBang(edit.dataset.localEdit); return; }
       const remove = event.target.closest("[data-local-delete]");
@@ -7116,7 +7177,7 @@ function renderHelpPage(requestUrl) {
     });
     const preferenceBindings = [
       [settingsHideDescriptions, STORAGE.hideDescriptions], [settingsHideFavorites, STORAGE.hideFavorites], [settingsDisableFavicons, STORAGE.disableFavicons],
-      [settingsDisableShortcuts, STORAGE.shortcutsDisabled], [settingsHideSupport, STORAGE.hideSupport], [settingsHideRepo, STORAGE.hideRepo]
+      [settingsCopyQueries, STORAGE.copyQueries], [settingsDisableShortcuts, STORAGE.shortcutsDisabled], [settingsHideSupport, STORAGE.hideSupport], [settingsHideRepo, STORAGE.hideRepo]
     ];
     preferenceBindings.forEach(([control, key]) => control.addEventListener("change", () => { writeStorage(key, String(control.checked)); applyPreferenceSettings(); }));
     settingsSaveHistory.addEventListener("change", () => setSearchHistoryEnabled(settingsSaveHistory.checked));
@@ -7485,6 +7546,7 @@ ${MULTI_SEARCH_PAGE_CSS}
       else if (themeMedia.addListener) themeMedia.addListener(syncAutoTheme);
     }
     const STORAGE_KEY = "search-multisearch-selected:" + MULTI_ID;
+    const COPY_QUERY_KEY = "search-help-copy-queries";
     const form = document.getElementById("multi-form");
     const searchAllButton = document.getElementById("search-all");
     const queryInput = document.getElementById("multi-query");
@@ -7509,6 +7571,16 @@ ${MULTI_SEARCH_PAGE_CSS}
     function setStatus(message, type = "") {
       status.textContent = message;
       status.className = "status" + (type ? " " + type : "");
+    }
+    function copyQueryWhenSupported() {
+      const query = queryInput.value.trim();
+      let enabled = false;
+      try { enabled = localStorage.getItem(COPY_QUERY_KEY) === "true"; } catch {}
+      if (!enabled || !query) return;
+      try {
+        const result = navigator.clipboard?.writeText(query);
+        if (result?.catch) result.catch(() => {});
+      } catch {}
     }
     function checkedTargets() {
       return checks
@@ -7585,6 +7657,7 @@ ${MULTI_SEARCH_PAGE_CSS}
       }
     }
     function openNext() {
+      copyQueryWhenSupported();
       const selected = checkedTargets();
       if (!selected.length) {
         setStatus("Choose at least one search target first.", "warn");
@@ -7614,6 +7687,7 @@ ${MULTI_SEARCH_PAGE_CSS}
     }
     function searchAllSelected(event) {
       if (event) event.preventDefault();
+      copyQueryWhenSupported();
       updateLinks();
       saveSelection();
       openTargets(checkedTargets());
@@ -7659,6 +7733,7 @@ ${MULTI_SEARCH_PAGE_CSS}
       setStatus("Deselected all targets.", "warn");
     });
     document.getElementById("copy-links").addEventListener("click", copyLinks);
+    links.forEach((link) => link.addEventListener("click", copyQueryWhenSupported));
     restoreSelection();
     updateLinks();
     updateSearchAllLabel();
