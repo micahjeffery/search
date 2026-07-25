@@ -128,7 +128,8 @@ Use the **Bang Builder** on the homepage, or edit `SITE_GROUPS` in `src/index.js
   aliases: ["example", "ex"],
   home: "https://example.com/",
   search: "https://example.com/search?q={q}",
-  icon: "https://example.com/favicon.svg"
+  icon: "https://example.com/favicon.svg",
+  iconBackground: "light"
 },
 ```
 
