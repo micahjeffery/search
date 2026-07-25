@@ -13,6 +13,7 @@
 - Includes multisearches for selected sites.
 - Includes favorites, recent searches, favicon previews, themes, and Comfortable/Compact/Minimalist layouts.
 - Stores preferences and optional history only in the browser.
+- Supports local bangs and local multisearches stored in the browser.
 
 
 ## Use it as your browser search engine
@@ -80,6 +81,7 @@ A multisearch opens a page where targets can be selected before opening them. Se
 | `;xai` | AI tools |
 | `;xeng` or `;xtrans` | English translation |
 | `;xmap` | Maps |
+| `;xb` or `;books` | Online bookstores |
 
 Example:
 
@@ -111,6 +113,7 @@ Browsers may require popups to be allowed before **Search all selected** can ope
 | `[` / `]` | Collapse / expand all categories |
 | `↑` / `↓` | Move through filtered shortcuts |
 | `Enter` | Use the selected shortcut |
+| `,` | Open Settings |
 
 Typing `+` into an empty search box and pressing Enter also opens Bang Builder.
 
@@ -145,7 +148,7 @@ All application code, configuration, HTML, CSS, and browser JavaScript live in `
 
 ## Privacy
 
-The Worker redirects searches and does not maintain user accounts. Homepage settings, favorites, multisearch selections, Bang Builder drafts, and optional recent-search history are stored in local browser data for the site.
+The Worker redirects searches and does not maintain user accounts. Settings, favorites, hidden bangs, local bangs, multisearch selections, Bang Builder drafts, and optional recent-search history are stored locally in the browser.
 
 A private fork can be deployed through Cloudflare Workers. A custom domain is optional.
 
