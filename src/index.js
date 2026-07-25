@@ -1,6 +1,6 @@
 const PROJECT = {
   name: "Search",
-  version: "0.2.0-dev.1",
+  version: "0.1.1",
   repository: "https://github.com/micahjeffery/search",
   editMain: "https://github.com/micahjeffery/search/edit/main/src/index.js",
   editTest: "https://gitlab.com/micahjeffery.com/search/-/edit/main/src/index.js?ref_type=heads",
@@ -288,25 +288,29 @@ const SITE_GROUPS = [
         name: "Yahoo",
         aliases: ["y", "yahoo"],
         home: "https://search.yahoo.com/",
-        search: "https://search.yahoo.com/search?p={q}"
+        search: "https://search.yahoo.com/search?p={q}",
+        icon: "https://s.yimg.com/pv/static/img/y_icon_iphone_76.min.png"
       },
       {
         name: "Yahoo Images",
         aliases: ["yi", "yimg", "yimage", "yimages"],
         home: "https://images.search.yahoo.com/",
-        search: "https://images.search.yahoo.com/search/images?p={q}"
+        search: "https://images.search.yahoo.com/search/images?p={q}",
+        icon: "https://icons.duckduckgo.com/ip3/images.search.yahoo.com.ico"
       },
       {
         name: "Yahoo Videos",
         aliases: ["yv", "yvideo", "yvideos"],
         home: "https://video.search.yahoo.com/",
-        search: "https://video.search.yahoo.com/search/video?p={q}"
+        search: "https://video.search.yahoo.com/search/video?p={q}",
+        icon: "https://s.yimg.com/rz/l/favicon.ico"
       },
       {
         name: "Yahoo News",
         aliases: ["yn", "ynews"],
         home: "https://news.search.yahoo.com/",
-        search: "https://news.search.yahoo.com/search?p={q}"
+        search: "https://news.search.yahoo.com/search?p={q}",
+        icon: "https://www.yahoo.com/favicon.ico?b0867f93a36b360e"
       },
       {
         name: "Yahoo Shopping",
@@ -469,7 +473,8 @@ const SITE_GROUPS = [
         aliases: ["hltr", "howlongtoread", "readtime"],
         home: "https://howlongtoread.com/",
         search: "https://howlongtoread.com/results/{q}",
-        icon: "https://howlongtoread.com/img/hltr-logo.png"
+        icon: "https://howlongtoread.com/img/hltr-logo.png",
+        iconBackground: "light"
       },
       {
         name: "ToS;DR",
@@ -529,7 +534,8 @@ const SITE_GROUPS = [
         description: "Search products and store inventory at Target.",
         aliases: ["target", "tgt"],
         home: "https://www.target.com/",
-        search: "https://www.target.com/s/{q}"
+        search: "https://www.target.com/s/{q}",
+        icon: "https://assets.targetimg1.com/static/images/favicon-96x96.png"
       },
       {
         name: "Best Buy",
@@ -558,6 +564,58 @@ const SITE_GROUPS = [
         aliases: ["eneba"],
         home: "https://www.eneba.com/us/",
         search: "https://www.eneba.com/us/store/all?text={q}"
+      },
+      {
+        name: "Amazon Books",
+        description: "Search Amazon's books department.",
+        aliases: ["abook", "amazonbooks"],
+        home: "https://www.amazon.com/books-used-books-textbooks/b/?node=283155",
+        search: "https://www.amazon.com/s?i=stripbooks&k={q}"
+      },
+      {
+        name: "Barnes & Noble",
+        description: "Search books and other media from Barnes & Noble.",
+        aliases: ["bnoble", "barnes", "barnesandnoble"],
+        home: "https://www.barnesandnoble.com/",
+        search: "https://www.barnesandnoble.com/s/{q}"
+      },
+      {
+        name: "Bookshop.org",
+        description: "Search books while supporting independent bookstores.",
+        aliases: ["bookshop", "bookshoporg"],
+        home: "https://bookshop.org/",
+        search: "https://bookshop.org/beta-search?keywords={q}",
+        icon: "https://rails-assets-us.bookshop.org/assets/favicon-63cb20989e2516343feeab429626798a43afdaa28eeaba777b7e0acde8a25dd2.png"
+      },
+      {
+        name: "Books-A-Million",
+        description: "Search books and other media from Books-A-Million.",
+        aliases: ["bam", "booksamillion"],
+        home: "https://www.booksamillion.com/",
+        search: "https://www.booksamillion.com/search?query={q}",
+        icon: "https://icons.duckduckgo.com/ip3/booksamillion.com.ico"
+      },
+      {
+        name: "ThriftBooks",
+        description: "Search new and used books from ThriftBooks.",
+        aliases: ["thrift", "thriftbooks"],
+        home: "https://www.thriftbooks.com/",
+        search: "https://www.thriftbooks.com/browse/?b.search={q}",
+        icon: "https://static.thriftbooks.com/images/favicon.ico"
+      },
+      {
+        name: "AbeBooks",
+        description: "Search new, used, rare, and collectible books.",
+        aliases: ["abe", "abebooks"],
+        home: "https://www.abebooks.com/",
+        search: "https://www.abebooks.com/servlet/SearchResults?kn={q}&sts=t"
+      },
+      {
+        name: "Better World Books",
+        description: "Search new and used books from Better World Books.",
+        aliases: ["bwb", "betterworldbooks"],
+        home: "https://www.betterworldbooks.com/",
+        search: "https://www.betterworldbooks.com/search/results?q={q}"
       }
     ]
   },
@@ -1518,7 +1576,8 @@ const SITE_GROUPS = [
         name: "MindMup",
         description: "Create a new mind map.",
         aliases: ["mindmap", "mup"],
-        home: "https://app.mindmup.com/map/new"
+        home: "https://app.mindmup.com/map/new",
+        iconBackground: "light"
       },
       {
         name: "diagrams.net",
@@ -1785,9 +1844,9 @@ const MULTI_ICON_SVGS = {
   video: `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3" stroke="currentColor" stroke-width="2"/><path d="m10 9 5 3-5 3V9Z" fill="currentColor"/></svg>`,
   image: `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3" stroke="currentColor" stroke-width="2"/><circle cx="8.5" cy="9" r="1.5" fill="currentColor"/><path d="m5 18 5-5 3 3 2-2 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
   news: `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 4h12a2 2 0 0 1 2 2v13H7a2 2 0 0 1-2-2V4Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M19 8h2v9a2 2 0 0 1-2 2M8 8h6M8 12h8M8 16h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
-  games: `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8.2 8h7.6a5 5 0 0 1 4.75 6.56l-.68 2.08a2.7 2.7 0 0 1-4.48 1.08L13.7 16h-3.4l-1.69 1.72a2.7 2.7 0 0 1-4.48-1.08l-.68-2.08A5 5 0 0 1 8.2 8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8 11v4M6 13h4M16.5 12h.01M18 14h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
+  games: `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6.00014 11H10.0001M8.00014 9V13M15.0001 12H15.0101M18.0001 10H18.0101M10.4491 5H13.5512C16.1761 5 17.4885 5 18.5187 5.49743C19.4257 5.9354 20.1793 6.63709 20.6808 7.51059C21.2503 8.5027 21.3438 9.81181 21.5309 12.43L21.7769 15.8745C21.8975 17.5634 20.5599 19 18.8667 19C18.0008 19 17.1796 18.6154 16.6253 17.9502L16.2501 17.5C15.907 17.0882 15.7354 16.8823 15.54 16.7159C15.1305 16.3672 14.6346 16.1349 14.1045 16.0436C13.8516 16 13.5836 16 13.0476 16H10.9527C10.4167 16 10.1487 16 9.89577 16.0436C9.36563 16.1349 8.86981 16.3672 8.46024 16.7159C8.26487 16.8823 8.09329 17.0882 7.75013 17.5L7.37497 17.9502C6.82064 18.6154 5.99949 19 5.13359 19C3.44037 19 2.10275 17.5634 2.22339 15.8745L2.46942 12.43C2.65644 9.81181 2.74994 8.5027 3.31951 7.51059C3.82098 6.63709 4.57458 5.9354 5.48159 5.49743C6.51176 5 7.8242 5 10.4491 5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  book: `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 21L11.8999 20.8499C11.2053 19.808 10.858 19.287 10.3991 18.9098C9.99286 18.5759 9.52476 18.3254 9.02161 18.1726C8.45325 18 7.82711 18 6.57482 18H5.2C4.07989 18 3.51984 18 3.09202 17.782C2.71569 17.5903 2.40973 17.2843 2.21799 16.908C2 16.4802 2 15.9201 2 14.8V6.2C2 5.07989 2 4.51984 2.21799 4.09202C2.40973 3.71569 2.71569 3.40973 3.09202 3.21799C3.51984 3 4.07989 3 5.2 3H5.6C7.84021 3 8.96031 3 9.81596 3.43597C10.5686 3.81947 11.1805 4.43139 11.564 5.18404C12 6.03968 12 7.15979 12 9.4M12 21V9.4M12 21L12.1001 20.8499C12.7947 19.808 13.142 19.287 13.6009 18.9098C14.0071 18.5759 14.4752 18.3254 14.9784 18.1726C15.5467 18 16.1729 18 17.4252 18H18.8C19.9201 18 20.4802 18 20.908 17.782C21.2843 17.5903 21.5903 17.2843 21.782 16.908C22 16.4802 22 15.9201 22 14.8V6.2C22 5.07989 22 4.51984 21.782 4.09202C21.5903 3.71569 21.2843 3.40973 20.908 3.21799C20.4802 3 19.9201 3 18.8 3H18.4C16.1598 3 15.0397 3 14.184 3.43597C13.4314 3.81947 12.8195 4.43139 12.436 5.18404C12 6.03968 12 7.15979 12 9.4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
   shopping: `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 4h2l2.2 10.2a2 2 0 0 0 1.95 1.58h7.98a2 2 0 0 0 1.94-1.5L21 7H6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="20" r="1.25" fill="currentColor"/><circle cx="18" cy="20" r="1.25" fill="currentColor"/></svg>`,
-  books: `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H11a3 3 0 0 1 3 3v15a3 3 0 0 0-3-3H6.5A2.5 2.5 0 0 1 4 15.5v-10Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M20 5.5A2.5 2.5 0 0 0 17.5 3H14v18a3 3 0 0 1 3-3h.5a2.5 2.5 0 0 0 2.5-2.5v-10Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>`,
   model3d: `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="m4.5 7.8 7.5 4.3 7.5-4.3M12 12v8.5" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>`,
   ai: `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2.8c.65 4.65 2.9 6.9 7.55 7.55-4.65.65-6.9 2.9-7.55 7.55-.65-4.65-2.9-6.9-7.55-7.55C9.1 9.7 11.35 7.45 12 2.8Z" fill="currentColor"/><path d="M19 15.5c.25 1.8 1.2 2.75 3 3-1.8.25-2.75 1.2-3 3-.25-1.8-1.2-2.75-3-3 1.8-.25 2.75-1.2 3-3Z" fill="currentColor" opacity=".75"/></svg>`,
   translate: `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 5h9M8.5 3v2M6 9c1.7 2.5 4 4.4 7 5.5M11 7c-1.1 3.2-3.5 5.8-7 7.5M14 20l3.3-8h1.4l3.3 8M15.2 17h5.6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
@@ -1899,65 +1958,16 @@ const MULTI_SEARCHES = [
     id: "xb",
     name: "Bookstore Multisearch",
     description: "Compare books across major online bookstores.",
-    iconSvg: MULTI_ICON_SVGS.books,
+    iconSvg: MULTI_ICON_SVGS.book,
     aliases: ["xb", "xbook", "xbooks", "books"],
     targets: [
-      {
-        type: "url",
-        id: "amazon-books",
-        name: "Amazon Books",
-        detail: "Online bookstore",
-        home: "https://www.amazon.com/books-used-books-textbooks/b/?node=283155",
-        search: "https://www.amazon.com/s?i=stripbooks&k={q}"
-      },
-      {
-        type: "url",
-        id: "barnes-noble",
-        name: "Barnes & Noble",
-        detail: "Online bookstore",
-        home: "https://www.barnesandnoble.com/",
-        search: "https://www.barnesandnoble.com/s/{q}"
-      },
-      {
-        type: "url",
-        id: "bookshop-org",
-        name: "Bookshop.org",
-        detail: "Supports independent bookstores",
-        home: "https://bookshop.org/",
-        search: "https://bookshop.org/beta-search?keywords={q}"
-      },
-      {
-        type: "url",
-        id: "books-a-million",
-        name: "Books-A-Million",
-        detail: "Online bookstore",
-        home: "https://www.booksamillion.com/",
-        search: "https://www.booksamillion.com/search?query={q}"
-      },
-      {
-        type: "url",
-        id: "thriftbooks",
-        name: "ThriftBooks",
-        detail: "Used and new books",
-        home: "https://www.thriftbooks.com/",
-        search: "https://www.thriftbooks.com/browse/?b.search={q}"
-      },
-      {
-        type: "url",
-        id: "abebooks",
-        name: "AbeBooks",
-        detail: "New, used, rare, and collectible books",
-        home: "https://www.abebooks.com/",
-        search: "https://www.abebooks.com/servlet/SearchResults?kn={q}&sts=t"
-      },
-      {
-        type: "url",
-        id: "better-world-books",
-        name: "Better World Books",
-        detail: "New and used books",
-        home: "https://www.betterworldbooks.com/",
-        search: "https://www.betterworldbooks.com/search/results?q={q}"
-      }
+      { type: "site", key: "abook" },
+      { type: "site", key: "bnoble" },
+      { type: "site", key: "bookshop" },
+      { type: "site", key: "bam" },
+      { type: "site", key: "thrift" },
+      { type: "site", key: "abe" },
+      { type: "site", key: "bwb" }
     ]
   },
   {
@@ -2978,6 +2988,8 @@ const MULTI_SEARCH_PAGE_CSS = String.raw`
     .multi-title { display: flex; align-items: center; gap: 12px; }
     .multi-heading-icon { display: inline-grid; width: 34px; height: 34px; flex: 0 0 34px; place-items: center; color: var(--accent); }
     .multi-heading-icon svg, img.multi-heading-icon { display: block; width: 34px; height: 34px; object-fit: contain; }
+    img.multi-heading-icon.icon-bg-light { padding: 4px; border-radius: 8px; background: #ffffff; }
+    img.multi-heading-icon.icon-bg-dark { padding: 4px; border-radius: 8px; background: #171a20; }
     .back { border: 1px solid var(--border); border-radius: 999px; padding: 8px 11px; text-decoration: none; color: var(--text); background: var(--surface-2); white-space: nowrap; }
     .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 8px 24px var(--shadow); padding: 16px; margin-top: 16px; }
     .search-row { display: flex; gap: 10px; align-items: stretch; }
@@ -3048,7 +3060,6 @@ function renderLocalBangResolverPage(shortcut, raw, defaultEngine) {
       } catch {}
       const target = localBangs.find((bang) =>
         bang &&
-        bang.enabled !== false &&
         Array.isArray(bang.aliases) &&
         bang.aliases.some((alias) => String(alias).trim().toLowerCase() === request.bang)
       ) || null;
@@ -3138,9 +3149,9 @@ ${MULTI_SEARCH_PAGE_CSS}
       if (!bootstrap) {
         try { const parsed = JSON.parse(localStorage.getItem(storageKey) || "[]"); if (Array.isArray(parsed)) localBangs = parsed; } catch {}
       }
-      const target = bootstrap?.target || localBangs.find((bang) => bang && bang.enabled !== false && Array.isArray(bang.aliases) && bang.aliases.some((alias) => String(alias).trim().toLowerCase() === request.bang));
+      const target = bootstrap?.target || localBangs.find((bang) => bang && Array.isArray(bang.aliases) && bang.aliases.some((alias) => String(alias).trim().toLowerCase() === request.bang));
       const localByAlias = new Map();
-      localBangs.filter((bang) => bang && bang.enabled !== false && Array.isArray(bang.aliases)).forEach((bang) => bang.aliases.forEach((alias) => localByAlias.set(String(alias).toLowerCase(), bang)));
+      localBangs.filter((bang) => bang && Array.isArray(bang.aliases)).forEach((bang) => bang.aliases.forEach((alias) => localByAlias.set(String(alias).toLowerCase(), bang)));
 
       function resolveLocalMultiTarget(item, index) {
         if (!item || typeof item !== "object") return null;
@@ -3178,8 +3189,9 @@ ${MULTI_SEARCH_PAGE_CSS}
         const query = String(request.query || "").trim();
         const primaryAlias = Array.isArray(bang.aliases) && bang.aliases[0] ? bang.aliases[0] : request.bang;
         const multiId = "local-" + bang.id;
+        const headingIconClass = "multi-heading-icon" + (bang.iconBackground === "light" ? " icon-bg-light" : bang.iconBackground === "dark" ? " icon-bg-dark" : "");
         const headingIcon = bang.icon
-          ? '<img class="multi-heading-icon" src="' + escapeHtml(bang.icon) + '" alt="" width="34" height="34" referrerpolicy="no-referrer">'
+          ? '<img class="' + headingIconClass + '" src="' + escapeHtml(bang.icon) + '" alt="" width="34" height="34" referrerpolicy="no-referrer">'
           : '<span class="multi-heading-icon" aria-hidden="true">' + genericMultiIcon + '</span>';
         document.title = String(bang.name || "Local multisearch") + " · ${escapeHtml(PROJECT.name)}";
         document.body.innerHTML = '<main>' +
@@ -4122,7 +4134,6 @@ function renderHelpPage(requestUrl) {
     .local-bang-main code { display: block; margin-top: 3px; color: var(--muted); overflow-wrap: anywhere; }
     .local-bang-main small { display: block; margin-top: 4px; color: var(--muted); }
     .local-bang-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 7px; }
-    .local-bang-toggle { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: .82rem; }
     .local-bang-empty { margin: 16px 0 0; color: var(--muted); }
     @media (max-width: 620px) {
       .local-bang-item { grid-template-columns: 1fr; }
@@ -4507,9 +4518,8 @@ function renderHelpPage(requestUrl) {
       display: block;
       width: 14px;
       height: 14px;
-      background: currentColor;
-      -webkit-mask: url("https://www.svgrepo.com/show/471998/trash-01.svg") center / contain no-repeat;
-      mask: url("https://www.svgrepo.com/show/471998/trash-01.svg") center / contain no-repeat;
+      object-fit: contain;
+      filter: brightness(0) saturate(100%) invert(72%) sepia(36%) saturate(1050%) hue-rotate(310deg) brightness(103%) contrast(101%);
     }
     .site-url { display: block; margin-top: 12px; color: var(--muted); font-size: .77rem; overflow-wrap: anywhere; text-decoration: none; }
     .warning { padding: 12px 14px; color: var(--warn); margin-bottom: 20px; }
@@ -4647,7 +4657,7 @@ function renderHelpPage(requestUrl) {
         </div>
         <div class="settings-section">
           <h3>Controls</h3>
-          <label class="settings-option" title="Copies the query when a Search-page action provides clipboard permission. Address-bar redirects may not be able to copy."><input id="settings-copy-queries" type="checkbox"><span>Copy bang queries when supported</span></label>
+          <label class="settings-option" title="Copies the query when a Search-page action provides clipboard permission. Address-bar redirects may not be able to copy."><input id="settings-copy-queries" type="checkbox"><span>Copy bang queries</span></label>
           <label class="settings-option"><input id="settings-disable-shortcuts" type="checkbox"><span>Disable keyboard shortcuts</span></label>
           <label class="settings-option"><input id="settings-hide-support" type="checkbox"><span>Hide support button</span></label>
           <label class="settings-option"><input id="settings-hide-repo" type="checkbox"><span>Hide repository button</span></label>
@@ -4789,7 +4799,10 @@ function renderHelpPage(requestUrl) {
             </div>
             <div class="builder-field full">
               <label for="builder-icon">Icon override <span class="builder-note">(optional)</span></label>
-              <input id="builder-icon" type="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="Paste an icon URL or choose one below">
+              <div class="builder-icon-row">
+                <input id="builder-icon" type="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="Paste an icon URL or choose one below">
+                <button class="dialog-button builder-small-button" id="builder-find-icon-override" type="button" title="Inspect the home URL for favicon choices">Find</button>
+              </div>
               <div class="builder-icon-appearance" id="builder-icon-appearance" data-icon-background="" hidden>
                 <div class="builder-icon-previews" aria-label="Icon preview on light and dark backgrounds">
                   <span class="builder-icon-preview builder-icon-preview-light" aria-hidden="true"><span class="builder-icon-preview-frame"><img id="builder-icon-preview-light" alt="" hidden></span></span>
@@ -4960,6 +4973,7 @@ function renderHelpPage(requestUrl) {
     const builderIconBackground = document.getElementById("builder-icon-background");
     const builderIconAppearance = document.getElementById("builder-icon-appearance");
     const builderFindIcon = document.getElementById("builder-find-icon");
+    const builderFindIconOverride = document.getElementById("builder-find-icon-override");
     const builderIconCandidates = document.getElementById("builder-icon-candidates");
     const builderIconMore = document.getElementById("builder-icon-more");
     const builderIconPreviewLight = document.getElementById("builder-icon-preview-light");
@@ -5146,7 +5160,6 @@ function renderHelpPage(requestUrl) {
         targets,
         icon,
         iconBackground: ["light", "dark"].includes(raw.iconBackground) ? raw.iconBackground : "",
-        enabled: raw.enabled !== false,
         createdAt: String(raw.createdAt || new Date().toISOString()),
         updatedAt: String(raw.updatedAt || new Date().toISOString())
       };
@@ -5189,16 +5202,14 @@ function renderHelpPage(requestUrl) {
         isLocal: true
       };
     }
-    function findLocalBangByAlias(alias, includeDisabled = false) {
+    function findLocalBangByAlias(alias) {
       const normalized = String(alias || "").toLowerCase();
-      return localBangs.find((bang) =>
-        (includeDisabled || bang.enabled) && bang.aliases.includes(normalized)
-      ) || null;
+      return localBangs.find((bang) => bang.aliases.includes(normalized)) || null;
     }
     function getBuilderAliasOwner(alias) {
       const builtIn = BANG_BUILDER_ALIAS_OWNERS[alias];
       if (builtIn) return { ...builtIn, isLocal: false };
-      const local = findLocalBangByAlias(alias, true);
+      const local = findLocalBangByAlias(alias);
       return local ? { id: "local:" + local.id, name: local.name, isLocal: true } : null;
     }
     function getLocalBangFavicon(bang) {
@@ -5294,7 +5305,7 @@ function renderHelpPage(requestUrl) {
       remove.dataset.localCardDelete = bang.id;
       remove.setAttribute("aria-label", "Delete local bang " + bang.name);
       remove.title = "Delete local bang";
-      remove.innerHTML = '<span class="local-delete-icon" aria-hidden="true"></span>';
+      remove.innerHTML = '<img class="local-delete-icon" src="https://www.svgrepo.com/show/471998/trash-01.svg" alt="" width="14" height="14" loading="lazy" decoding="async" referrerpolicy="no-referrer">';
       actions.append(type, favorite, remove);
       top.append(heading, actions);
       card.append(top);
@@ -5334,8 +5345,8 @@ function renderHelpPage(requestUrl) {
     }
     function renderLocalBangCards() {
       localBangsGrid.replaceChildren();
-      localBangs.filter((bang) => bang.enabled).forEach((bang) => localBangsGrid.append(buildLocalBangCard(bang)));
-      localBangsGroup.hidden = !localBangs.some((bang) => bang.enabled);
+      localBangs.forEach((bang) => localBangsGrid.append(buildLocalBangCard(bang)));
+      localBangsGroup.hidden = localBangs.length === 0;
       updateLocalBangCounts();
       refreshCardIndexes();
     }
@@ -5359,13 +5370,6 @@ function renderHelpPage(requestUrl) {
         }
         const actions = document.createElement("div");
         actions.className = "local-bang-actions";
-        const toggleLabel = document.createElement("label");
-        toggleLabel.className = "local-bang-toggle";
-        const toggle = document.createElement("input");
-        toggle.type = "checkbox";
-        toggle.checked = bang.enabled;
-        toggle.dataset.localToggle = bang.id;
-        toggleLabel.append(toggle, document.createTextNode("Enabled"));
         const edit = document.createElement("button");
         edit.className = "dialog-button";
         edit.type = "button";
@@ -5376,7 +5380,7 @@ function renderHelpPage(requestUrl) {
         remove.type = "button";
         remove.dataset.localDelete = bang.id;
         remove.textContent = "Delete";
-        actions.append(toggleLabel, edit, remove);
+        actions.append(edit, remove);
         item.append(main, actions);
         localBangsList.append(item);
       });
@@ -5961,6 +5965,7 @@ function renderHelpPage(requestUrl) {
       builderHome.value = home;
       updateExistingBuilderMatch();
       builderFindIcon.disabled = true;
+      builderFindIconOverride.disabled = true;
       builderIconCandidates.hidden = true;
       builderIconCandidates.replaceChildren();
       builderIconMore.hidden = true;
@@ -6019,6 +6024,7 @@ function renderHelpPage(requestUrl) {
         setBuilderStatus(builderIconStatus, error.message || "Inspection failed.", "danger");
       } finally {
         builderFindIcon.disabled = false;
+        builderFindIconOverride.disabled = false;
       }
     }
     function setBangBuilderCopyFeedback(button, copied) {
@@ -6120,7 +6126,6 @@ function renderHelpPage(requestUrl) {
       const saved = normalizeLocalBang({
         ...bang,
         id: existing?.id || makeLocalBangId(),
-        enabled: existing?.enabled !== false,
         createdAt: existing?.createdAt || now,
         updatedAt: now
       });
@@ -6148,13 +6153,8 @@ function renderHelpPage(requestUrl) {
       if (builderEditingId === "local:" + id) resetBangBuilder();
       refreshLocalBangUi();
     }
-    function toggleLocalBang(id, enabled) {
-      localBangs = localBangs.map((bang) => bang.id === id ? { ...bang, enabled, updatedAt: new Date().toISOString() } : bang);
-      saveLocalBangs();
-      refreshLocalBangUi();
-    }
     function navigateToLocalBang(bang, query = "") {
-      if (!bang?.enabled) return false;
+      if (!bang) return false;
       const trimmed = String(query || "").trim();
       if (bang.kind === "multi") {
         const request = "!" + bang.aliases[0] + (trimmed ? " " + trimmed : "");
@@ -7107,6 +7107,7 @@ function renderHelpPage(requestUrl) {
     });
     bangBuilderForm.addEventListener("submit", (event) => event.preventDefault());
     builderFindIcon.addEventListener("click", findBuilderFavicon);
+    builderFindIconOverride.addEventListener("click", findBuilderFavicon);
     builderAutofillSearch.addEventListener("click", findBuilderSearchUrl);
     builderTestSearch.addEventListener("click", testBuilderSearch);
     builderLocalType.addEventListener("change", () => {
@@ -7164,10 +7165,6 @@ function renderHelpPage(requestUrl) {
       localBangsManagerDialog.close();
       resetBangBuilder();
       openBangBuilder();
-    });
-    localBangsList.addEventListener("change", (event) => {
-      const toggle = event.target.closest("[data-local-toggle]");
-      if (toggle) toggleLocalBang(toggle.dataset.localToggle, toggle.checked);
     });
     localBangsList.addEventListener("click", (event) => {
       const edit = event.target.closest("[data-local-edit]");
@@ -7467,8 +7464,9 @@ function renderMultiSearchPage(multi, query, requestUrl) {
       </label>`;
   }).join("");
   const targetDataJson = jsonForInlineScript(targets);
+  const multiHeadingIconClass = `multi-heading-icon${multi.iconBackground === "light" ? " icon-bg-light" : multi.iconBackground === "dark" ? " icon-bg-dark" : ""}`;
   const multiHeadingIcon = multi.icon
-    ? `<img class="multi-heading-icon" src="${escapeAttribute(multi.icon)}" alt="" width="34" height="34" referrerpolicy="no-referrer">`
+    ? `<img class="${multiHeadingIconClass}" src="${escapeAttribute(multi.icon)}" alt="" width="34" height="34" referrerpolicy="no-referrer">`
     : String(multi.iconSvg || "").trim()
       ? `<span class="multi-heading-icon" aria-hidden="true">${multi.iconSvg}</span>`
       : "";
