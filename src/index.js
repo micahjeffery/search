@@ -1367,7 +1367,7 @@ const SITE_GROUPS = [
         name: "Proton",
         description: "Proton referral link.",
         aliases: ["p", "proton"],
-        home: "https://micahjeffery.com/proton/",
+        home: "https://micahjeffery.com/proton",
         icon: "https://upload.wikimedia.org/wikipedia/commons/f/f3/Proton_AG_Logo_01.svg"
       },
       {
