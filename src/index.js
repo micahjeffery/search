@@ -1,6 +1,6 @@
 const PROJECT = {
   name: "Search",
-  version: "0.1.1",
+  version: "0.1.2",
   repository: "https://github.com/micahjeffery/search",
   editMain: "https://github.com/micahjeffery/search/edit/main/src/index.js",
   editTest: "https://gitlab.com/micahjeffery.com/search/-/edit/main/src/index.js?ref_type=heads",
@@ -95,12 +95,14 @@ const SITE_GROUPS = [
         name: "Search Project",
         description: "Open the GitHub repository for this Cloudflare Worker.",
         aliases: ["repo", "project"],
-        home: PROJECT.repository
+        home: PROJECT.repository,
+        iconBackground: "light"
       },
       {
         name: "Edit Search Source",
         aliases: ["edit"],
-        home: PROJECT.editMain
+        home: PROJECT.editMain,
+        iconBackground: "light"
       },
       {
         name: "Edit Test Source",
@@ -111,7 +113,8 @@ const SITE_GROUPS = [
         name: "GitHub",
         aliases: ["gh", "github"],
         home: "https://github.com/",
-        search: "https://github.com/search?q={q}"
+        search: "https://github.com/search?q={q}",
+        iconBackground: "light"
       }
     ]
   },
@@ -1486,17 +1489,22 @@ const SITE_GROUPS = [
     ]
   },
   {
-    category: "Creative & Utilities",
+    category: "Math & Formulas",
     sites: [
       {
-        name: "Calculator",
-        description: "Preview simple expressions locally, or search Wolfram|Alpha with a bang.",
+        name: "WolframAlpha",
+        description: "Search WolframAlpha for advanced calculations and math queries.",
         aliases: ["math", "calc"],
         home: "https://www.wolframalpha.com/",
         search: "https://www.wolframalpha.com/input?i={q}",
         icon: "https://icons.duckduckgo.com/ip3/wolframalpha.com.ico",
         handler: "math"
-      },
+      }
+    ]
+  },
+  {
+    category: "Creative & Utilities",
+    sites: [
       {
         name: "Micah Jeffery",
         description: "Open Micah Jeffery’s site.",
@@ -1557,7 +1565,8 @@ const SITE_GROUPS = [
         name: "Cursors",
         description: "Open the cursor theme repository.",
         aliases: ["cursor", "cursors"],
-        home: "https://github.com/wrinkdater/Posys-Cursors-Improved-by-wrinkdater"
+        home: "https://github.com/wrinkdater/Posys-Cursors-Improved-by-wrinkdater",
+        iconBackground: "light"
       },
       {
         name: "Cobalt Downloader",
@@ -1611,6 +1620,13 @@ const SITE_GROUPS = [
         home: "https://www.svgrepo.com/",
         search: "https://www.svgrepo.com/vectors/{q}/",
         icon: "https://www.svgrepo.com/android-chrome-192x192.png"
+      },
+      {
+        name: "Public Domain Vectors",
+        description: "Search public-domain vector graphics.",
+        aliases: ["pdv", "publicdomainvectors", "publicvectors"],
+        home: "https://publicdomainvectors.org/",
+        search: "https://publicdomainvectors.org/en/search/{q}"
       },
       {
         name: "VectorMaker",
@@ -1852,6 +1868,173 @@ const MULTI_ICON_SVGS = {
   translate: `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 5h9M8.5 3v2M6 9c1.7 2.5 4 4.4 7 5.5M11 7c-1.1 3.2-3.5 5.8-7 7.5M14 20l3.3-8h1.4l3.3 8M15.2 17h5.6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
   maps: `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 22s7-6.1 7-13A7 7 0 1 0 5 9c0 6.9 7 13 7 13Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="9" r="2.5" fill="currentColor"/></svg>`
 };
+const FORMULA_ICON_SVG = `<svg viewBox="0 0 142.514 142.514" fill="currentColor" aria-hidden="true"><path d="M34.367 142.514c11.645 0 17.827-10.4 19.645-16.544.029-.097.056-.196.081-.297 4.236-17.545 10.984-45.353 15.983-65.58h17.886a6.09 6.09 0 0 0 0-12.18H73.103c1.6-6.373 2.771-10.912 3.232-12.461l.512-1.734c1.888-6.443 6.309-21.535 13.146-21.535 6.34 0 7.285 9.764 7.328 10.236.27 3.343 3.186 5.868 6.537 5.579 3.354-.256 5.864-3.187 5.605-6.539C108.894 14.036 104.087 0 89.991 0 74.03 0 68.038 20.458 65.159 30.292l-.49 1.659c-.585 1.946-2.12 7.942-4.122 15.962H39.239a6.09 6.09 0 0 0 0 12.18H57.53c-6.253 25.362-14.334 58.815-15.223 62.498-.332.965-2.829 7.742-7.937 7.742-7.8 0-11.177-10.948-11.204-11.03-.936-3.229-4.305-5.098-7.544-4.156-3.23.937-5.092 4.314-4.156 7.545 2.131 7.361 9.35 19.822 22.901 19.822Z"/><path d="M124.685 126.809c3.589 0 6.605-2.549 6.605-6.607 0-1.885-.754-3.586-2.359-5.474l-12.646-14.534 12.271-14.346c1.132-1.416 1.98-2.926 1.98-4.908 0-3.59-2.927-6.231-6.703-6.231-2.547 0-4.527 1.604-6.229 3.684l-9.531 12.454-9.343-12.456c-1.89-2.357-3.869-3.682-6.7-3.682-3.59 0-6.607 2.551-6.607 6.609 0 1.885.756 3.586 2.357 5.471l11.799 13.592-12.932 15.289c-1.227 1.416-1.98 2.926-1.98 4.908 0 3.589 2.926 6.229 6.699 6.229 2.549 0 4.53-1.604 6.229-3.682l10.19-13.4 10.193 13.4c1.894 2.363 3.876 3.684 6.707 3.684Z"/></svg>`;
+// Formula card icons: SVG Repo UI Oval Interface Icons collection (CC0).
+const FORMULA_ICON_SVGS = {
+  money: `<svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M6 11V15M18 9V13M17 4C19.4487 4 20.7731 4.37476 21.4321 4.66544C21.5199 4.70415 21.5638 4.72351 21.6904 4.84437C21.7663 4.91682 21.9049 5.12939 21.9405 5.22809C22 5.39274 22 5.48274 22 5.66274V16.4111C22 17.3199 22 17.7743 21.8637 18.0079C21.7251 18.2454 21.5914 18.3559 21.3319 18.4472C21.0769 18.5369 20.562 18.438 19.5322 18.2401C18.8114 18.1017 17.9565 18 17 18C14 18 11 20 7 20C4.55129 20 3.22687 19.6252 2.56788 19.3346C2.48012 19.2958 2.43624 19.2765 2.3096 19.1556C2.23369 19.0832 2.09512 18.8706 2.05947 18.7719C2 18.6073 2 18.5173 2 18.3373L2 7.58885C2 6.68009 2 6.2257 2.13628 5.99214C2.2749 5.75456 2.40859 5.64412 2.66806 5.55281C2.92314 5.46305 3.43803 5.56198 4.46783 5.75985C5.18862 5.89834 6.04348 6 7 6C10 6 13 4 17 4ZM14.5 12C14.5 13.3807 13.3807 14.5 12 14.5C10.6193 14.5 9.5 13.3807 9.5 12C9.5 10.6193 10.6193 9.5 12 9.5C13.3807 9.5 14.5 10.6193 14.5 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  growth: `<svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M22 7L14.1314 14.8686C13.7354 15.2646 13.5373 15.4627 13.309 15.5368C13.1082 15.6021 12.8918 15.6021 12.691 15.5368C12.4627 15.4627 12.2646 15.2646 11.8686 14.8686L9.13137 12.1314C8.73535 11.7354 8.53735 11.5373 8.30902 11.4632C8.10817 11.3979 7.89183 11.3979 7.69098 11.4632C7.46265 11.5373 7.26465 11.7354 6.86863 12.1314L2 17M22 7H15M22 7V14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  change: `<svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M17 4V20M17 20L13 16M17 20L21 16M7 20V4M7 4L3 8M7 4L11 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  time: `<svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M22.7 11.5L20.7005 13.5L18.7 11.5M20.9451 13C20.9814 12.6717 21 12.338 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21C14.8273 21 17.35 19.6963 19 17.6573M12 7V12L15 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  percent: `<svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M9 9H9.01M15 15H15.01M16 8L8 16M9.5 9C9.5 9.27614 9.27614 9.5 9 9.5C8.72386 9.5 8.5 9.27614 8.5 9C8.5 8.72386 8.72386 8.5 9 8.5C9.27614 8.5 9.5 8.72386 9.5 9ZM15.5 15C15.5 15.2761 15.2761 15.5 15 15.5C14.7239 15.5 14.5 15.2761 14.5 15C14.5 14.7239 14.7239 14.5 15 14.5C15.2761 14.5 15.5 14.7239 15.5 15ZM22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  tag: `<svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M8 8H8.01M4.56274 2.93726L2.93726 4.56274C2.59136 4.90864 2.4184 5.0816 2.29472 5.28343C2.18506 5.46237 2.10425 5.65746 2.05526 5.86154C2 6.09171 2 6.3363 2 6.82548L2 9.67452C2 10.1637 2 10.4083 2.05526 10.6385C2.10425 10.8425 2.18506 11.0376 2.29472 11.2166C2.4184 11.4184 2.59135 11.5914 2.93726 11.9373L10.6059 19.6059C11.7939 20.7939 12.388 21.388 13.0729 21.6105C13.6755 21.8063 14.3245 21.8063 14.927 21.6105C15.612 21.388 16.2061 20.7939 17.3941 19.6059L19.6059 17.3941C20.7939 16.2061 21.388 15.612 21.6105 14.927C21.8063 14.3245 21.8063 13.6755 21.6105 13.0729C21.388 12.388 20.7939 11.7939 19.6059 10.6059L11.9373 2.93726C11.5914 2.59136 11.4184 2.4184 11.2166 2.29472C11.0376 2.18506 10.8425 2.10425 10.6385 2.05526C10.4083 2 10.1637 2 9.67452 2L6.82548 2C6.3363 2 6.09171 2 5.86154 2.05526C5.65746 2.10425 5.46237 2.18506 5.28343 2.29472C5.0816 2.4184 4.90865 2.59135 4.56274 2.93726ZM8.5 8C8.5 8.27614 8.27614 8.5 8 8.5C7.72386 8.5 7.5 8.27614 7.5 8C7.5 7.72386 7.72386 7.5 8 7.5C8.27614 7.5 8.5 7.72386 8.5 8Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  compound: `<svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M12 3H16.2C17.8802 3 18.7202 3 19.362 3.32698C19.9265 3.6146 20.3854 4.07354 20.673 4.63803C21 5.27976 21 6.11984 21 7.8V16.2C21 17.8802 21 18.7202 20.673 19.362C20.3854 19.9265 19.9265 20.3854 19.362 20.673C18.7202 21 17.8802 21 16.2 21H7.8C6.11984 21 5.27976 21 4.63803 20.673C4.07354 20.3854 3.6146 19.9265 3.32698 19.362C3 18.7202 3 17.8802 3 16.2V12M8 13V17M16 11V17M12 7V17M2 5L5 2M5 2L8 5M5 2L5 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+};
+const CASH_FLOW_HELP = "Cash received +, paid -.";
+const PAYMENT_TIMING_HELP = "Payments due at end (0) or beginning (1) of period";
+const FORMULAS = [
+  {
+    aliases: ["npv"],
+    name: "Net Present Value",
+    description: "Discount cash flows to today; initial is at time zero.",
+    params: [
+      "rate",
+      { name: "initial", help: CASH_FLOW_HELP },
+      { name: "cashFlows...", help: CASH_FLOW_HELP }
+    ],
+    expression: "initial + discounted_sum(rate, cashFlows)",
+    output: "{currency}",
+    iconSvg: FORMULA_ICON_SVGS.money
+  },
+  {
+    aliases: ["cagr"],
+    name: "CAGR",
+    description: "Annualized growth between two values.",
+    params: ["start", "end", "years"],
+    expression: "(end / start) ^ (1 / years) - 1",
+    output: "{percent}",
+    iconSvg: FORMULA_ICON_SVGS.growth
+  },
+  {
+    aliases: ["pv", "presentvalue"],
+    name: "Present Value",
+    description: "Present value of payments and a future amount.",
+    params: [
+      "rate",
+      "periods",
+      { name: "payment", default: 0, help: CASH_FLOW_HELP },
+      { name: "future", default: 0, help: CASH_FLOW_HELP },
+      { name: "type", default: 0, help: PAYMENT_TIMING_HELP }
+    ],
+    expression: "-(future + payment * annuity(rate, periods, type)) / (1 + rate) ^ periods",
+    output: "{currency}",
+    iconSvg: FORMULA_ICON_SVGS.money
+  },
+  {
+    aliases: ["fv", "futurevalue"],
+    name: "Future Value",
+    description: "Future value of payments and a present amount.",
+    params: [
+      "rate",
+      "periods",
+      { name: "payment", default: 0, help: CASH_FLOW_HELP },
+      { name: "present", default: 0, help: CASH_FLOW_HELP },
+      { name: "type", default: 0, help: PAYMENT_TIMING_HELP }
+    ],
+    expression: "-(present * (1 + rate) ^ periods + payment * annuity(rate, periods, type))",
+    output: "{currency}",
+    iconSvg: FORMULA_ICON_SVGS.money
+  },
+  {
+    aliases: ["pmt", "payment"],
+    name: "Payment",
+    description: "Periodic payment for present and future values.",
+    params: [
+      "rate",
+      "periods",
+      { name: "present", help: CASH_FLOW_HELP },
+      { name: "future", default: 0, help: CASH_FLOW_HELP },
+      { name: "type", default: 0, help: PAYMENT_TIMING_HELP }
+    ],
+    expression: "-(present * (1 + rate) ^ periods + future) / annuity(rate, periods, type)",
+    output: "{currency}",
+    iconSvg: FORMULA_ICON_SVGS.money
+  },
+  {
+    aliases: ["nper", "periods"],
+    name: "Number of Periods",
+    description: "Periods needed for payments to reach a future value.",
+    params: [
+      "rate",
+      { name: "payment", help: CASH_FLOW_HELP },
+      { name: "present", help: CASH_FLOW_HELP },
+      { name: "future", default: 0, help: CASH_FLOW_HELP },
+      { name: "type", default: 0, help: PAYMENT_TIMING_HELP }
+    ],
+    expression: "nper(rate, payment, present, future, type)",
+    output: "{number:2} periods",
+    iconSvg: FORMULA_ICON_SVGS.time
+  },
+  {
+    aliases: ["effect", "apy", "effective"],
+    name: "Effective Annual Rate",
+    description: "Effective annual rate from a nominal rate and compounding frequency.",
+    params: ["nominalRate", "periodsPerYear"],
+    expression: "(1 + nominalRate / periodsPerYear) ^ periodsPerYear - 1",
+    output: "{percent}",
+    iconSvg: FORMULA_ICON_SVGS.percent
+  },
+  {
+    aliases: ["change", "pctchange", "percentchange"],
+    name: "Percent Change",
+    description: "Percentage change from old value to new value.",
+    params: ["old", "new"],
+    expression: "(new - old) / abs(old)",
+    output: "{percent}",
+    iconSvg: FORMULA_ICON_SVGS.change
+  },
+  {
+    aliases: ["margin"],
+    name: "Margin",
+    description: "Profit as a percentage of selling price.",
+    params: ["cost", "price"],
+    expression: "(price - cost) / price",
+    output: "{percent}",
+    iconSvg: FORMULA_ICON_SVGS.percent
+  },
+  {
+    aliases: ["markup"],
+    name: "Markup",
+    description: "Profit as a percentage of cost.",
+    params: ["cost", "price"],
+    expression: "(price - cost) / cost",
+    output: "{percent}",
+    iconSvg: FORMULA_ICON_SVGS.tag
+  },
+  {
+    aliases: ["compound"],
+    name: "Compound Growth",
+    description: "Compound a value over a number of periods.",
+    params: ["principal", "rate", "periods"],
+    expression: "principal * (1 + rate) ^ periods",
+    output: "{currency}",
+    iconSvg: FORMULA_ICON_SVGS.compound
+  },
+  {
+    aliases: ["rule72", "ruleof72"],
+    name: "Rule of 72",
+    description: "Estimate years to double at a growth rate.",
+    params: ["rate"],
+    expression: "72 / (rate * 100)",
+    output: "{number:2} years",
+    iconSvg: FORMULA_ICON_SVGS.time
+  },
+  {
+    aliases: ["sum"],
+    name: "Sum",
+    description: "Add a pasted or typed list of values.",
+    params: ["values..."],
+    expression: "sum(values)",
+    output: "{number}"
+  },
+  {
+    aliases: ["avg", "average"],
+    name: "Average",
+    description: "Average a pasted or typed list of values.",
+    params: ["values..."],
+    expression: "sum(values) / count(values)",
+    output: "{number}"
+  }
+];
 const MULTI_SEARCHES = [
   {
     id: "x",
@@ -3372,6 +3555,7 @@ function renderHelpPage(requestUrl) {
     sites: browserBangSites,
     aliases: browserBangAliases
   }).replaceAll("<", "\\u003c");
+  const formulaDataJson = JSON.stringify(FORMULAS).replaceAll("<", "\\u003c");
   const bangBuilderAliasOwnersJson = JSON.stringify(Object.fromEntries([
     ...[...BANGS.entries()].map(([alias, site]) => [alias, { id: site.id, name: site.name }]),
     ...[...MULTI_SEARCH_BY_ALIAS.entries()].map(([alias, multi]) => [alias, { id: `multi:${multi.id}`, name: multi.name }])
@@ -3436,7 +3620,30 @@ function renderHelpPage(requestUrl) {
       searchTerms: MULTI_SEARCH_CARD_TERMS.get(multi.id) || ""
     }))
   };
-  const displayGroups = [multiSearchDisplayGroup, ...SITE_GROUPS];
+  const formulaDisplaySites = FORMULAS.map((formula) => {
+    const command = formula.aliases[0];
+    return {
+      id: `formula:${command}`,
+      name: formula.name,
+      description: formula.description,
+      aliases: formula.aliases.map((alias) => `=${alias}`),
+      handler: "formula",
+      category: "Math & Formulas",
+      iconSvg: formula.iconSvg || FORMULA_ICON_SVG,
+      formulaCommand: command,
+      formulaParams: formula.params || [],
+      searchTerms: [
+        ...formula.aliases,
+        ...(formula.params || []).map((param) => typeof param === "string" ? param.replace(/\.\.\.$/, "") : param.name || "")
+      ].join(" ")
+    };
+  });
+  const displayGroups = [
+    multiSearchDisplayGroup,
+    ...SITE_GROUPS.map((group) => group.category === "Math & Formulas"
+      ? { ...group, sites: [...formulaDisplaySites, ...group.sites] }
+      : group)
+  ];
   const groups = displayGroups.map((group) => {
     const cards = group.sites
       .map((site) => renderSiteCard({
@@ -3659,6 +3866,10 @@ function renderHelpPage(requestUrl) {
       --type-icon: url("https://upload.wikimedia.org/wikipedia/commons/8/8a/X_Pinhead_icon.svg");
       color: var(--accent);
     }
+    .type.formula {
+      --type-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20142.514%20142.514%22%3E%3Cpath%20fill%3D%22black%22%20d%3D%22M34.367%20142.514c11.645%200%2017.827-10.4%2019.645-16.544.029-.097.056-.196.081-.297%204.236-17.545%2010.984-45.353%2015.983-65.58h17.886a6.09%206.09%200%200%200%200-12.18H73.103c1.6-6.373%202.771-10.912%203.232-12.461l.512-1.734c1.888-6.443%206.309-21.535%2013.146-21.535%206.34%200%207.285%209.764%207.328%2010.236.27%203.343%203.186%205.868%206.537%205.579%203.354-.256%205.864-3.187%205.605-6.539C108.894%2014.036%20104.087%200%2089.991%200%2074.03%200%2068.038%2020.458%2065.159%2030.292l-.49%201.659c-.585%201.946-2.12%207.942-4.122%2015.962H39.239a6.09%206.09%200%200%200%200%2012.18H57.53c-6.253%2025.362-14.334%2058.815-15.223%2062.498-.332.965-2.829%207.742-7.937%207.742-7.8%200-11.177-10.948-11.204-11.03-.936-3.229-4.305-5.098-7.544-4.156-3.23.937-5.092%204.314-4.156%207.545%202.131%207.361%209.35%2019.822%2022.901%2019.822Z%22%2F%3E%3Cpath%20fill%3D%22black%22%20d%3D%22M124.685%20126.809c3.589%200%206.605-2.549%206.605-6.607%200-1.885-.754-3.586-2.359-5.474l-12.646-14.534%2012.271-14.346c1.132-1.416%201.98-2.926%201.98-4.908%200-3.59-2.927-6.231-6.703-6.231-2.547%200-4.527%201.604-6.229%203.684l-9.531%2012.454-9.343-12.456c-1.89-2.357-3.869-3.682-6.7-3.682-3.59%200-6.607%202.551-6.607%206.609%200%201.885.756%203.586%202.357%205.471l11.799%2013.592-12.932%2015.289c-1.227%201.416-1.98%202.926-1.98%204.908%200%203.589%202.926%206.229%206.699%206.229%202.549%200%204.53-1.604%206.229-3.682l10.19-13.4%2010.193%2013.4c1.894%202.363%203.876%203.684%206.707%203.684Z%22%2F%3E%3C%2Fsvg%3E");
+      color: var(--info);
+    }
     .toolbar, .defaults, .favorites, .recent-searches, .warning {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -3821,6 +4032,8 @@ function renderHelpPage(requestUrl) {
     }
     .builder-field { display: grid; align-content: start; gap: 6px; min-width: 0; }
     .builder-field.full { grid-column: 1 / -1; }
+    .builder-formula-fields { display: contents; }
+    .builder-formula-fields[hidden] { display: none; }
     .builder-field > label { color: var(--text); font-size: .88rem; font-weight: 700; }
     .builder-field small, .builder-note, .builder-status {
       color: var(--muted);
@@ -3884,16 +4097,18 @@ function renderHelpPage(requestUrl) {
     .builder-icon-preview-light { background: #f7f8fa; }
     .builder-icon-preview-dark { background: #111318; }
     .builder-icon-preview-frame {
-      display: grid; place-items: center; width: 34px; height: 34px; padding: 2px; border-radius: 7px;
-      transition: background-color .15s ease, box-shadow .15s ease;
+      display: grid; place-items: center; width: 40px; height: 40px;
     }
-    .builder-icon-appearance[data-icon-background="light"] .builder-icon-preview-dark .builder-icon-preview-frame {
-      background: #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, .28);
+    .builder-icon-preview img {
+      display: block; width: 40px; height: 40px; object-fit: contain; border-radius: 8px;
+      transition: padding .15s ease, background-color .15s ease;
     }
-    .builder-icon-appearance[data-icon-background="dark"] .builder-icon-preview-light .builder-icon-preview-frame {
-      background: #171a20; box-shadow: 0 1px 3px rgba(0, 0, 0, .18);
+    .builder-icon-appearance[data-icon-background="light"] .builder-icon-preview-dark img {
+      padding: 4px; background: #fff;
     }
-    .builder-icon-preview img { display: block; max-width: 28px; max-height: 28px; object-fit: contain; }
+    .builder-icon-appearance[data-icon-background="dark"] .builder-icon-preview-light img {
+      padding: 4px; background: #171a20;
+    }
     .builder-inline-select { display: inline-grid; grid-template-columns: auto minmax(90px, auto); align-items: center; gap: 8px; margin-left: auto; color: var(--muted); font-size: .82rem; }
     .builder-inline-select .builder-select { min-width: 94px; min-height: 34px; }
     .builder-candidates { display: grid; gap: 8px; margin-top: 2px; }
@@ -4476,6 +4691,28 @@ function renderHelpPage(requestUrl) {
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+    .site-name-button {
+      appearance: none;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+    }
+    .site-name-button { font-weight: 750; }
+    .site-card[data-site-key^="formula:"] .site-favicon-svg, .local-site-card[data-local-kind="formula"] .site-favicon-svg { color: var(--info); }
+    .formula-preview-format { display: block; }
+    .formula-preview-format code { color: var(--muted); }
+    .formula-preview-format strong { color: var(--info); font-weight: 800; }
+    .formula-preview-notes { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 0; margin-top: 3px; font-size: .82rem; }
+    .formula-preview-note { color: var(--muted); }
+    .formula-preview-note + .formula-preview-note::before { content: "·"; margin: 0 5px; color: var(--muted); opacity: .7; }
+    .formula-preview-note.is-default, .formula-preview-note.is-interim { color: var(--info); }
+    .formula-preview-note.is-error { color: var(--danger); }
+    .formula-cash-positive { color: var(--good); font-weight: 700; }
+    .formula-cash-negative { color: var(--danger); font-weight: 700; }
     .site-actions { flex: 0 0 auto; flex-wrap: nowrap; justify-content: flex-end; gap: 6px; }
     .site-description { min-height: 1.45em; margin: 8px 0 0; font-size: .87rem; }
     .aliases { margin-top: 11px; }
@@ -4733,6 +4970,7 @@ function renderHelpPage(requestUrl) {
                 <select class="builder-select" id="builder-local-type" aria-label="Builder type">
                   <option value="bang">Normal bang</option>
                   <option value="multi">Multisearch</option>
+                  <option value="formula">Math bang</option>
                 </select>
               </label>
             </div>
@@ -4768,7 +5006,6 @@ function renderHelpPage(requestUrl) {
             <div class="builder-field">
               <label for="builder-aliases">Aliases</label>
               <input id="builder-aliases" type="text" autocomplete="off" spellcheck="false" placeholder="example, ex">
-              <small>Separate with spaces or commas.</small>
             </div>
             <div class="builder-field" id="builder-handler-field">
               <label for="builder-handler">Handler <span class="builder-note">(optional)</span></label>
@@ -4797,7 +5034,33 @@ function renderHelpPage(requestUrl) {
               <textarea id="builder-multi-targets" hidden aria-hidden="true"></textarea>
               <small>Add at least two targets. Choose an existing bang alias or a direct search URL containing <code>{q}</code>.</small>
             </div>
-            <div class="builder-field full">
+            <div id="builder-formula-fields" class="builder-formula-fields full" hidden>
+              <div class="builder-field full">
+                <label for="builder-formula-params">Parameters</label>
+                <input id="builder-formula-params" type="text" autocomplete="off" spellcheck="false" placeholder="initial final">
+                <small><code>name=default</code> sets a default. <code>parameter...</code> accepts multiple values. <code>{parameter | Help text}</code> adds help text.</small>
+              </div>
+              <div class="builder-field full">
+                <label for="builder-formula-expression">Expression</label>
+                <input id="builder-formula-expression" type="text" autocomplete="off" spellcheck="false" placeholder="(final - initial) / initial">
+                <small>Use parameters, arithmetic, and supported math helpers.</small>
+              </div>
+              <div class="builder-field full">
+                <label for="builder-formula-output">Output</label>
+                <div class="builder-icon-row">
+                  <input id="builder-formula-output" type="text" autocomplete="off" spellcheck="false" placeholder="{number}">
+                  <select class="builder-select" id="builder-formula-insert" aria-label="Insert value">
+                    <option value="">Insert value…</option>
+                    <option value="{number}">Number</option>
+                    <option value="{percent}">Percent</option>
+                    <option value="{currency}">Currency</option>
+                    <option value="{raw}">Raw</option>
+                  </select>
+                </div>
+                <small><code>{number:#}</code> to limit decimals.</small>
+              </div>
+            </div>
+            <div class="builder-field full" id="builder-icon-field">
               <label for="builder-icon">Icon override <span class="builder-note">(optional)</span></label>
               <div class="builder-icon-row">
                 <input id="builder-icon" type="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="Paste an icon URL or choose one below">
@@ -4816,7 +5079,7 @@ function renderHelpPage(requestUrl) {
             </div>
             <div class="builder-field full">
               <div class="builder-output-meta">
-                <label for="builder-code">Generated bang code</label>
+                <label for="builder-code" id="builder-code-label">Generated bang code</label>
                 <span class="builder-status" id="builder-validation-status" aria-live="polite"></span>
               </div>
               <small id="builder-code-hint">Paste this object into the appropriate <code>SITE_GROUPS</code> sites array.</small>
@@ -4892,6 +5155,14 @@ function renderHelpPage(requestUrl) {
     const RECENT_SEARCH_LIMIT = 20;
     const HOME_ENGINE_PATHS = ${JSON.stringify(homeEnginePaths)};
     const BANG_DATA = ${browserBangDataJson};
+    const FORMULA_DATA = ${formulaDataJson};
+    const FORMULA_TYPE_ICON_SVG = ${JSON.stringify(FORMULA_ICON_SVG)};
+    const FORMULA_BY_ALIAS = new Map(
+      FORMULA_DATA.flatMap((formula) =>
+        formula.aliases.map((alias) => [String(alias).toLowerCase(), formula])
+      )
+    );
+    const WOLFRAM_ALPHA_SEARCH = "https://www.wolframalpha.com/input?i={q}";
     const GITHUB_EDITOR_URL = ${JSON.stringify(PROJECT.editMain)};
     const BANG_BUILDER_ALIAS_OWNERS = ${bangBuilderAliasOwnersJson};
     BANG_BUILDER_ALIAS_OWNERS.xvideos ||= { id: "reserved:xvideos", name: "Reserved safety hint" };
@@ -4967,9 +5238,15 @@ function renderHelpPage(requestUrl) {
     const builderMultiTargets = document.getElementById("builder-multi-targets");
     const builderMultiTargetsEditor = document.getElementById("builder-multi-targets-editor");
     const builderMultiAdd = document.getElementById("builder-multi-add");
+    const builderFormulaFields = document.getElementById("builder-formula-fields");
+    const builderFormulaParams = document.getElementById("builder-formula-params");
+    const builderFormulaExpression = document.getElementById("builder-formula-expression");
+    const builderFormulaOutput = document.getElementById("builder-formula-output");
+    const builderFormulaInsert = document.getElementById("builder-formula-insert");
     const builderHandler = document.getElementById("builder-handler");
     const builderHandlerField = document.getElementById("builder-handler-field");
     const builderIcon = document.getElementById("builder-icon");
+    const builderIconField = document.getElementById("builder-icon-field");
     const builderIconBackground = document.getElementById("builder-icon-background");
     const builderIconAppearance = document.getElementById("builder-icon-appearance");
     const builderFindIcon = document.getElementById("builder-find-icon");
@@ -4988,6 +5265,7 @@ function renderHelpPage(requestUrl) {
     const builderValidationStatus = document.getElementById("builder-validation-status");
     const builderCodeHint = document.getElementById("builder-code-hint");
     const builderCode = document.getElementById("builder-code");
+    const builderCodeLabel = document.getElementById("builder-code-label");
     const builderCopyInline = document.getElementById("builder-copy-inline");
     const builderCopyBottom = document.getElementById("builder-copy-bottom");
     const builderAddLocal = document.getElementById("builder-add-local");
@@ -4999,6 +5277,7 @@ function renderHelpPage(requestUrl) {
     const requestedAction = pageParams.get("action") || "";
     const requestedLocalId = pageParams.get("local") || "";
     const requestedMode = pageParams.get("mode") || "";
+    const requestedSearchQuery = pageParams.get("q") || "";
     function updateSearchPlaceholder() {
       const engineName =
         homeEngineSelect.selectedOptions[0]?.textContent.trim() || "DuckDuckGo";
@@ -5060,11 +5339,12 @@ function renderHelpPage(requestUrl) {
         if (image.getAttribute("src") !== source) image.src = source;
       });
     }
-    const BANG_BUILDER_STORAGE_KEY = "search-bang-builder-draft-v2";
+    const BANG_BUILDER_STORAGE_KEY = "search-bang-builder-draft-v3";
     const BUILDER_ICON_INITIAL_LIMIT = 6;
-    const bangBuilderFields = [builderHome, builderName, builderAliases, builderDescription, builderSearch, builderMultiTargets, builderHandler, builderIcon, builderIconBackground];
+    const bangBuilderFields = [builderHome, builderName, builderAliases, builderDescription, builderSearch, builderMultiTargets, builderHandler, builderIcon, builderIconBackground, builderFormulaParams, builderFormulaExpression, builderFormulaOutput];
     let discoveredIconPreviewUrl = "";
     let builderEditingMultiIconKey = "";
+    let builderEditingFormulaIconSvg = "";
     let builderIconChoices = [];
     let builderIconPreferredIndex = -1;
     let builderIconChoicesExpanded = false;
@@ -5096,6 +5376,190 @@ function renderHelpPage(requestUrl) {
     function parseBuilderAliases(value) {
       return [...new Set(String(value || "").toLowerCase().split(/[\\s,]+/).map((alias) => alias.trim()).filter(Boolean))];
     }
+    function parseBuilderFormulaParams(value) {
+      const input = String(value || "").trim();
+      const specs = [];
+      const errors = [];
+      let cursor = 0;
+      while (cursor < input.length) {
+        while (cursor < input.length && /[\\s,]/.test(input[cursor])) cursor += 1;
+        if (cursor >= input.length) break;
+        if (input[cursor] === "}") {
+          errors.push("Unexpected } in Parameters.");
+          cursor += 1;
+          continue;
+        }
+        if (input[cursor] === "{") {
+          const close = input.indexOf("}", cursor + 1);
+          if (close < 0) {
+            errors.push("Close parameter help with }.");
+            break;
+          }
+          const body = input.slice(cursor + 1, close).trim();
+          if (body.includes("{")) {
+            errors.push("Parameter help cannot contain braces.");
+          } else {
+            const pipeIndex = body.indexOf("|");
+            if (pipeIndex < 0) {
+              specs.push({ token: body, help: "" });
+            } else {
+              const token = body.slice(0, pipeIndex).trim();
+              const help = body.slice(pipeIndex + 1).trim();
+              if (!help) errors.push("Add help text after |.");
+              specs.push({ token, help });
+            }
+          }
+          cursor = close + 1;
+          continue;
+        }
+        let end = cursor;
+        while (end < input.length && !/[\\s,{}]/.test(input[end])) end += 1;
+        const token = input.slice(cursor, end).trim();
+        if (token.includes("|")) errors.push("Put parameters with help text in { }.");
+        else if (token) specs.push({ token, help: "" });
+        cursor = end;
+      }
+      const params = [];
+      const seen = new Set();
+      let variadicSeen = false;
+      for (let index = 0; index < specs.length; index += 1) {
+        const { token, help } = specs[index];
+        const match = token.match(/^([a-z][a-z0-9_]*)(\\.\\.\\.)?(?:=(-?(?:\\d+(?:\\.\\d*)?|\\.\\d+)))?$/i);
+        if (!match) {
+          errors.push("Invalid parameter: " + (token || "(blank)") + ".");
+          continue;
+        }
+        const name = match[1];
+        const key = name.toLowerCase();
+        const variadic = Boolean(match[2]);
+        const hasDefault = match[3] !== undefined;
+        if (seen.has(key)) errors.push("Duplicate parameter: " + name + ".");
+        seen.add(key);
+        if (variadic && hasDefault) errors.push("A list parameter cannot have a default.");
+        if (variadic && index !== specs.length - 1) errors.push("The list parameter must be last.");
+        if (variadicSeen) errors.push("Only one list parameter is allowed.");
+        if (variadic) variadicSeen = true;
+        const paramName = name + (variadic ? "..." : "");
+        if (hasDefault || help) {
+          const param = { name: paramName };
+          if (hasDefault) param.default = Number(match[3]);
+          if (help) param.help = help.slice(0, 160);
+          params.push(param);
+        } else {
+          params.push(paramName);
+        }
+      }
+      return { params, errors: [...new Set(errors)] };
+    }
+    function normalizeStoredFormulaParams(rawParams) {
+      if (!Array.isArray(rawParams) || !rawParams.length) return null;
+      const params = [];
+      const seen = new Set();
+      let variadicSeen = false;
+      for (let index = 0; index < rawParams.length; index += 1) {
+        const raw = rawParams[index];
+        const rawName = typeof raw === "string" ? raw : String(raw?.name || "");
+        const match = rawName.trim().match(/^([a-z][a-z0-9_]*)(\\.\\.\\.)?$/i);
+        if (!match) return null;
+        const key = match[1].toLowerCase();
+        const variadic = Boolean(match[2]);
+        if (seen.has(key) || (variadic && (variadicSeen || index !== rawParams.length - 1))) return null;
+        seen.add(key);
+        if (variadic) variadicSeen = true;
+        const name = match[1] + (variadic ? "..." : "");
+        const hasDefault = typeof raw === "object" && raw !== null && Object.prototype.hasOwnProperty.call(raw, "default");
+        if (variadic && hasDefault) return null;
+        const help = typeof raw === "object" && raw !== null ? String(raw.help || "").trim().slice(0, 160) : "";
+        if (hasDefault || help) {
+          const param = { name };
+          if (hasDefault) {
+            const defaultValue = Number(raw.default);
+            if (!Number.isFinite(defaultValue)) return null;
+            param.default = defaultValue;
+          }
+          if (help) param.help = help;
+          params.push(param);
+        } else {
+          params.push(name);
+        }
+      }
+      return params;
+    }
+    function normalizeFormulaOutput(value) {
+      const output = String(value || "").trim() || "{number}";
+      return output.slice(0, 160);
+    }
+    const FORMULA_FUNCTIONS = {
+      abs(value) {
+        return typeof value === "number" ? Math.abs(value) : NaN;
+      },
+      sum(values) {
+        return Array.isArray(values) && values.length ? values.reduce((total, value) => total + value, 0) : NaN;
+      },
+      count(values) {
+        return Array.isArray(values) && values.length ? values.length : NaN;
+      },
+      discounted_sum(rate, cashFlows) {
+        if (typeof rate !== "number" || rate <= -1 || !Array.isArray(cashFlows) || !cashFlows.length) return NaN;
+        return cashFlows.reduce((total, cashFlow, index) => total + cashFlow / ((1 + rate) ** (index + 1)), 0);
+      },
+      annuity(rate, periods, type) {
+        if (![rate, periods, type].every((value) => typeof value === "number" && Number.isFinite(value))) return NaN;
+        if (periods <= 0 || (type !== 0 && type !== 1) || rate <= -1) return NaN;
+        if (rate === 0) return periods;
+        return (1 + rate * type) * (((1 + rate) ** periods - 1) / rate);
+      },
+      nper(rate, payment, present, future, type) {
+        if (![rate, payment, present, future, type].every((value) => typeof value === "number" && Number.isFinite(value))) return NaN;
+        if (rate <= -1 || (type !== 0 && type !== 1)) return NaN;
+        if (rate === 0) return payment === 0 ? NaN : -(present + future) / payment;
+        const adjustedPayment = payment * (1 + rate * type);
+        const ratio = (adjustedPayment - future * rate) / (present * rate + adjustedPayment);
+        if (ratio <= 0) return NaN;
+        return Math.log(ratio) / Math.log(1 + rate);
+      }
+    };
+    function inspectFormulaDefinition(formula) {
+      const errors = [];
+      const warnings = [];
+      const params = (formula?.params || []).map(normalizeFormulaParam);
+      if (!params.length) errors.push("Add at least one parameter.");
+      const paramKeys = new Set(params.map((param) => formulaParamKey(param.name)));
+      const usedParams = new Set();
+      const tokens = tokenizeFormulaExpression(formula?.expression || "");
+      if (!tokens) {
+        errors.push("Enter a valid expression.");
+      } else {
+        for (let index = 0; index < tokens.length; index += 1) {
+          const token = tokens[index];
+          if (token.type !== "ident") continue;
+          const isCall = tokens[index + 1]?.type === "(";
+          if (isCall) {
+            if (typeof FORMULA_FUNCTIONS[token.value] !== "function") errors.push("Unknown helper: " + token.value + ".");
+          } else if (!paramKeys.has(token.value)) {
+            errors.push("Unknown parameter: " + token.value + ".");
+          } else {
+            usedParams.add(token.value);
+          }
+        }
+      }
+      if (tokens) {
+        const unused = params.filter((param) => !usedParams.has(formulaParamKey(param.name))).map((param) => formulaParamDisplayName(param.name));
+        if (unused.length) warnings.push("Unused parameter" + (unused.length === 1 ? ": " : "s: ") + unused.join(", ") + ".");
+      }
+      const output = normalizeFormulaOutput(formula?.output);
+      const supported = /\\{(?:number|percent)(?::(?:[0-9]|10))?\\}|\\{(?:currency|raw)\\}/g;
+      const validToken = /^\\{(?:number|percent)(?::(?:[0-9]|10))?\\}$|^\\{(?:currency|raw)\\}$/;
+      const matches = output.match(supported) || [];
+      if (!matches.length) errors.push("Output needs a value token.");
+      const braceTokens = output.match(/\\{[^{}]*\\}/g) || [];
+      const invalidTokens = braceTokens.filter((token) => !validToken.test(token));
+      if (invalidTokens.length) errors.push("Unknown output token: " + invalidTokens[0] + ".");
+      return { errors: [...new Set(errors)], warnings: [...new Set(warnings)] };
+    }
+    function validateFormulaDefinition(formula) {
+      return inspectFormulaDefinition(formula).errors;
+    }
     const LOCAL_BANGS_STORAGE_KEY = "search-local-bangs-v1";
     const LOCAL_BANG_LIMIT = 100;
     const BUILTIN_SITE_TOTAL = ${totalSites};
@@ -5110,7 +5574,26 @@ function renderHelpPage(requestUrl) {
         .map((alias) => String(alias).trim().toLowerCase())
         .filter((alias) => /^[a-z0-9_-]+$/.test(alias)))].slice(0, 20);
       if (!aliases.length) return null;
-      const kind = raw.kind === "multi" ? "multi" : "bang";
+      const kind = raw.kind === "formula" ? "formula" : raw.kind === "multi" ? "multi" : "bang";
+      const name = String(raw.name || aliases[0]).trim().slice(0, 80) || aliases[0];
+      const description = String(raw.description || "").replace(/\s+/g, " ").trim().slice(0, 240);
+      if (kind === "formula") {
+        const params = normalizeStoredFormulaParams(raw.params);
+        const expression = String(raw.expression || "").trim().slice(0, 500);
+        const output = normalizeFormulaOutput(raw.output);
+        let icon = "";
+        try { icon = normalizeBuilderHttpUrl(raw.icon); } catch { icon = ""; }
+        const iconSvg = String(raw.iconSvg || "").trim().slice(0, 8000);
+        const candidate = { aliases, name, description, params: params || [], expression, output, icon, iconSvg, iconBackground: ["light", "dark"].includes(raw.iconBackground) ? raw.iconBackground : "" };
+        if (!params || validateFormulaDefinition(candidate).length) return null;
+        return {
+          id: String(raw.id || fallbackId || makeLocalBangId()).slice(0, 100),
+          kind,
+          ...candidate,
+          createdAt: String(raw.createdAt || new Date().toISOString()),
+          updatedAt: String(raw.updatedAt || new Date().toISOString())
+        };
+      }
       let home = "", search = "", icon = "";
       try { home = normalizeBuilderHttpUrl(raw.home); } catch { home = ""; }
       try { search = normalizeBuilderSearchUrl(raw.search); } catch { search = ""; }
@@ -5148,7 +5631,6 @@ function renderHelpPage(requestUrl) {
         home = home || "https://search.micahjeffery.com/";
         search = "";
       } else if (!home || (search && !search.includes("{q}"))) return null;
-      const name = String(raw.name || aliases[0]).trim().slice(0, 80) || aliases[0];
       return {
         id: String(raw.id || fallbackId || makeLocalBangId()).slice(0, 100),
         kind,
@@ -5169,10 +5651,13 @@ function renderHelpPage(requestUrl) {
         const parsed = JSON.parse(readStorage(LOCAL_BANGS_STORAGE_KEY, "[]"));
         if (!Array.isArray(parsed)) return [];
         const result = [];
-        const usedAliases = new Set(Object.keys(BANG_BUILDER_ALIAS_OWNERS));
+        const usedBangAliases = new Set(Object.keys(BANG_BUILDER_ALIAS_OWNERS));
+        const usedFormulaAliases = new Set(FORMULA_DATA.flatMap((formula) => formula.aliases.map((alias) => String(alias).toLowerCase())));
         for (const item of parsed.slice(0, LOCAL_BANG_LIMIT)) {
           const bang = normalizeLocalBang(item);
-          if (!bang || bang.aliases.some((alias) => usedAliases.has(alias))) continue;
+          if (!bang) continue;
+          const usedAliases = bang.kind === "formula" ? usedFormulaAliases : usedBangAliases;
+          if (bang.aliases.some((alias) => usedAliases.has(alias))) continue;
           bang.aliases.forEach((alias) => usedAliases.add(alias));
           result.push(bang);
         }
@@ -5182,13 +5667,24 @@ function renderHelpPage(requestUrl) {
     function saveLocalBangs() {
       writeStorage(LOCAL_BANGS_STORAGE_KEY, JSON.stringify(localBangs.slice(0, LOCAL_BANG_LIMIT)));
       refreshBuilderBangAliasesList();
+      refreshFormulaAliasMap();
     }
     let localBangs = readLocalBangs();
+    function refreshFormulaAliasMap() {
+      FORMULA_BY_ALIAS.clear();
+      for (const formula of FORMULA_DATA) {
+        for (const alias of formula.aliases || []) FORMULA_BY_ALIAS.set(String(alias).toLowerCase(), formula);
+      }
+      for (const formula of localBangs.filter((item) => item.kind === "formula")) {
+        for (const alias of formula.aliases || []) FORMULA_BY_ALIAS.set(String(alias).toLowerCase(), formula);
+      }
+    }
+    refreshFormulaAliasMap();
     function refreshBuilderBangAliasesList() {
       if (!builderBangAliasesList) return;
       const aliases = [...new Set([
         ...Object.keys(BANG_BUILDER_ALIAS_OWNERS),
-        ...localBangs.flatMap((bang) => bang.aliases || [])
+        ...localBangs.filter((bang) => bang.kind !== "formula").flatMap((bang) => bang.aliases || [])
       ])].sort();
       builderBangAliasesList.innerHTML = aliases.map((alias) => '<option value="' + alias.replaceAll('&', '&amp;').replaceAll('"', '&quot;') + '"></option>').join("");
     }
@@ -5197,14 +5693,21 @@ function renderHelpPage(requestUrl) {
       return {
         ...bang,
         id: "local:" + bang.id,
-        category: "Local Bangs",
-        handler: bang.kind === "multi" ? "multi" : "",
+        category: bang.kind === "formula" ? "Local Math Bangs" : "Local Bangs",
+        handler: bang.kind === "formula" ? "formula" : bang.kind === "multi" ? "multi" : "",
         isLocal: true
       };
     }
     function findLocalBangByAlias(alias) {
       const normalized = String(alias || "").toLowerCase();
-      return localBangs.find((bang) => bang.aliases.includes(normalized)) || null;
+      return localBangs.find((bang) => bang.kind !== "formula" && bang.aliases.includes(normalized)) || null;
+    }
+    function getBuilderFormulaAliasOwner(alias) {
+      const normalized = String(alias || "").toLowerCase();
+      const builtIn = FORMULA_DATA.find((formula) => (formula.aliases || []).some((item) => String(item).toLowerCase() === normalized));
+      if (builtIn) return { id: "formula:" + builtIn.aliases[0], name: builtIn.name, isLocal: false };
+      const local = localBangs.find((bang) => bang.kind === "formula" && bang.aliases.includes(normalized));
+      return local ? { id: "local:" + local.id, name: local.name, isLocal: true } : null;
     }
     function getBuilderAliasOwner(alias) {
       const builtIn = BANG_BUILDER_ALIAS_OWNERS[alias];
@@ -5217,13 +5720,13 @@ function renderHelpPage(requestUrl) {
       if (explicit) return explicit;
       try { return new URL("/favicon.ico", bang.home).href; } catch { return ""; }
     }
-    function appendFaviconEditButton(heading, imageUrl, siteId, siteName, iconBackground = "") {
+    function appendFaviconEditButton(heading, imageUrl, siteId, siteName, iconBackground = "", builderLabel = "Bang Builder") {
       const button = document.createElement("button");
       button.className = "site-favicon-edit" + (imageUrl ? " has-favicon" : "") + (["light", "dark"].includes(iconBackground) ? " icon-bg-" + iconBackground : "");
       button.type = "button";
       button.dataset.builderEditSite = siteId;
-      button.setAttribute("aria-label", "Edit " + siteName + " in Bang Builder");
-      button.title = "Edit in Bang Builder";
+      button.setAttribute("aria-label", "Edit " + siteName + " in " + builderLabel);
+      button.title = "Edit in " + builderLabel;
       const fallback = document.createElement("span");
       fallback.className = "site-favicon-fallback";
       fallback.setAttribute("aria-hidden", "true");
@@ -5249,21 +5752,37 @@ function renderHelpPage(requestUrl) {
       heading.append(button);
     }
     function buildLocalBangCard(bang) {
+      const isFormula = bang.kind === "formula";
       const card = document.createElement("article");
       card.className = "site-card local-site-card";
       card.dataset.siteKey = "local:" + bang.id;
+      card.dataset.siteKind = isFormula ? "formula" : "bang";
       card.dataset.localBangId = bang.id;
+      card.dataset.localKind = bang.kind;
       card.dataset.siteName = bang.name;
       card.dataset.aliases = bang.aliases.join(" ");
-      card.dataset.category = bang.kind === "multi" ? "Local multisearches" : "Local bangs";
-      card.dataset.search = [bang.name, bang.description, card.dataset.category, ...bang.aliases, bang.home, bang.search].join(" ").toLowerCase();
-      card.title = bang.home;
+      card.dataset.category = isFormula ? "Local math bangs" : bang.kind === "multi" ? "Local multisearches" : "Local bangs";
+      card.dataset.search = [bang.name, bang.description, card.dataset.category, ...bang.aliases, bang.home || "", bang.search || "", bang.expression || "", ...(bang.params || []).map((param) => typeof param === "string" ? param : param.name || "")].join(" ").toLowerCase();
+      if (bang.home) card.title = bang.home;
 
       const top = document.createElement("div");
       top.className = "site-top";
       const heading = document.createElement("div");
       heading.className = "site-heading";
-      if (bang.kind === "multi") {
+      if (isFormula) {
+        if (bang.icon) {
+          appendFaviconEditButton(heading, bang.icon, "local:" + bang.id, bang.name, bang.iconBackground, "Math Bang Builder");
+        } else {
+          const formulaButton = document.createElement("button");
+          formulaButton.className = "site-favicon-edit has-custom-visual";
+          formulaButton.type = "button";
+          formulaButton.dataset.builderEditSite = "local:" + bang.id;
+          formulaButton.setAttribute("aria-label", "Edit " + bang.name + " in Math Bang Builder");
+          formulaButton.title = "Edit in Math Bang Builder";
+          formulaButton.innerHTML = '<span class="site-favicon-fallback" aria-hidden="true"></span><span class="site-favicon site-favicon-svg" aria-hidden="true">' + (bang.iconSvg || FORMULA_TYPE_ICON_SVG) + '</span><span class="site-favicon-pencil" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m16.9 3.6 3.5 3.5-11 11-4.4.9.9-4.4 11-11ZM4 20l1.5-7.1L15.8 2.6a2 2 0 0 1 2.8 0l2.8 2.8a2 2 0 0 1 0 2.8L11.1 18.5 4 20Z"/></svg></span>';
+          heading.append(formulaButton);
+        }
+      } else if (bang.kind === "multi") {
         const multiButton = document.createElement("button");
         multiButton.className = "site-favicon-edit has-custom-visual";
         multiButton.type = "button";
@@ -5275,22 +5794,33 @@ function renderHelpPage(requestUrl) {
       } else {
         appendFaviconEditButton(heading, getLocalBangFavicon(bang), "local:" + bang.id, bang.name, bang.iconBackground);
       }
-      const name = document.createElement("a");
-      name.className = "site-name";
-      name.href = bang.kind === "multi" ? "/?q=" + encodeURIComponent("!" + bang.aliases[0]) : bang.home;
-      name.target = "_blank";
-      name.rel = "noreferrer";
-      name.title = bang.name;
-      name.textContent = bang.name;
-      heading.append(name);
+      if (isFormula) {
+        const name = document.createElement("button");
+        name.className = "site-name site-name-button";
+        name.type = "button";
+        name.dataset.formulaCommand = bang.aliases[0];
+        name.title = "Use =" + bang.aliases[0];
+        name.textContent = bang.name;
+        heading.append(name);
+      } else {
+        const name = document.createElement("a");
+        name.className = "site-name";
+        name.href = bang.kind === "multi" ? "/?q=" + encodeURIComponent("!" + bang.aliases[0]) : bang.home;
+        name.target = "_blank";
+        name.rel = "noreferrer";
+        name.title = bang.name;
+        name.textContent = bang.name;
+        heading.append(name);
+      }
       const actions = document.createElement("div");
       actions.className = "site-actions";
       const type = document.createElement("span");
-      const localType = bang.kind === "multi" ? "multi" : bang.search ? "search" : "open";
+      const localType = isFormula ? "formula" : bang.kind === "multi" ? "multi" : bang.search ? "search" : "open";
       type.className = "type " + localType;
       type.setAttribute("role", "img");
-      type.setAttribute("aria-label", bang.kind === "multi" ? "Local multisearch" : bang.search ? "Local search" : "Local link");
-      type.title = bang.kind === "multi" ? "Local multisearch" : bang.search ? "Local search" : "Local link";
+      const typeLabel = isFormula ? "Local formula" : bang.kind === "multi" ? "Local multisearch" : bang.search ? "Local search" : "Local link";
+      type.setAttribute("aria-label", typeLabel);
+      type.title = typeLabel;
       const favorite = document.createElement("button");
       favorite.className = "favorite-button";
       favorite.type = "button";
@@ -5303,8 +5833,8 @@ function renderHelpPage(requestUrl) {
       remove.className = "local-delete-button";
       remove.type = "button";
       remove.dataset.localCardDelete = bang.id;
-      remove.setAttribute("aria-label", "Delete local bang " + bang.name);
-      remove.title = "Delete local bang";
+      remove.setAttribute("aria-label", "Delete local " + (isFormula ? "math bang " : "bang ") + bang.name);
+      remove.title = "Delete local " + (isFormula ? "math bang" : "bang");
       remove.innerHTML = '<img class="local-delete-icon" src="https://www.svgrepo.com/show/471998/trash-01.svg" alt="" width="14" height="14" loading="lazy" decoding="async" referrerpolicy="no-referrer">';
       actions.append(type, favorite, remove);
       top.append(heading, actions);
@@ -5317,23 +5847,31 @@ function renderHelpPage(requestUrl) {
       }
       const aliases = document.createElement("div");
       aliases.className = "aliases";
-      bang.aliases.forEach((alias) => {
+      bang.aliases.forEach((alias, index) => {
         const button = document.createElement("button");
         button.className = "alias";
         button.type = "button";
-        button.dataset.bang = "!" + alias;
-        button.title = "Use !" + alias + " in the search box";
-        button.textContent = "!" + alias;
+        if (isFormula) {
+          button.dataset.formulaCommand = alias;
+          button.title = "Use =" + alias;
+          button.textContent = "=" + (index === 0 ? alias.toUpperCase() : alias);
+        } else {
+          button.dataset.bang = "!" + alias;
+          button.title = "Use !" + alias + " in the search box";
+          button.textContent = "!" + alias;
+        }
         aliases.append(button);
       });
       card.append(aliases);
-      const url = document.createElement("a");
-      url.className = "site-url";
-      url.href = bang.home;
-      url.target = "_blank";
-      url.rel = "noreferrer";
-      url.textContent = bang.home;
-      card.append(url);
+      if (!isFormula && bang.home) {
+        const url = document.createElement("a");
+        url.className = "site-url";
+        url.href = bang.home;
+        url.target = "_blank";
+        url.rel = "noreferrer";
+        url.textContent = bang.home;
+        card.append(url);
+      }
       return card;
     }
     function updateLocalBangCounts() {
@@ -5361,7 +5899,7 @@ function renderHelpPage(requestUrl) {
         const name = document.createElement("strong");
         name.textContent = bang.name;
         const aliases = document.createElement("code");
-        aliases.textContent = bang.aliases.map((alias) => "!" + alias).join(" · ");
+        aliases.textContent = bang.aliases.map((alias) => (bang.kind === "formula" ? "=" : "!") + alias).join(" · ");
         main.append(name, aliases);
         if (bang.description) {
           const description = document.createElement("small");
@@ -5414,12 +5952,34 @@ function renderHelpPage(requestUrl) {
         return url.href.replace("__QUERY__", "{q}").replace(/\\/+$/, "");
       } catch { return ""; }
     }
+    function formulaBuilderSite(formula, isLocal = false) {
+      return {
+        ...formula,
+        id: isLocal ? "local:" + formula.id : "formula:" + formula.aliases[0],
+        kind: "formula",
+        handler: "formula",
+        category: isLocal ? "Local Math Bangs" : "FORMULAS",
+        isLocal
+      };
+    }
     function findExistingBuilderSite() {
+      if (builderLocalType.value === "formula") {
+        const aliases = parseBuilderAliases(builderAliases.value);
+        const sites = [
+          ...FORMULA_DATA.map((formula) => formulaBuilderSite(formula, false)),
+          ...localBangs.filter((item) => item.kind === "formula").map((formula) => formulaBuilderSite(formula, true))
+        ];
+        if (builderEditingId) {
+          const editing = sites.find((site) => site.id === builderEditingId);
+          if (editing) return editing;
+        }
+        return aliases.length ? sites.find((site) => site.aliases.some((alias) => aliases.includes(alias))) || null : null;
+      }
       if (builderLocalType.value === "multi") return null;
       const homeKey = builderHomeKey(builderHome.value);
       const searchKey = builderSearchKey(builderSearch.value);
       if (!homeKey && !searchKey) return null;
-      const matches = [...BANG_BUILDER_EXISTING_SITES, ...localBangs.map(localBuilderSite)].filter((site) =>
+      const matches = [...BANG_BUILDER_EXISTING_SITES, ...localBangs.filter((item) => item.kind !== "formula").map(localBuilderSite)].filter((site) =>
         (homeKey && builderHomeKey(site.home) === homeKey) ||
         (searchKey && site.search && builderSearchKey(site.search) === searchKey)
       );
@@ -5431,7 +5991,7 @@ function renderHelpPage(requestUrl) {
       builderExistingMatch = match;
       if (!match) {
         builderExisting.hidden = true;
-        if (builderEditingId && builderEditingId !== previousId) builderEditingId = "";
+        if (builderEditingId && !builderEditingId.startsWith("local:") && builderEditingId !== previousId) builderEditingId = "";
         builderDuplicateAllowed = false;
         return;
       }
@@ -5452,60 +6012,70 @@ function renderHelpPage(requestUrl) {
         return;
       }
       builderExisting.hidden = false;
-      builderExistingTitle.textContent = "This URL already exists";
-      builderExistingText.textContent = match.name + " uses !" + match.aliases.join(", !") + ".";
+      const isFormula = builderLocalType.value === "formula";
+      builderExistingTitle.textContent = isFormula ? "This math bang already exists" : "This URL already exists";
+      builderExistingText.textContent = isFormula
+        ? match.name + " uses =" + match.aliases.join(", =") + "."
+        : match.name + " uses !" + match.aliases.join(", !") + ".";
       builderEditExisting.hidden = false;
-      builderKeepNew.hidden = false;
+      builderKeepNew.hidden = builderLocalType.value === "formula";
     }
-    function loadExistingBang() {
-      clearBuilderIconSuggestions();
-      const site = builderExistingMatch;
+    function formulaParamsToBuilderText(params) {
+      return (params || []).map((param) => {
+        if (typeof param === "string") return param;
+        const name = String(param?.name || "").trim();
+        if (!name) return "";
+        const spec = Object.prototype.hasOwnProperty.call(param || {}, "default") ? name + "=" + String(param.default) : name;
+        const help = String(param?.help || "").trim();
+        return help ? "{" + spec + " | " + help + "}" : spec;
+      }).filter(Boolean).join(" ");
+    }
+    function loadBuilderSite(site) {
       if (!site) return;
       builderEditingId = site.id;
       builderDuplicateAllowed = false;
-      builderHome.value = site.home || "";
       builderName.value = site.name || "";
       builderAliases.value = (site.aliases || []).join(", ");
       builderDescription.value = site.description || "";
+      builderLocalType.value = site.kind === "formula" || site.handler === "formula" ? "formula" : site.kind === "multi" ? "multi" : "bang";
+      builderHome.value = site.home || "";
       builderSearch.value = site.search || "";
-      builderLocalType.value = site.kind === "multi" ? "multi" : "bang";
       builderMultiTargets.value = site.kind === "multi" && Array.isArray(site.targets) ? JSON.stringify(site.targets) : "";
       builderEditingMultiIconKey = site.kind === "multi" ? String(site.iconKey || "") : "";
-      renderBuilderMultiTargetEditor();
-      syncBuilderTypeUi();
-      builderHandler.value = site.handler === "multi" ? "" : (site.handler || "");
+      builderHandler.value = site.handler === "multi" || site.handler === "formula" ? "" : (site.handler || "");
       builderIcon.value = site.icon || "";
       builderIconBackground.value = site.iconBackground || "";
-      setBuilderIconPreview(builderIcon.value);
+      builderEditingFormulaIconSvg = site.kind === "formula" || site.handler === "formula" ? String(site.iconSvg || "") : "";
+      builderFormulaParams.value = site.kind === "formula" || site.handler === "formula" ? formulaParamsToBuilderText(site.params) : "";
+      builderFormulaExpression.value = site.kind === "formula" || site.handler === "formula" ? String(site.expression || "") : "";
+      builderFormulaOutput.value = site.kind === "formula" || site.handler === "formula" ? normalizeFormulaOutput(site.output) : "{number}";
+      renderBuilderMultiTargetEditor();
+      syncBuilderTypeUi();
+      setBuilderIconPreview(builderIcon.value || (site.isLocal && site.kind !== "formula" ? getLocalBangFavicon(site) : ""));
       updateExistingBuilderMatch();
       renderBangBuilderCode();
+    }
+    function loadExistingBang() {
+      clearBuilderIconSuggestions();
+      loadBuilderSite(builderExistingMatch);
     }
     function openBuilderForSiteId(siteId) {
       clearBuilderIconSuggestions();
       const normalizedId = String(siteId || "");
-      const site = normalizedId.startsWith("local:")
-        ? localBangs.map(localBuilderSite).find((item) => item.id === normalizedId)
-        : BANG_BUILDER_EXISTING_SITES.find((item) => item.id === normalizedId);
+      let site = null;
+      if (normalizedId.startsWith("local:")) {
+        const local = localBangs.find((item) => "local:" + item.id === normalizedId);
+        if (local) site = localBuilderSite(local);
+      } else if (normalizedId.startsWith("formula:")) {
+        const command = normalizedId.slice(8);
+        const formula = FORMULA_DATA.find((item) => item.aliases[0] === command);
+        if (formula) site = formulaBuilderSite(formula, false);
+      } else {
+        site = BANG_BUILDER_EXISTING_SITES.find((item) => item.id === normalizedId) || null;
+      }
       if (!site) return;
       builderExistingMatch = site;
-      builderEditingId = site.id;
-      builderDuplicateAllowed = false;
-      builderHome.value = site.home || "";
-      builderName.value = site.name || "";
-      builderAliases.value = (site.aliases || []).join(", ");
-      builderDescription.value = site.description || "";
-      builderSearch.value = site.search || "";
-      builderLocalType.value = site.kind === "multi" ? "multi" : "bang";
-      builderMultiTargets.value = site.kind === "multi" && Array.isArray(site.targets) ? JSON.stringify(site.targets) : "";
-      builderEditingMultiIconKey = site.kind === "multi" ? String(site.iconKey || "") : "";
-      renderBuilderMultiTargetEditor();
-      syncBuilderTypeUi();
-      builderHandler.value = site.handler === "multi" ? "" : (site.handler || "");
-      builderIcon.value = site.icon || "";
-      builderIconBackground.value = site.iconBackground || "";
-      setBuilderIconPreview(builderIcon.value || getLocalBangFavicon(site));
-      updateExistingBuilderMatch();
-      renderBangBuilderCode();
+      loadBuilderSite(site);
       if (localBangsManagerDialog.open) localBangsManagerDialog.close();
       openBangBuilder();
     }
@@ -5520,6 +6090,7 @@ function renderHelpPage(requestUrl) {
       writeStorage(BANG_BUILDER_STORAGE_KEY, JSON.stringify({
         name: builderName.value, aliases: builderAliases.value, description: builderDescription.value,
         home: builderHome.value, search: builderSearch.value, multiTargets: builderMultiTargets.value, localType: builderLocalType.value, handler: builderHandler.value, icon: builderIcon.value, iconBackground: builderIconBackground.value,
+        formulaParams: builderFormulaParams.value, formulaExpression: builderFormulaExpression.value, formulaOutput: builderFormulaOutput.value,
         editingId: builderEditingId, duplicateAllowed: builderDuplicateAllowed, multiIconKey: builderEditingMultiIconKey
       }));
     }
@@ -5532,10 +6103,13 @@ function renderHelpPage(requestUrl) {
         builderHome.value = typeof draft.home === "string" ? draft.home : "";
         builderSearch.value = typeof draft.search === "string" ? draft.search : "";
         builderMultiTargets.value = typeof draft.multiTargets === "string" ? draft.multiTargets : "";
-        builderLocalType.value = draft.localType === "multi" ? "multi" : "bang";
+        builderLocalType.value = ["multi", "formula"].includes(draft.localType) ? draft.localType : "bang";
         builderHandler.value = typeof draft.handler === "string" ? draft.handler : "";
         builderIcon.value = typeof draft.icon === "string" ? draft.icon : "";
         builderIconBackground.value = ["light", "dark"].includes(draft.iconBackground) ? draft.iconBackground : "";
+        builderFormulaParams.value = typeof draft.formulaParams === "string" ? draft.formulaParams : "";
+        builderFormulaExpression.value = typeof draft.formulaExpression === "string" ? draft.formulaExpression : "";
+        builderFormulaOutput.value = typeof draft.formulaOutput === "string" ? draft.formulaOutput : "{number}";
         builderEditingId = typeof draft.editingId === "string" ? draft.editingId : "";
         builderDuplicateAllowed = Boolean(draft.duplicateAllowed);
         builderEditingMultiIconKey = typeof draft.multiIconKey === "string" ? draft.multiIconKey : "";
@@ -5708,16 +6282,25 @@ function renderHelpPage(requestUrl) {
     }
     function syncBuilderTypeUi() {
       const isMulti = builderLocalType.value === "multi";
-      builderHomeField.hidden = isMulti;
-      builderSearchField.hidden = isMulti;
-      builderHandlerField.hidden = isMulti;
+      const isFormula = builderLocalType.value === "formula";
+      builderHomeField.hidden = isMulti || isFormula;
+      builderSearchField.hidden = isMulti || isFormula;
+      builderHandlerField.hidden = isMulti || isFormula;
       builderMultiTargetsField.hidden = !isMulti;
-      if (isMulti) {
+      builderFormulaFields.hidden = !isFormula;
+      builderIconField.hidden = false;
+      builderFindIconOverride.hidden = isFormula;
+      if (isFormula && !builderFormulaOutput.value.trim()) builderFormulaOutput.value = "{number}";
+      if (!builderIcon.value.trim()) setBuilderStatus(builderIconStatus, isFormula ? "" : "Inspect the site to find favicon choices.");
+      builderCodeLabel.textContent = isFormula ? "Generated math bang code" : isMulti ? "Generated multisearch code" : "Generated bang code";
+      if (isMulti || isFormula) {
         builderHandler.value = "";
+        if (isMulti && !builderMultiTargetsEditor.children.length) renderBuilderMultiTargetEditor();
+      }
+      if (isMulti) {
         builderExisting.hidden = true;
         builderExistingMatch = null;
         builderDuplicateAllowed = false;
-        if (!builderMultiTargetsEditor.children.length) renderBuilderMultiTargetEditor();
       }
     }
     function applyBuilderSearchDiscovery(data, { force = false, allowGuess = false } = {}) {
@@ -5767,53 +6350,129 @@ function renderHelpPage(requestUrl) {
         window.open(search.replaceAll("{q}", encodeURIComponent("test search")), "_blank", "noopener");
       } catch (error) { setBuilderStatus(builderValidationStatus, error.message || "Could not test that URL.", "danger"); }
     }
-    function renderBangBuilderCode() {
-      updateExistingBuilderMatch();
+    function collectBuilderCandidate() {
       const name = builderName.value.trim();
       const aliases = parseBuilderAliases(builderAliases.value);
       const description = builderDescription.value.trim();
       const isMulti = builderLocalType.value === "multi";
-      const handler = isMulti ? "" : builderHandler.value.trim().toLowerCase();
+      const isFormula = builderLocalType.value === "formula";
+      const handler = isMulti || isFormula ? "" : builderHandler.value.trim().toLowerCase();
+      const editingLocalId = builderEditingId.startsWith("local:") ? builderEditingId.slice(6) : "";
       const errors = [];
       const warnings = [];
       let home = "", search = "", icon = "";
       const requestedIconBackground = ["light", "dark"].includes(builderIconBackground.value) ? builderIconBackground.value : "";
       let iconBackground = "";
-      const multiTargetResults = isMulti ? parseBuilderMultiTargets(builderMultiTargets.value) : [];
-      const multiTargetErrors = multiTargetResults.filter((target) => target.error).map((target) => target.error);
-      const multiTargets = multiTargetResults.filter((target) => !target.error);
-      try { home = normalizeBuilderHttpUrl(builderHome.value); } catch (error) { if (!isMulti) errors.push(error.message || "Invalid home URL."); }
-      try { search = normalizeBuilderSearchUrl(builderSearch.value); } catch (error) { if (!isMulti) errors.push(error.message || "Invalid search URL."); }
-      try { icon = normalizeBuilderHttpUrl(builderIcon.value); } catch (error) { errors.push(error.message || "Invalid icon URL."); }
-      iconBackground = requestedIconBackground && (icon || (isMulti && builderEditingMultiIconKey)) ? requestedIconBackground : "";
+
       if (!name) errors.push("Add a name.");
       if (!aliases.length) errors.push("Add an alias.");
       const invalidAliases = aliases.filter((alias) => !/^[a-z0-9_-]+$/.test(alias));
       if (invalidAliases.length) errors.push("Invalid aliases: " + invalidAliases.join(", ") + ".");
       if (handler && !/^[a-z0-9_-]+$/.test(handler)) errors.push("Handler names may use lowercase letters, numbers, underscores, and hyphens.");
       if (handler && !BANG_BUILDER_HANDLERS.includes(handler)) warnings.push("Custom handler: add matching Worker logic.");
-      if (builderDuplicateAllowed) warnings.push("Duplicate URL allowed; use unique aliases.");
+      if (!isFormula && builderDuplicateAllowed) warnings.push("Duplicate URL allowed; use unique aliases.");
+
       const conflicts = aliases.flatMap((alias) => {
-        const owner = getBuilderAliasOwner(alias);
+        const owner = isFormula ? getBuilderFormulaAliasOwner(alias) : getBuilderAliasOwner(alias);
         if (!owner || owner.id === builderEditingId) return [];
         return [alias + " (" + owner.name + ")"];
       });
       if (conflicts.length) errors.push("Aliases in use: " + conflicts.join(", ") + ".");
-      if (isMulti) {
-        errors.push(...multiTargetErrors);
-        if (multiTargets.length < 2) errors.push("Add at least two valid multisearch targets.");
+
+      let bang = null;
+      let multiTargets = [];
+      if (isFormula) {
+        const parsedParams = parseBuilderFormulaParams(builderFormulaParams.value);
+        errors.push(...parsedParams.errors);
+        try { icon = normalizeBuilderHttpUrl(builderIcon.value); } catch (error) { errors.push(error.message || "Invalid icon URL."); }
+        iconBackground = requestedIconBackground && icon ? requestedIconBackground : "";
+        bang = {
+          kind: "formula",
+          name,
+          aliases,
+          description,
+          params: parsedParams.params,
+          expression: builderFormulaExpression.value.trim(),
+          output: normalizeFormulaOutput(builderFormulaOutput.value),
+          icon,
+          iconSvg: icon ? "" : builderEditingFormulaIconSvg,
+          iconBackground
+        };
+        const issues = inspectFormulaDefinition(bang);
+        errors.push(...issues.errors);
+        warnings.push(...issues.warnings);
       } else {
-        if (!home && !errors.some((message) => message.toLowerCase().includes("home url"))) errors.push("Add a home URL.");
-        if (search && !search.includes("{q}")) errors.push('Search URL needs "{q}".');
+        try { home = normalizeBuilderHttpUrl(builderHome.value); } catch (error) { if (!isMulti) errors.push(error.message || "Invalid home URL."); }
+        try { search = normalizeBuilderSearchUrl(builderSearch.value); } catch (error) { if (!isMulti) errors.push(error.message || "Invalid search URL."); }
+        try { icon = normalizeBuilderHttpUrl(builderIcon.value); } catch (error) { errors.push(error.message || "Invalid icon URL."); }
+        iconBackground = requestedIconBackground && (icon || (!isMulti && home) || (isMulti && builderEditingMultiIconKey)) ? requestedIconBackground : "";
+        const targetResults = isMulti ? parseBuilderMultiTargets(builderMultiTargets.value) : [];
+        multiTargets = targetResults.filter((target) => !target.error);
+        errors.push(...targetResults.filter((target) => target.error).map((target) => target.error));
+        if (isMulti) {
+          if (multiTargets.length < 2) errors.push("Add at least two valid multisearch targets.");
+          home = home || "https://search.micahjeffery.com/";
+          search = "";
+        } else {
+          if (!home && !errors.some((message) => message.toLowerCase().includes("home url"))) errors.push("Add a home URL.");
+          if (search && !search.includes("{q}")) errors.push('Search URL needs "{q}".');
+        }
+        if (handler) warnings.push("Handlers require Worker source code and cannot be stored locally.");
+        bang = { kind: isMulti ? "multi" : "bang", name, aliases, description, home, search, targets: multiTargets, icon, iconBackground };
+        if (handler) bang.handler = handler;
       }
+
       if (builderExistingMatch && builderExistingMatch.id !== builderEditingId && !builderDuplicateAllowed) {
-        errors.push("This URL already has a bang. Edit it or choose Create another anyway.");
+        if (builderEditingId.startsWith("local:")) {
+          warnings.push((isFormula ? "This alias is also used by " : "This URL is also used by ") + builderExistingMatch.name + "; saving will still update the local entry being edited.");
+        } else {
+          errors.push(isFormula ? "This math bang already exists. Edit it or use a different alias." : "This URL already has a bang. Edit it or choose Create another anyway.");
+        }
       }
-      if (isMulti) {
+
+      const builtInFormulaAliases = isFormula && builderEditingId.startsWith("formula:")
+        ? new Set((builderExistingMatch?.aliases || []).map((alias) => String(alias).toLowerCase()))
+        : null;
+      const wouldOverrideBuiltInFormula = Boolean(builtInFormulaAliases && aliases.some((alias) => builtInFormulaAliases.has(alias)));
+      return {
+        isMulti, isFormula, handler, editingLocalId, name, aliases, description, home, search, icon, iconBackground,
+        multiTargets, bang, conflicts, wouldOverrideBuiltInFormula,
+        errors: [...new Set(errors)], warnings: [...new Set(warnings)]
+      };
+    }
+    function formulaParamCode(param) {
+      if (typeof param === "string") return JSON.stringify(param);
+      const properties = ["name: " + JSON.stringify(param.name)];
+      if (Object.prototype.hasOwnProperty.call(param || {}, "default")) properties.push("default: " + String(param.default));
+      if (param.help) properties.push("help: " + JSON.stringify(param.help));
+      return "{ " + properties.join(", ") + " }";
+    }
+    function renderBangBuilderCode() {
+      updateExistingBuilderMatch();
+      const candidate = collectBuilderCandidate();
+      const { isMulti, isFormula, handler, name, aliases, description, icon, iconBackground, multiTargets, bang, conflicts, wouldOverrideBuiltInFormula, errors, warnings } = candidate;
+
+      if (isFormula) {
+        const properties = [
+          "aliases: " + JSON.stringify(aliases.length ? aliases : ["example"]),
+          "name: " + JSON.stringify(name || "Example Formula"),
+          ...(description ? ["description: " + JSON.stringify(description)] : []),
+          "params: [" + (bang?.params || []).map(formulaParamCode).join(", ") + "]",
+          "expression: " + JSON.stringify(bang?.expression || "value"),
+          "output: " + JSON.stringify(bang?.output || "{number}"),
+          ...(icon ? ["icon: " + JSON.stringify(icon)] : bang?.iconSvg ? ["iconSvg: " + JSON.stringify(bang.iconSvg)] : []),
+          ...(iconBackground ? ["iconBackground: " + JSON.stringify(iconBackground)] : [])
+        ];
+        builderCode.value = [
+          "  {",
+          ...properties.map((property, index) => "    " + property + (index < properties.length - 1 ? "," : "")),
+          "  },"
+        ].join("\\n");
+      } else if (isMulti) {
         const objectIndent = "  ";
         const propertyIndent = "    ";
         const targetIndent = "      ";
-        const multiLines = [
+        builderCode.value = [
           objectIndent + "{",
           propertyIndent + "id: " + JSON.stringify((aliases[0] || "example").replace(/[^a-z0-9_-]+/g, "-")) + ",",
           propertyIndent + "name: " + JSON.stringify(name || "Example Multisearch") + ",",
@@ -5821,46 +6480,50 @@ function renderHelpPage(requestUrl) {
           propertyIndent + "aliases: " + JSON.stringify(aliases.length ? aliases : ["example"]) + ",",
           propertyIndent + "targets: [",
           ...multiTargets.map((target) => target.type === "bang"
-            ? targetIndent + "{ type: \\\"bang\\\", key: " + JSON.stringify(target.bang) + ", name: " + JSON.stringify(target.name) + " },"
-            : targetIndent + "{ type: \\\"url\\\", name: " + JSON.stringify(target.name) + ", search: " + JSON.stringify(target.search) + " },"),
+            ? targetIndent + "{ type: \\"bang\\", key: " + JSON.stringify(target.bang) + ", name: " + JSON.stringify(target.name) + " },"
+            : targetIndent + "{ type: \\"url\\", name: " + JSON.stringify(target.name) + ", search: " + JSON.stringify(target.search) + " },"),
           propertyIndent + "]" + (icon || iconBackground || builderEditingMultiIconKey ? "," : ""),
           ...(icon ? [propertyIndent + "icon: " + JSON.stringify(icon) + (iconBackground ? "," : "")] : builderEditingMultiIconKey ? [propertyIndent + "iconSvg: MULTI_ICON_SVGS." + builderEditingMultiIconKey + (iconBackground ? "," : "")] : []),
           ...(iconBackground ? [propertyIndent + "iconBackground: " + JSON.stringify(iconBackground)] : []),
           objectIndent + "},"
-        ];
-        builderCode.value = multiLines.join("\\n");
+        ].join("\\n");
       } else {
         const properties = [
           "name: " + JSON.stringify(name || "Example"),
           ...(description ? ["description: " + JSON.stringify(description)] : []),
           "aliases: " + JSON.stringify(aliases.length ? aliases : ["example"]),
-          "home: " + JSON.stringify(home || "https://example.com/"),
-          ...(search ? ["search: " + JSON.stringify(search)] : []),
+          "home: " + JSON.stringify(candidate.home || "https://example.com/"),
+          ...(candidate.search ? ["search: " + JSON.stringify(candidate.search)] : []),
           ...(icon ? ["icon: " + JSON.stringify(icon)] : []),
           ...(iconBackground ? ["iconBackground: " + JSON.stringify(iconBackground)] : []),
           ...(handler ? ["handler: " + JSON.stringify(handler)] : [])
         ];
-        const objectIndent = "\t\t\t";
-        const propertyIndent = objectIndent + "\t";
+        const objectIndent = "\\t\\t\\t";
+        const propertyIndent = objectIndent + "\\t";
         builderCode.value = [
           objectIndent + "{",
           ...properties.map((property, index) => propertyIndent + property + (index < properties.length - 1 ? "," : "")),
           objectIndent + "},"
         ].join("\\n");
       }
+
       builderCopyInline.disabled = false;
       builderCopyBottom.disabled = false;
       const editingLocalBang = builderEditingId.startsWith("local:");
-      builderAddLocal.textContent = editingLocalBang ? "Update local bang" : "Add locally";
-      builderAddLocal.disabled = Boolean(handler) || conflicts.length > 0;
+      builderAddLocal.textContent = editingLocalBang ? (isFormula ? "Update local math bang" : "Update local bang") : "Add locally";
+      builderAddLocal.disabled = Boolean(handler) || conflicts.length > 0 || errors.length > 0 || wouldOverrideBuiltInFormula;
       builderAddLocal.title = handler
         ? "Handlers require Worker source code and cannot be stored locally."
-        : conflicts.length ? "Choose unused aliases before saving locally." : "Save this bang in this browser";
+        : wouldOverrideBuiltInFormula ? "Change the aliases to save this as a separate local math bang."
+        : conflicts.length ? "Choose unused aliases before saving locally."
+        : errors.length ? "Fix validation errors before saving locally."
+        : isFormula ? "Save this math bang in this browser" : "Save this bang in this browser";
       builderOpenGithub.href = GITHUB_EDITOR_URL;
       builderCodeHint.textContent = builderEditingId && builderExistingMatch
         ? "Replace the existing " + builderExistingMatch.name + " object in " + builderExistingMatch.category + "."
+        : isFormula ? "Paste this complete object directly into the FORMULAS array."
         : isMulti ? "Paste this complete object directly into the MULTI_SEARCHES array." : "Paste directly into the appropriate SITE_GROUPS sites array.";
-      const messages = [...errors, ...warnings];
+      const messages = [...new Set([...errors, ...warnings])];
       setBuilderStatus(
         builderValidationStatus,
         messages.length ? messages.join(" ") : "Ready to copy.",
@@ -6075,45 +6738,12 @@ function renderHelpPage(requestUrl) {
       }
     }
     function getLocalBangCandidate() {
-      const errors = [];
-      const name = builderName.value.trim();
-      const aliases = parseBuilderAliases(builderAliases.value);
-      const description = builderDescription.value.trim();
-      const isMulti = builderLocalType.value === "multi";
-      const handler = isMulti ? "" : builderHandler.value.trim().toLowerCase();
-      let home = "", search = "", icon = "";
-      const requestedIconBackground = ["light", "dark"].includes(builderIconBackground.value) ? builderIconBackground.value : "";
-      let iconBackground = "";
-      try { home = normalizeBuilderHttpUrl(builderHome.value); } catch (error) { errors.push(error.message || "Invalid home URL."); }
-      try { search = normalizeBuilderSearchUrl(builderSearch.value); } catch (error) { errors.push(error.message || "Invalid search URL."); }
-      try { icon = normalizeBuilderHttpUrl(builderIcon.value); } catch (error) { errors.push(error.message || "Invalid icon URL."); }
-      iconBackground = requestedIconBackground && icon ? requestedIconBackground : "";
-      if (!name) errors.push("Add a name.");
-      if (!aliases.length) errors.push("Add an alias.");
-      if (aliases.some((alias) => !/^[a-z0-9_-]+$/.test(alias))) errors.push("Use only letters, numbers, underscores, and hyphens in aliases.");
-      const targetResults = isMulti ? parseBuilderMultiTargets(builderMultiTargets.value) : [];
-      const targets = targetResults.filter((target) => !target.error);
-      targetResults.filter((target) => target.error).forEach((target) => errors.push(target.error));
-      if (isMulti) {
-        if (targets.length < 2) errors.push("Add at least two valid multisearch targets.");
-        home = home || "https://search.micahjeffery.com/";
-        search = "";
-      } else {
-        if (!home) errors.push("Add a home URL.");
-        if (search && !search.includes("{q}")) errors.push('Search URL needs "{q}".');
-      }
-      if (handler) errors.push("Handlers require Worker source code and cannot be added locally.");
-      const editingLocalId = builderEditingId.startsWith("local:") ? builderEditingId.slice(6) : "";
-      const conflicts = aliases.flatMap((alias) => {
-        const owner = getBuilderAliasOwner(alias);
-        if (!owner || (owner.isLocal && owner.id === "local:" + editingLocalId)) return [];
-        return [alias + " (" + owner.name + ")"];
-      });
-      if (conflicts.length) errors.push("Aliases in use: " + conflicts.join(", ") + ".");
-      if (builderExistingMatch && !builderExistingMatch.isLocal && !builderDuplicateAllowed) {
-        errors.push("This URL already has a built-in bang. Choose Create another anyway to save a local version.");
-      }
-      return { errors, editingLocalId, bang: { kind: isMulti ? "multi" : "bang", name, aliases, description, home, search, targets, icon, iconBackground } };
+      updateExistingBuilderMatch();
+      const candidate = collectBuilderCandidate();
+      const errors = [...candidate.errors];
+      if (candidate.handler) errors.push("Handlers require Worker source code and cannot be added locally.");
+      if (candidate.wouldOverrideBuiltInFormula) errors.push("Change the aliases before saving this built-in formula locally.");
+      return { errors: [...new Set(errors)], editingLocalId: candidate.editingLocalId, bang: candidate.bang };
     }
     function addBangLocally() {
       const { errors, editingLocalId, bang } = getLocalBangCandidate();
@@ -6130,7 +6760,7 @@ function renderHelpPage(requestUrl) {
         updatedAt: now
       });
       if (!saved) {
-        setBuilderStatus(builderValidationStatus, "Could not save that local bang.", "danger");
+        setBuilderStatus(builderValidationStatus, "Could not save that local entry.", "danger");
         return;
       }
       if (existing) localBangs = localBangs.map((item) => item.id === existing.id ? saved : item);
@@ -6145,7 +6775,7 @@ function renderHelpPage(requestUrl) {
     }
     function deleteLocalBang(id) {
       const bang = localBangs.find((item) => item.id === id);
-      if (!bang || !window.confirm("Delete local bang “" + bang.name + "”?")) return;
+      if (!bang || !window.confirm("Delete local " + (bang.kind === "formula" ? "math bang" : "bang") + " “" + bang.name + "”?")) return;
       localBangs = localBangs.filter((item) => item.id !== id);
       favorites = favorites.filter((key) => key !== "local:" + id);
       saveFavorites();
@@ -6169,30 +6799,34 @@ function renderHelpPage(requestUrl) {
       return true;
     }
     function resetBangBuilder(shouldFocus = true) {
-      const retainedType = builderLocalType.value === "multi" ? "multi" : "bang";
+      const retainedType = ["multi", "formula"].includes(builderLocalType.value) ? builderLocalType.value : "bang";
       bangBuilderForm.reset();
       builderLocalType.value = retainedType;
       builderMultiTargets.value = "";
       renderBuilderMultiTargetEditor();
       syncBuilderTypeUi();
-      clearBuilderIconSuggestions();
+      clearBuilderIconSuggestions(retainedType === "formula" ? "" : "Inspect the site to find favicon choices.");
       builderEditingId = "";
       builderEditingMultiIconKey = "";
+      builderEditingFormulaIconSvg = "";
       builderDuplicateAllowed = false;
       builderExistingMatch = null;
       builderExisting.hidden = true;
       setBuilderIconPreview("");
-      setBuilderStatus(builderIconStatus, "Inspect the site to find favicon choices.");
+      setBuilderStatus(builderIconStatus, retainedType === "formula" ? "" : "Inspect the site to find favicon choices.");
       setBuilderStatus(builderSearchStatus, "Find detects a search URL or makes a clearly labeled guess.");
       try { localStorage.removeItem(BANG_BUILDER_STORAGE_KEY); } catch {}
       renderBangBuilderCode();
-      if (shouldFocus !== false) (retainedType === "multi" ? builderName : builderHome).focus();
+      if (shouldFocus !== false) (retainedType === "formula" ? builderName : retainedType === "multi" ? builderName : builderHome).focus();
     }
     function openBangBuilder() {
       showDialog(bangBuilderDialog);
       window.setTimeout(() => {
-        const firstEmpty = [builderHome, builderName, builderAliases].find((field) => !field.value.trim());
-        (firstEmpty || builderHome).focus();
+        const fields = builderLocalType.value === "formula"
+          ? [builderName, builderAliases, builderFormulaParams, builderFormulaExpression]
+          : builderLocalType.value === "multi" ? [builderName, builderAliases] : [builderHome, builderName, builderAliases];
+        const firstEmpty = fields.find((field) => !field.value.trim());
+        (firstEmpty || fields[0]).focus();
       }, 0);
     }
     function normalizeRecentSearch(value) {
@@ -6544,7 +7178,7 @@ function renderHelpPage(requestUrl) {
           const title = document.createElement("strong");
           title.textContent = name;
           const detail = document.createElement("small");
-          detail.textContent = aliases ? aliases.split(" ").map((alias) => "!" + alias).join(" · ") : "No aliases";
+          detail.textContent = aliases ? aliases.split(" ").map((alias) => alias.startsWith("=") ? alias : "!" + alias).join(" · ") : "No aliases";
           copy.append(title, detail);
           row.append(check, copy);
           rows.append(row);
@@ -6773,27 +7407,451 @@ function renderHelpPage(requestUrl) {
       if (match) return { bang: match[2].toLowerCase(), query: match[1] || "" };
       return null;
     }
-    function evaluateMathExpression(value) {
-      const expression = String(value).trim();
+    function normalizeMathExpression(value) {
+      let expression = String(value).trim();
+      if (!expression || expression.length > 120) return null;
+      const explicitFormula = expression.startsWith("=") || expression.startsWith("+");
+      if (explicitFormula) expression = expression.slice(1).trimStart();
+      expression = expression
+        .replaceAll("×", "*")
+        .replaceAll("÷", "/")
+        .replaceAll("−", "-");
+
+      // Remove commas only from valid thousands-grouped numbers. Leftover commas are rejected.
+      expression = expression.replace(/\\b\\d{1,3}(?:,\\d{3})+(?:\\.\\d+)?\\b/g, (number) => number.replaceAll(",", ""));
+      if (expression.includes(",")) return null;
+
+      // Support natural percentage expressions while leaving bare % as modulo.
+      expression = expression.replace(/(\\d+(?:\\.\\d+)?)\\s*%\\s*of\\s*/gi, "($1/100)*");
+      if (/\\bof\\b/i.test(expression)) return null;
+
       if (
         !expression ||
-        expression.length > 120 ||
-        !/[+*/%^-]/.test(expression) ||
+        (!explicitFormula && !/[+*/%^-]/.test(expression)) ||
         !/^[0-9+*/%^().\\s-]+$/.test(expression)
       ) {
         return null;
       }
-
-      try {
-        const result = Function('"use strict"; return (' + expression.replaceAll("^", "**") + ");")();
-        if (typeof result !== "number" || !Number.isFinite(result)) return null;
-        const normalized = Object.is(result, -0) ? 0 : Number(result.toPrecision(12));
-        return String(normalized);
-      } catch {
+      return expression;
+    }
+    function evaluateMathExpression(value) {
+      const expression = normalizeMathExpression(value);
+      if (!expression) return null;
+      const result = evaluateSafeFormulaExpression(expression, {}, {}, { modulo: true });
+      if (typeof result !== "number" || !Number.isFinite(result)) return null;
+      const normalized = Object.is(result, -0) ? 0 : Number(result.toPrecision(12));
+      return String(normalized);
+    }
+    function normalizeFormulaParam(param) {
+      const rawName = typeof param === "string" ? param : String(param?.name || "value");
+      const variadic = rawName.endsWith("...");
+      const name = variadic ? rawName.slice(0, -3) : rawName;
+      const hasDefault = typeof param === "object" && param !== null && Object.prototype.hasOwnProperty.call(param, "default");
+      return {
+        name,
+        variadic,
+        hasDefault,
+        defaultValue: hasDefault ? param.default : undefined,
+        help: typeof param === "object" && param !== null ? String(param.help || "") : ""
+      };
+    }
+    function formulaParamKey(name) {
+      return String(name || "value").replace(/[^a-z0-9_]/gi, "").toLowerCase();
+    }
+    function formulaParamDisplayName(name) {
+      return String(name || "VALUE")
+        .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
+        .replace(/[_-]+/g, " ")
+        .toUpperCase();
+    }
+    function formulaParamLabel(param) {
+      const spec = normalizeFormulaParam(param);
+      const base = formulaParamDisplayName(spec.name) + (spec.variadic ? "…" : "");
+      return spec.hasDefault ? "[" + base + "]" : base;
+    }
+    function splitFormulaSpaceArgs(tail) {
+      const content = String(tail || "").trim();
+      if (!content) return [];
+      if (/\\s/.test(content)) {
+        return content
+          .split(/\\s+/)
+          .map((part) => part.endsWith(",") ? part.slice(0, -1) : part)
+          .filter((part) => part !== "");
+      }
+      if (content.includes(",")) return content.split(",").map((part) => part.trim());
+      return [content];
+    }
+    function parseFormulaInput(value) {
+      const raw = String(value || "");
+      const trimmedStart = raw.trimStart();
+      if (!trimmedStart.startsWith("=") && !trimmedStart.startsWith("+")) return null;
+      const prefix = trimmedStart[0];
+      const body = trimmedStart.slice(1).replace(/^\\s+/, "");
+      const commandMatch = body.match(/^([a-z][a-z0-9_-]*)([\\s\\S]*)$/i);
+      if (!commandMatch) return null;
+      const inputAlias = commandMatch[1].toLowerCase();
+      const formula = FORMULA_BY_ALIAS.get(inputAlias) || null;
+      let tail = commandMatch[2] || "";
+      let style = "space";
+      let args = [];
+      if (tail.trimStart().startsWith("(")) {
+        style = "function";
+        const openIndex = tail.indexOf("(");
+        let inside = tail.slice(openIndex + 1);
+        if (/\\)\\s*$/.test(inside)) inside = inside.replace(/\\)\\s*$/, "");
+        args = inside === "" ? [] : inside.split(",").map((part) => part.trim());
+      } else {
+        args = splitFormulaSpaceArgs(tail);
+      }
+      return { alias: inputAlias, formula, args, style, tail, prefix };
+    }
+    function formulaActiveArgument(value, parsed) {
+      if (!parsed?.formula) return null;
+      const raw = String(value || "");
+      const caret = document.activeElement === filter && typeof filter.selectionStart === "number"
+        ? filter.selectionStart
+        : raw.length;
+      const prefix = raw.slice(0, Math.max(0, caret)).trimStart();
+      const aliasPattern = new RegExp("^[=+]" + parsed.alias, "i");
+      if (!aliasPattern.test(prefix)) return null;
+      const afterCommand = prefix.replace(aliasPattern, "");
+      let index = null;
+      if (parsed.style === "function") {
+        const openIndex = afterCommand.indexOf("(");
+        if (openIndex < 0) return null;
+        const afterOpen = afterCommand.slice(openIndex + 1);
+        index = (afterOpen.match(/,/g) || []).length;
+      } else {
+        if (!/^\\s/.test(afterCommand)) return null;
+        const content = afterCommand.replace(/^\\s+/, "");
+        if (!content) {
+          index = 0;
+        } else if (/\\s/.test(content)) {
+          const hasTrailingSpace = /\\s$/.test(content);
+          const tokens = content.trim().split(/\\s+/).filter(Boolean);
+          index = Math.max(0, tokens.length - (hasTrailingSpace ? 0 : 1));
+        } else if (content.includes(",")) {
+          index = (content.match(/,/g) || []).length;
+        } else {
+          index = 0;
+        }
+      }
+      const params = (parsed.formula.params || []).map(normalizeFormulaParam);
+      if (!params.length) return null;
+      const variadicIndex = params.findIndex((param) => param.variadic);
+      if (variadicIndex >= 0 && index >= variadicIndex) return variadicIndex;
+      return Math.min(index, params.length - 1);
+    }
+    function tokenizeFormulaExpression(source) {
+      let text = String(source || "")
+        .replaceAll("×", "*")
+        .replaceAll("÷", "/")
+        .replaceAll("−", "-")
+        .trim();
+      text = text.replace(/^([+-]?)\\$/, "$1");
+      if (!text || text.length > 500) return null;
+      const tokens = [];
+      let index = 0;
+      while (index < text.length) {
+        const char = text[index];
+        if (/\\s/.test(char)) {
+          index += 1;
+          continue;
+        }
+        const rest = text.slice(index);
+        const numberMatch = rest.match(/^(?:(?:\\d{1,3}(?:,\\d{3})+|\\d+)(?:\\.\\d*)?|\\.\\d+)/);
+        if (numberMatch) {
+          tokens.push({ type: "number", value: Number(numberMatch[0].replaceAll(",", "")) });
+          index += numberMatch[0].length;
+          continue;
+        }
+        const identMatch = rest.match(/^[a-z_][a-z0-9_]*/i);
+        if (identMatch) {
+          tokens.push({ type: "ident", value: identMatch[0].toLowerCase() });
+          index += identMatch[0].length;
+          continue;
+        }
+        if ("+-*/^(),%".includes(char)) {
+          tokens.push({ type: char, value: char });
+          index += 1;
+          continue;
+        }
         return null;
       }
+      return tokens;
     }
-
+    function evaluateSafeFormulaExpression(source, context = {}, functions = {}, options = {}) {
+      const tokens = tokenizeFormulaExpression(source);
+      if (!tokens) return null;
+      let position = 0;
+      const peek = () => tokens[position] || null;
+      const take = (type) => {
+        if (peek()?.type !== type) return null;
+        return tokens[position++];
+      };
+      const numeric = (value) => typeof value === "number" && Number.isFinite(value);
+      function parsePrimary() {
+        const token = peek();
+        if (!token) return null;
+        if (token.type === "number") {
+          position += 1;
+          return token.value;
+        }
+        if (token.type === "ident") {
+          position += 1;
+          const name = token.value;
+          if (take("(")) {
+            const args = [];
+            if (peek()?.type !== ")") {
+              while (true) {
+                const value = parseAddSub();
+                if (value === null) return null;
+                args.push(value);
+                if (!take(",")) break;
+              }
+            }
+            if (!take(")")) return null;
+            const fn = functions[name];
+            if (typeof fn !== "function") return null;
+            try {
+              return fn(...args);
+            } catch {
+              return null;
+            }
+          }
+          return Object.prototype.hasOwnProperty.call(context, name) ? context[name] : null;
+        }
+        if (take("(")) {
+          const value = parseAddSub();
+          if (value === null || !take(")")) return null;
+          return value;
+        }
+        return null;
+      }
+      function parsePostfix() {
+        let value = parsePrimary();
+        if (value === null) return null;
+        if (!options.modulo) {
+          while (take("%")) {
+            if (!numeric(value)) return null;
+            value /= 100;
+          }
+        }
+        return value;
+      }
+      function parsePower() {
+        let left = parsePostfix();
+        if (left === null) return null;
+        if (take("^")) {
+          const right = parseUnary();
+          if (!numeric(left) || !numeric(right)) return null;
+          left = left ** right;
+        }
+        return left;
+      }
+      function parseUnary() {
+        if (take("+")) return parseUnary();
+        if (take("-")) {
+          const value = parseUnary();
+          return numeric(value) ? -value : null;
+        }
+        return parsePower();
+      }
+      function parseMulDiv() {
+        let left = parseUnary();
+        if (left === null) return null;
+        while (peek() && ["*", "/", ...(options.modulo ? ["%"] : [])].includes(peek().type)) {
+          const op = tokens[position++].type;
+          const right = parseUnary();
+          if (!numeric(left) || !numeric(right)) return null;
+          left = op === "*" ? left * right : op === "/" ? left / right : left % right;
+        }
+        return left;
+      }
+      function parseAddSub() {
+        let left = parseMulDiv();
+        if (left === null) return null;
+        while (peek() && ["+", "-"].includes(peek().type)) {
+          const op = tokens[position++].type;
+          const right = parseMulDiv();
+          if (!numeric(left) || !numeric(right)) return null;
+          left = op === "+" ? left + right : left - right;
+        }
+        return left;
+      }
+      const result = parseAddSub();
+      if (result === null || position !== tokens.length) return null;
+      return result;
+    }
+    function evaluateFormulaArgument(raw) {
+      const value = evaluateSafeFormulaExpression(String(raw || ""));
+      return typeof value === "number" && Number.isFinite(value) ? value : null;
+    }
+    function resolveFormulaArguments(formula, args) {
+      const params = (formula?.params || []).map(normalizeFormulaParam);
+      const context = {};
+      const missing = [];
+      const variadicIndex = params.findIndex((param) => param.variadic);
+      if (variadicIndex >= 0 && variadicIndex !== params.length - 1) {
+        return { ok: false, reason: "invalid" };
+      }
+      if (variadicIndex < 0 && args.length > params.length) {
+        return { ok: false, reason: "invalid" };
+      }
+      for (let index = 0; index < params.length; index += 1) {
+        const param = params[index];
+        const key = formulaParamKey(param.name);
+        if (param.variadic) {
+          const values = args.slice(index);
+          if (!values.length) {
+            missing.push(formulaParamLabel(formula.params[index]));
+            context[key] = [];
+            break;
+          }
+          const parsedValues = [];
+          for (const rawValue of values) {
+            if (!String(rawValue ?? "").trim() || String(rawValue).trim() === "_") return { ok: false, reason: "invalid" };
+            const value = evaluateFormulaArgument(rawValue);
+            if (value === null) return { ok: false, reason: "invalid" };
+            parsedValues.push(value);
+          }
+          context[key] = parsedValues;
+          break;
+        }
+        const rawValue = args[index];
+        const omitted = rawValue === undefined || String(rawValue).trim() === "" || String(rawValue).trim() === "_";
+        if (omitted) {
+          if (param.hasDefault) {
+            context[key] = Number(param.defaultValue);
+          } else {
+            missing.push(formulaParamLabel(formula.params[index]));
+          }
+          continue;
+        }
+        const value = evaluateFormulaArgument(rawValue);
+        if (value === null) return { ok: false, reason: "invalid" };
+        context[key] = value;
+      }
+      if (missing.length) return { ok: false, reason: "missing", missing, context };
+      return { ok: true, context };
+    }
+    function calculateFormula(parsed) {
+      if (!parsed?.formula) return { ok: false, reason: "unknown" };
+      const resolved = resolveFormulaArguments(parsed.formula, parsed.args);
+      if (!resolved.ok) return { ...resolved, formula: parsed.formula };
+      const value = evaluateSafeFormulaExpression(parsed.formula.expression, resolved.context, FORMULA_FUNCTIONS);
+      if (typeof value !== "number" || !Number.isFinite(value)) {
+        return { ok: false, reason: "invalid", formula: parsed.formula };
+      }
+      return { ok: true, value, formula: parsed.formula };
+    }
+    function formatFormulaValue(value, kind = "number", decimals = null) {
+      const normalizedValue = Object.is(value, -0) ? 0 : Number(Number(value).toPrecision(12));
+      if (kind === "raw") return String(normalizedValue);
+      if (kind === "currency") {
+        return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(normalizedValue);
+      }
+      const options = { minimumFractionDigits: 0 };
+      if (decimals === null) options.maximumSignificantDigits = 12;
+      else options.maximumFractionDigits = decimals;
+      if (kind === "percent") options.style = "percent";
+      return new Intl.NumberFormat("en-US", options).format(normalizedValue);
+    }
+    function formatFormulaResult(result) {
+      const output = normalizeFormulaOutput(result.formula.output);
+      return output.replace(/\\{(number|percent)(?::([0-9]|10))?\\}|\\{(currency|raw)\\}/g, (_match, numericKind, decimalsText, fixedKind) => {
+        const kind = fixedKind || numericKind;
+        const decimals = decimalsText === undefined ? null : Number(decimalsText);
+        return formatFormulaValue(result.value, kind, decimals);
+      });
+    }
+    function escapePreviewHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+    function renderFormulaBreadcrumb(formula, activeIndex = null) {
+      const params = formula.params || [];
+      return '<span class="formula-preview-format"><code>' + params.map((param, index) => {
+        const text = escapePreviewHtml(formulaParamLabel(param));
+        return index === activeIndex ? "<strong>" + text + "</strong>" : text;
+      }).join(' <span aria-hidden="true">›</span> ') + "</code></span>";
+    }
+    function renderFormulaHelp(help) {
+      const text = String(help || "");
+      if (text === "Cash received +, paid -.") {
+        return 'Cash received <span class="formula-cash-positive">+</span>, paid <span class="formula-cash-negative">−</span>';
+      }
+      return escapePreviewHtml(text);
+    }
+    function renderFormulaGuidance(items) {
+      if (!items.length) return "";
+      return '<span class="formula-preview-notes">' + items.map((item) =>
+        '<span class="formula-preview-note' + (item.className ? " " + item.className : "") + '">' + item.html + "</span>"
+      ).join("") + "</span>";
+    }
+    function interpretedParamGuidance(parsed, activeIndex, activeParam) {
+      if (!activeParam) return null;
+      const rawArg = parsed.args?.[activeIndex];
+      const text = String(rawArg ?? "").trim();
+      const arithmeticText = text.replace(/^[+-]/, "");
+      if (!text || !/[*/^()+-]/.test(arithmeticText)) return null;
+      const value = evaluateFormulaArgument(text);
+      if (value === null) return null;
+      const key = formulaParamKey(activeParam.name);
+      const formatted = key === "rate"
+        ? new Intl.NumberFormat("en-US", { style: "percent", maximumFractionDigits: 6 }).format(value)
+        : new Intl.NumberFormat("en-US", { maximumFractionDigits: 10 }).format(Number(value.toPrecision(12)));
+      return { className: "is-interim", html: "= " + escapePreviewHtml(formatted) };
+    }
+    let formulaSubmissionAttempted = false;
+    function showFormulaPreview(value) {
+      const parsed = parseFormulaInput(value);
+      if (!parsed) return false;
+      bangPreview.hidden = false;
+      bangPreview.classList.remove("is-unknown");
+      if (!parsed.formula) {
+        const query = String(value || "").trim().slice(1).trim();
+        bangPreview.classList.add("is-unknown");
+        bangPreviewTitle.textContent = "WolframAlpha";
+        bangPreviewText.textContent = query
+          ? "Unsupported bang · Enter to use WolframAlpha"
+          : "Enter a calculation.";
+        return true;
+      }
+      const activeIndex = formulaActiveArgument(value, parsed);
+      const result = calculateFormula(parsed);
+      bangPreviewTitle.textContent = result.ok
+        ? parsed.formula.name + ": " + formatFormulaResult(result)
+        : parsed.formula.name;
+      let html = renderFormulaBreadcrumb(parsed.formula, activeIndex);
+      const guidance = [];
+      if (formulaSubmissionAttempted && result.reason === "missing" && result.missing?.length) {
+        guidance.push({ className: "is-error", html: "Missing: " + escapePreviewHtml(result.missing.join(", ")) });
+      } else if (formulaSubmissionAttempted && result.reason === "invalid") {
+        guidance.push({ className: "is-error", html: "Check the values and try again." });
+      }
+      const rawParam = activeIndex === null ? null : parsed.formula.params?.[activeIndex];
+      const activeParam = rawParam === null || rawParam === undefined ? null : normalizeFormulaParam(rawParam);
+      if (activeParam?.hasDefault) {
+        const hasLaterParam = activeIndex < (parsed.formula.params?.length || 0) - 1;
+        const instruction = hasLaterParam
+          ? (parsed.style === "function" ? "Use ,, for " : "Use _ for ") + String(activeParam.defaultValue)
+          : "Default " + String(activeParam.defaultValue);
+        guidance.push({ className: "is-default", html: escapePreviewHtml(instruction) });
+      }
+      const interimGuidance = interpretedParamGuidance(parsed, activeIndex, activeParam);
+      if (interimGuidance) guidance.push(interimGuidance);
+      if (activeParam?.help) {
+        guidance.push({ className: "", html: renderFormulaHelp(activeParam.help) });
+      }
+      html += renderFormulaGuidance(guidance);
+      bangPreviewText.innerHTML = html;
+      return true;
+    }
     function showMathPreview(expression, title = "Calculator") {
       const result = evaluateMathExpression(expression);
       if (result === null) return false;
@@ -6805,6 +7863,15 @@ function renderHelpPage(requestUrl) {
     }
 
     function updateBangPreview() {
+      const previewValue = filter.value.trim();
+      if (previewValue.startsWith("!!")) {
+        bangPreview.hidden = false;
+        bangPreview.classList.remove("is-unknown");
+        bangPreviewTitle.textContent = "Default search";
+        bangPreviewText.textContent = "!! bypasses bangs and calculator detection.";
+        return;
+      }
+      if ((previewValue.startsWith("=") || previewValue.startsWith("+")) && showFormulaPreview(filter.value)) return;
       const shortcut = parseBangInput(filter.value);
       if (!shortcut) {
         if (!showMathPreview(filter.value)) {
@@ -6831,10 +7898,9 @@ function renderHelpPage(requestUrl) {
       bangPreviewTitle.textContent = primaryBang;
       if (behavior === "math") {
         if (!shortcut.query) {
-          bangPreviewText.textContent = "Enter a simple expression, such as !math 45/6.";
-        } else if (!showMathPreview(shortcut.query, primaryBang)) {
-          bangPreviewTitle.textContent = primaryBang;
-          bangPreviewText.textContent = "Use numbers, parentheses, and + - * / % ^.";
+          bangPreviewText.textContent = "Enter an expression for WolframAlpha, such as !math solve x^2=9.";
+        } else {
+          bangPreviewText.textContent = 'Search WolframAlpha for “' + shortcut.query + '”.';
         }
         return;
       }
@@ -6895,19 +7961,40 @@ function renderHelpPage(requestUrl) {
         if (url) window.location.assign(url);
         return;
       }
+      const formulaTarget = card.querySelector("[data-formula-command]");
+      if (formulaTarget) {
+        formulaTarget.click();
+        return;
+      }
       const bang = card.querySelector("[data-bang]")?.dataset.bang;
       if (bang) putBangInSearch(bang);
     }
     function applyFilter() {
       clearKeyboardSelection();
-      const query = filter.value
-        .trim()
-        .toLowerCase()
-        .replace(/[!;:.]/g, "");
+      const trimmedFilter = filter.value.trim();
+      const prefix = trimmedFilter.charAt(0);
+      const mathOnly = prefix === "=" || prefix === "+";
+      const bangOnly = ["!", ";", ":", "."].includes(prefix);
+      const modeActive = mathOnly || bangOnly;
+      const formulaFilter = mathOnly ? parseFormulaInput(trimmedFilter) : null;
+      const bangFilter = bangOnly ? parseBangInput(trimmedFilter) : null;
+      const query = (formulaFilter?.formula
+        ? formulaFilter.formula.aliases[0]
+        : bangFilter?.bang
+          ? bangFilter.bang
+          : modeActive
+            ? trimmedFilter.slice(1)
+            : trimmedFilter.replace(/[!;:.]/g, ""))
+        .toLowerCase();
       const queryTokens = query.split(/\\s+/).filter(Boolean);
-      const cardMatches = (card) =>
-        !hiddenBangs.includes(card.dataset.siteKey) && (queryTokens.length === 0 || queryTokens.every((token) => card.dataset.search.includes(token)));
-      defaults.hidden = queryTokens.length > 0;
+      const cardMatches = (card) => {
+        if (hiddenBangs.includes(card.dataset.siteKey)) return false;
+        const isFormula = card.dataset.siteKind === "formula";
+        if (mathOnly && !isFormula) return false;
+        if (bangOnly && isFormula) return false;
+        return queryTokens.length === 0 || queryTokens.every((token) => card.dataset.search.includes(token));
+      };
+      defaults.hidden = modeActive || queryTokens.length > 0;
       let visible = 0;
       sourceCards.forEach((card) => {
         const matches = cardMatches(card);
@@ -6926,21 +8013,34 @@ function renderHelpPage(requestUrl) {
         card.hidden = !matches;
         if (matches) visibleFavorites += 1;
       });
-      favoritesSection.hidden = favorites.length === 0 || (queryTokens.length > 0 && visibleFavorites === 0);
+      favoritesSection.hidden = favorites.length === 0 || ((modeActive || queryTokens.length > 0) && visibleFavorites === 0);
       empty.style.display = visible ? "none" : "block";
       updateBangPreview();
       renderRecentSearches();
     }
-    function putBangInSearch(bang) {
-      filter.value = bang + " ";
+    function replaceSearchFieldValue(value) {
+      const nextValue = String(value ?? "");
       filter.focus();
-      filter.setSelectionRange(filter.value.length, filter.value.length);
+      filter.select();
+      let usedNativeUndo = false;
+      try {
+        usedNativeUndo = Boolean(document.execCommand && document.execCommand("insertText", false, nextValue));
+      } catch {}
+      if (!usedNativeUndo) {
+        filter.value = nextValue;
+        filter.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+      try { filter.setSelectionRange(filter.value.length, filter.value.length); } catch {}
+    }
+    function putBangInSearch(bang) {
+      formulaSubmissionAttempted = false;
+      replaceSearchFieldValue(bang + " ");
       applyFilter();
     }
     function clearSearch() {
       if (!filter.value) return false;
-      filter.value = "";
-      filter.focus();
+      formulaSubmissionAttempted = false;
+      replaceSearchFieldValue("");
       applyFilter();
       return true;
     }
@@ -6958,24 +8058,18 @@ function renderHelpPage(requestUrl) {
         applyFilter();
       });
     }
-    filter.addEventListener("input", scheduleFilter);
+    filter.addEventListener("input", () => {
+      formulaSubmissionAttempted = false;
+      scheduleFilter();
+    });
+    filter.addEventListener("keyup", () => {
+      if (/^[=+]/.test(filter.value.trim())) updateBangPreview();
+    });
+    filter.addEventListener("click", () => {
+      if (/^[=+]/.test(filter.value.trim())) updateBangPreview();
+    });
     filter.addEventListener("keydown", (event) => {
       const shortcutsDisabled = readStorage(STORAGE.shortcutsDisabled, "false") === "true";
-      if (!shortcutsDisabled && !filter.value && event.key === "+") {
-        event.preventDefault();
-        openBangBuilder();
-        return;
-      }
-      if (!shortcutsDisabled && !filter.value && event.key === "?") {
-        event.preventDefault();
-        showDialog(keyboardShortcutsDialog);
-        return;
-      }
-      if (!shortcutsDisabled && !filter.value && event.key === ",") {
-        event.preventDefault();
-        showDialog(settingsBackupDialog);
-        return;
-      }
       if (event.key === "Escape") {
         if (clearSearch()) {
           event.preventDefault();
@@ -7036,14 +8130,8 @@ function renderHelpPage(requestUrl) {
     }
     searchForm.addEventListener("submit", async (event) => {
       const raw = filter.value.trim();
-      if (raw === "+") {
-        event.preventDefault();
-        filter.value = "";
-        applyFilter();
-        openBangBuilder();
-        return;
-      }
-      const parsedShortcut = parseBangInput(raw);
+      const forceDefaultSearch = raw.startsWith("!!");
+      const parsedShortcut = forceDefaultSearch ? null : parseBangInput(raw);
       const localBang = parsedShortcut ? findLocalBangByAlias(parsedShortcut.bang) : null;
       if (parsedShortcut?.query) copyBangQueryWhenSupported(parsedShortcut.query);
       if (localBang) {
@@ -7052,13 +8140,40 @@ function renderHelpPage(requestUrl) {
         navigateToLocalBang(localBang, parsedShortcut.query);
         return;
       }
-      const mathResult = parsedShortcut ? null : evaluateMathExpression(raw);
+      const parsedFormula = forceDefaultSearch || parsedShortcut ? null : parseFormulaInput(raw);
+      const formulaResult = parsedFormula?.formula ? calculateFormula(parsedFormula) : null;
+      if (formulaResult?.ok) {
+        event.preventDefault();
+        const formattedResult = formatFormulaResult(formulaResult);
+        const copied = await copyTextToClipboard(formattedResult);
+        filter.value = "";
+        applyFilter();
+        showMathCopyStatus(formattedResult, copied);
+        return;
+      }
+      if (parsedFormula?.formula) {
+        event.preventDefault();
+        formulaSubmissionAttempted = true;
+        updateBangPreview();
+        return;
+      }
+      const mathResult = forceDefaultSearch || parsedShortcut ? null : evaluateMathExpression(raw);
       if (mathResult !== null) {
         event.preventDefault();
         const copied = await copyTextToClipboard(mathResult);
         filter.value = "";
         applyFilter();
         showMathCopyStatus(mathResult, copied);
+        return;
+      }
+      if (!forceDefaultSearch && (raw.startsWith("=") || raw.startsWith("+"))) {
+        event.preventDefault();
+        const wolframQuery = raw.slice(1).trim();
+        if (wolframQuery) {
+          window.location.assign(WOLFRAM_ALPHA_SEARCH.replaceAll("{q}", encodeURIComponent(wolframQuery)));
+        } else {
+          updateBangPreview();
+        }
         return;
       }
       saveRecentSearch(filter.value);
@@ -7074,7 +8189,7 @@ function renderHelpPage(requestUrl) {
         if (field === builderIcon) setBuilderIconPreview(builderIcon.value);
         if (field === builderIconBackground) syncBuilderIconAppearance();
         if (field === builderHome || field === builderSearch) {
-          if (builderEditingId && builderExistingMatch && builderHomeKey(builderHome.value) !== builderHomeKey(builderExistingMatch.home)) builderEditingId = "";
+          if (builderEditingId && !builderEditingId.startsWith("local:") && builderExistingMatch && builderHomeKey(builderHome.value) !== builderHomeKey(builderExistingMatch.home)) builderEditingId = "";
           builderDuplicateAllowed = false;
         }
         renderBangBuilderCode();
@@ -7114,6 +8229,16 @@ function renderHelpPage(requestUrl) {
       if (builderLocalType.value !== "multi") builderEditingMultiIconKey = "";
       syncBuilderTypeUi();
       renderBangBuilderCode();
+    });
+    builderFormulaInsert.addEventListener("change", () => {
+      const token = builderFormulaInsert.value;
+      if (!token) return;
+      const start = typeof builderFormulaOutput.selectionStart === "number" ? builderFormulaOutput.selectionStart : builderFormulaOutput.value.length;
+      const end = typeof builderFormulaOutput.selectionEnd === "number" ? builderFormulaOutput.selectionEnd : start;
+      builderFormulaOutput.focus();
+      builderFormulaOutput.setRangeText(token, start, end, "end");
+      builderFormulaInsert.value = "";
+      builderFormulaOutput.dispatchEvent(new Event("input", { bubbles: true }));
     });
     builderMultiAdd.addEventListener("click", () => {
       const row = addBuilderMultiTargetRow({ type: "bang", bang: "" });
@@ -7313,7 +8438,7 @@ function renderHelpPage(requestUrl) {
     document.addEventListener("click", async (event) => {
       const recentTarget = event.target.closest("[data-recent-search]");
       if (recentTarget) {
-        filter.value = recentTarget.dataset.recentSearch;
+        replaceSearchFieldValue(recentTarget.dataset.recentSearch);
         searchForm.requestSubmit();
         return;
       }
@@ -7334,6 +8459,18 @@ function renderHelpPage(requestUrl) {
         toggleFavorite(favoriteTarget.dataset.favorite);
         return;
       }
+      const formulaTarget = event.target.closest("[data-formula-command]");
+      if (formulaTarget) {
+        const command = String(formulaTarget.dataset.formulaCommand || "").trim().toLowerCase();
+        if (command) {
+          formulaSubmissionAttempted = false;
+          replaceSearchFieldValue("=" + command + " ");
+          clearKeyboardSelection();
+          applyFilter();
+          updateBangPreview();
+        }
+        return;
+      }
       const bangTarget = event.target.closest("[data-bang]");
       if (bangTarget) {
         putBangInSearch(bangTarget.dataset.bang);
@@ -7351,6 +8488,9 @@ function renderHelpPage(requestUrl) {
         window.prompt("Copy this:", text);
       }
     });
+    if (/^[=+]/.test(requestedSearchQuery.trim())) {
+      filter.value = requestedSearchQuery;
+    }
     renderFavorites();
     renderHiddenBangManager();
     applyFilter();
@@ -7743,9 +8883,17 @@ ${MULTI_SEARCH_PAGE_CSS}
   return htmlResponse(html);
 }
 function renderSiteCard(site) {
-  const aliases = site.aliases
-    .map((alias) => `<button class="alias" type="button" data-bang="!${escapeAttribute(alias)}" title="Use !${escapeAttribute(alias)} in the search box">!${escapeHtml(alias)}</button>`)
-    .join("");
+  const isFormula = site.handler === "formula";
+  const aliases = isFormula
+    ? (site.aliases || [`=${site.formulaCommand}`])
+      .map((alias, index) => {
+        const command = String(alias).replace(/^=/, "");
+        return `<button class="alias" type="button" data-formula-command="${escapeAttribute(command)}" title="Use =${escapeAttribute(command)}">=${escapeHtml(index === 0 ? command.toUpperCase() : command)}</button>`;
+      })
+      .join("")
+    : site.aliases
+      .map((alias) => `<button class="alias" type="button" data-bang="!${escapeAttribute(alias)}" title="Use !${escapeAttribute(alias)} in the search box">!${escapeHtml(alias)}</button>`)
+      .join("");
   const type = getSiteType(site);
   const searchText = [
     site.name,
@@ -7753,7 +8901,8 @@ function renderSiteCard(site) {
     site.category || "",
     site.searchTerms || "",
     ...site.aliases,
-    site.home || ""
+    site.home || "",
+    ...(site.formulaParams || []).map((param) => typeof param === "string" ? param.replace(/\.\.\.$/, "") : param.name || "")
   ].join(" ").toLowerCase();
   const link = site.home || "#";
   const faviconUrl = getFaviconUrl(site);
@@ -7768,16 +8917,23 @@ function renderSiteCard(site) {
         : "");
   const iconBackgroundClass = ["light", "dark"].includes(site.iconBackground) ? ` icon-bg-${site.iconBackground}` : "";
   const faviconClass = `site-favicon-edit${iconMask || inlineIcon ? " has-custom-visual" : faviconUrl ? " has-favicon" : ""}${iconBackgroundClass}`;
-  const favicon = `<button class="${faviconClass}" type="button" data-builder-edit-site="${escapeAttribute(site.id)}" aria-label="Edit ${escapeAttribute(site.name)} in ${site.handler === "multi" ? "Multisearch Builder" : "Bang Builder"}" title="Edit in ${site.handler === "multi" ? "Multisearch Builder" : "Bang Builder"}">${visual}<span class="site-favicon-pencil" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m16.9 3.6 3.5 3.5-11 11-4.4.9.9-4.4 11-11ZM4 20l1.5-7.1L15.8 2.6a2 2 0 0 1 2.8 0l2.8 2.8a2 2 0 0 1 0 2.8L11.1 18.5 4 20Z"/></svg></span></button>`;
+  const builderName = isFormula ? "Math Bang Builder" : site.handler === "multi" ? "Multisearch Builder" : "Bang Builder";
+  const favicon = `<button class="${faviconClass}" type="button" data-builder-edit-site="${escapeAttribute(site.id)}" aria-label="Edit ${escapeAttribute(site.name)} in ${builderName}" title="Edit in ${builderName}">${visual}<span class="site-favicon-pencil" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m16.9 3.6 3.5 3.5-11 11-4.4.9.9-4.4 11-11ZM4 20l1.5-7.1L15.8 2.6a2 2 0 0 1 2.8 0l2.8 2.8a2 2 0 0 1 0 2.8L11.1 18.5 4 20Z"/></svg></span></button>`;
   const description = site.description
     ? `<p class="site-description">${escapeHtml(site.description)}</p>`
     : "";
+  const siteName = isFormula
+    ? `<button class="site-name site-name-button" type="button" data-formula-command="${escapeAttribute(site.formulaCommand || "")}" title="Use =${escapeAttribute(site.formulaCommand || "")}">${escapeHtml(site.name)}</button>`
+    : `<a class="site-name" href="${escapeAttribute(link)}" target="_blank" rel="noreferrer" title="${escapeAttribute(site.name)}">${escapeHtml(site.name)}</a>`;
+  const bottomLine = isFormula
+    ? ""
+    : site.home ? `<a class="site-url" href="${escapeAttribute(site.home)}" target="_blank" rel="noreferrer">${escapeHtml(site.home)}</a>` : "";
   return `
-    <article class="site-card" data-site-key="${escapeAttribute(site.id)}" data-site-name="${escapeAttribute(site.name)}" data-aliases="${escapeAttribute(site.aliases.join(" "))}" data-category="${escapeAttribute(site.category || (site.handler === "multi" ? "Multisearch" : "Bang"))}" data-search="${escapeAttribute(searchText)}"${site.home ? ` title="${escapeAttribute(site.home)}"` : ""}>
+    <article class="site-card" data-site-key="${escapeAttribute(site.id)}" data-site-kind="${isFormula ? "formula" : "bang"}" data-site-name="${escapeAttribute(site.name)}" data-aliases="${escapeAttribute(site.aliases.join(" "))}" data-category="${escapeAttribute(site.category || (site.handler === "multi" ? "Multisearch" : "Bang"))}" data-search="${escapeAttribute(searchText)}"${site.home ? ` title="${escapeAttribute(site.home)}"` : ""}>
       <div class="site-top">
         <div class="site-heading">
           ${favicon}
-          <a class="site-name" href="${escapeAttribute(link)}" target="_blank" rel="noreferrer" title="${escapeAttribute(site.name)}">${escapeHtml(site.name)}</a>
+          ${siteName}
         </div>
         <div class="site-actions">
           <span class="type ${type.className}" role="img" aria-label="${escapeAttribute(type.label)}" title="${escapeAttribute(type.label)}"></span>
@@ -7786,10 +8942,13 @@ function renderSiteCard(site) {
       </div>
       ${description}
       <div class="aliases">${aliases}</div>
-      ${site.home ? `<a class="site-url" href="${escapeAttribute(site.home)}" target="_blank" rel="noreferrer">${escapeHtml(site.home)}</a>` : ""}
+      ${bottomLine}
     </article>`;
 }
 function getSiteType(site) {
+  if (site.handler === "formula") {
+    return { label: "Formula", className: "formula" };
+  }
   if (site.handler === "multi") {
     return { label: "Multisearch", className: "multi" };
   }
@@ -7855,6 +9014,15 @@ export default {
     const defaultEngine = getDefaultEngine(url.pathname);
     if (!raw) {
       return redirectTo(defaultEngine.home);
+    }
+    // A leading !! forces an ordinary search and bypasses bangs, reserved hints, and special parsing.
+    if (raw.startsWith("!!")) {
+      const forcedQuery = raw.slice(2).trimStart();
+      return forcedQuery ? redirectTo(defaultEngine.search, forcedQuery) : redirectTo(defaultEngine.home);
+    }
+    // = and + expressions/formulas calculate on the Search page so preview and copy behavior are available.
+    if (raw.startsWith("=") || raw.startsWith("+")) {
+      return renderHelpPage(url);
     }
     // A bare shortcut symbol is a quick way to open the Help page.
     if (["!", ";", ":", "."].includes(raw)) {
