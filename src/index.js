@@ -1,6 +1,6 @@
 const PROJECT = {
   name: "Search",
-  version: "0.1.2",
+  version: "0.1.3",
   repository: "https://github.com/micahjeffery/search",
   editMain: "https://github.com/micahjeffery/search/edit/main/src/index.js",
   editTest: "https://gitlab.com/micahjeffery.com/search/-/edit/main/src/index.js?ref_type=heads",
@@ -2430,12 +2430,24 @@ function isBlockedIpv4(hostname) {
 }
 function isBlockedIpv6(hostname) {
   if (!hostname.includes(":")) return false;
-  const value = hostname.toLowerCase();
-  if (value === "::" || value === "::1") return true;
-  if (value.startsWith("fc") || value.startsWith("fd")) return true;
-  if (/^fe[89ab]/.test(value)) return true;
-  const mapped = value.match(/::ffff:(\d{1,3}(?:\.\d{1,3}){3})$/);
-  return mapped ? isBlockedIpv4(mapped[1]) : false;
+  // URL has already converted dotted IPv4 suffixes to hexadecimal IPv6 words.
+  const halves = hostname.toLowerCase().split("::");
+  if (halves.length > 2) return true;
+  const left = halves[0] ? halves[0].split(":") : [];
+  const right = halves[1] ? halves[1].split(":") : [];
+  const missing = 8 - left.length - right.length;
+  if (halves.length === 2 ? missing < 1 : missing !== 0) return true;
+  const parts = [...left, ...Array(halves.length === 2 ? missing : 0).fill("0"), ...right];
+  if (parts.some((part) => !/^[0-9a-f]{1,4}$/.test(part))) return true;
+  const words = parts.map((part) => parseInt(part, 16));
+  if (words.slice(0, 5).every((word) => word === 0) && words[5] === 0xffff) {
+    const ipv4 = [words[6] >> 8, words[6] & 255, words[7] >> 8, words[7] & 255].join(".");
+    return isBlockedIpv4(ipv4);
+  }
+  // Only permit global unicast; exclude special-use, documentation and 6to4 ranges.
+  return (words[0] & 0xe000) !== 0x2000 ||
+    (words[0] === 0x2001 && (words[1] < 0x200 || words[1] === 0xdb8)) ||
+    words[0] === 0x2002 || (words[0] === 0x3fff && words[1] < 0x1000);
 }
 async function fetchDiscoveryResource(input, init = {}, maxRedirects = 4) {
   let current = input instanceof URL ? new URL(input.href) : normalizeDiscoveryUrl(input);
@@ -2470,30 +2482,42 @@ async function fetchDiscoveryResource(input, init = {}, maxRedirects = 4) {
   }
   throw new Error("The site redirected too many times.");
 }
+class BodyTooLargeError extends Error {}
 async function readTextLimited(response, maxBytes) {
   const contentLength = Number(response.headers.get("content-length") || 0);
   if (contentLength && contentLength > maxBytes) {
-    throw new Error("The site response is too large to inspect safely.");
+    if (response.body) response.body.cancel().catch(() => {});
+    throw new BodyTooLargeError("The response is too large to inspect safely.");
   }
   if (!response.body) return "";
   const reader = response.body.getReader();
   const decoder = new TextDecoder();
   let total = 0;
   let result = "";
+  let timedOut = false;
+  // fetch() resolves at headers. Bound body consumption separately, including stalls.
+  const timeout = setTimeout(() => {
+    timedOut = true;
+    reader.cancel().catch(() => {});
+  }, 8000);
   try {
     while (true) {
       const { value, done } = await reader.read();
+      if (timedOut) throw new Error("The response body timed out.");
       if (done) break;
       total += value.byteLength;
       if (total > maxBytes) {
-        await reader.cancel();
-        throw new Error("The site response is too large to inspect safely.");
+        throw new BodyTooLargeError("The response is too large to inspect safely.");
       }
       result += decoder.decode(value, { stream: true });
     }
     result += decoder.decode();
     return result;
+  } catch (error) {
+    reader.cancel().catch(() => {});
+    throw error;
   } finally {
+    clearTimeout(timeout);
     reader.releaseLock();
   }
 }
@@ -2950,11 +2974,7 @@ async function handleFaviconDiscovery(request) {
     return jsonResponse({ ok: false, error: "Cross-site requests are not allowed." }, 403);
   }
   try {
-    const contentLength = Number(request.headers.get("content-length") || 0);
-    if (contentLength > 16 * 1024) {
-      return jsonResponse({ ok: false, error: "The request is too large." }, 413);
-    }
-    const body = await request.json();
+    const body = JSON.parse(await readTextLimited(request, 16 * 1024));
     const homeUrl = normalizeDiscoveryUrl(body?.url);
     const cacheKey = homeUrl.href;
     const cached = getCachedFaviconDiscovery(cacheKey);
@@ -2963,6 +2983,9 @@ async function handleFaviconDiscovery(request) {
     setCachedFaviconDiscovery(cacheKey, result);
     return jsonResponse(result);
   } catch (error) {
+    if (error instanceof BodyTooLargeError) {
+      return jsonResponse({ ok: false, error: "The request is too large." }, 413);
+    }
     return jsonResponse({
       ok: false,
       error: error instanceof Error ? error.message : "Site inspection failed."
@@ -5489,6 +5512,11 @@ function renderHelpPage(requestUrl) {
       const output = String(value || "").trim() || "{number}";
       return output.slice(0, 160);
     }
+    function trustedFormulaIconSvg(value) {
+      // Backups and localStorage are untrusted. Only reuse markup shipped with the app.
+      const candidate = String(value || "").trim();
+      return FORMULA_DATA.find((formula) => formula.iconSvg === candidate)?.iconSvg || "";
+    }
     const FORMULA_FUNCTIONS = {
       abs(value) {
         return typeof value === "number" ? Math.abs(value) : NaN;
@@ -5583,7 +5611,7 @@ function renderHelpPage(requestUrl) {
         const output = normalizeFormulaOutput(raw.output);
         let icon = "";
         try { icon = normalizeBuilderHttpUrl(raw.icon); } catch { icon = ""; }
-        const iconSvg = String(raw.iconSvg || "").trim().slice(0, 8000);
+        const iconSvg = trustedFormulaIconSvg(raw.iconSvg);
         const candidate = { aliases, name, description, params: params || [], expression, output, icon, iconSvg, iconBackground: ["light", "dark"].includes(raw.iconBackground) ? raw.iconBackground : "" };
         if (!params || validateFormulaDefinition(candidate).length) return null;
         return {
@@ -5779,7 +5807,7 @@ function renderHelpPage(requestUrl) {
           formulaButton.dataset.builderEditSite = "local:" + bang.id;
           formulaButton.setAttribute("aria-label", "Edit " + bang.name + " in Math Bang Builder");
           formulaButton.title = "Edit in Math Bang Builder";
-          formulaButton.innerHTML = '<span class="site-favicon-fallback" aria-hidden="true"></span><span class="site-favicon site-favicon-svg" aria-hidden="true">' + (bang.iconSvg || FORMULA_TYPE_ICON_SVG) + '</span><span class="site-favicon-pencil" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m16.9 3.6 3.5 3.5-11 11-4.4.9.9-4.4 11-11ZM4 20l1.5-7.1L15.8 2.6a2 2 0 0 1 2.8 0l2.8 2.8a2 2 0 0 1 0 2.8L11.1 18.5 4 20Z"/></svg></span>';
+          formulaButton.innerHTML = '<span class="site-favicon-fallback" aria-hidden="true"></span><span class="site-favicon site-favicon-svg" aria-hidden="true">' + (trustedFormulaIconSvg(bang.iconSvg) || FORMULA_TYPE_ICON_SVG) + '</span><span class="site-favicon-pencil" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m16.9 3.6 3.5 3.5-11 11-4.4.9.9-4.4 11-11ZM4 20l1.5-7.1L15.8 2.6a2 2 0 0 1 2.8 0l2.8 2.8a2 2 0 0 1 0 2.8L11.1 18.5 4 20Z"/></svg></span>';
           heading.append(formulaButton);
         }
       } else if (bang.kind === "multi") {
@@ -6975,12 +7003,44 @@ function renderHelpPage(requestUrl) {
         keys.forEach((key) => localStorage.removeItem(key));
       } catch {}
     }
+    function prepareImportedLocalBangs(items, merge) {
+      if (!Array.isArray(items) || items.length > LOCAL_BANG_LIMIT) {
+        throw new Error("Settings must contain at most " + LOCAL_BANG_LIMIT + " local entries.");
+      }
+      const imported = merge ? localBangs.map((bang) => normalizeLocalBang(bang)).filter(Boolean) : [];
+      for (const item of items) {
+        const bang = normalizeLocalBang(item);
+        if (!bang) throw new Error("A local entry is invalid. No settings were imported.");
+        const isFormula = bang.kind === "formula";
+        const usedAliases = new Set(isFormula
+          ? FORMULA_DATA.flatMap((formula) => formula.aliases.map((alias) => String(alias).toLowerCase()))
+          : Object.keys(BANG_BUILDER_ALIAS_OWNERS));
+        const existingIndex = imported.findIndex((current) => current.id === bang.id);
+        imported.forEach((current, index) => {
+          if (index !== existingIndex && (current.kind === "formula") === isFormula) {
+            current.aliases.forEach((alias) => usedAliases.add(alias));
+          }
+        });
+        const conflict = bang.aliases.find((alias) => usedAliases.has(alias));
+        if (conflict) throw new Error("Alias " + (isFormula ? "=" : "!") + conflict + " is already in use. No settings were imported.");
+        if (existingIndex >= 0) imported[existingIndex] = bang;
+        else {
+          if (imported.length >= LOCAL_BANG_LIMIT) throw new Error("The import would exceed " + LOCAL_BANG_LIMIT + " local entries.");
+          imported.push(bang);
+        }
+      }
+      return imported;
+    }
     function importSettingsPayload(payload) {
       if (!payload || payload.version !== 1 || !payload.settings || typeof payload.settings !== "object") {
         throw new Error("That is not a supported Search settings file.");
       }
-      if (settingsImportMode.value === "replace") clearImportableSettings();
       const settings = payload.settings;
+      // Validate local entries before replace mode clears any saved preferences.
+      const importedLocalBangs = settings.localBangs !== undefined
+        ? prepareImportedLocalBangs(settings.localBangs, settingsImportMode.value === "merge")
+        : settingsImportMode.value === "replace" ? [] : localBangs;
+      if (settingsImportMode.value === "replace") clearImportableSettings();
       if (["auto", "light", "dark", "black"].includes(settings.theme)) writeStorage(STORAGE.theme, settings.theme);
       if (["comfortable", "compact", "minimalist"].includes(settings.layout)) writeStorage(STORAGE.layout, settings.layout);
       if (typeof settings.homeEngine === "string" && HOME_ENGINE_PATHS.includes(settings.homeEngine)) writeStorage(STORAGE.homeEngine, settings.homeEngine);
@@ -6996,39 +7056,8 @@ function renderHelpPage(requestUrl) {
       else if (settings.lockLayout === true) writeStorage(STORAGE.lockLayout, ["comfortable", "compact", "minimalist"].includes(settings.layout) ? settings.layout : "comfortable");
       if (Array.isArray(settings.hiddenBangs)) writeStorage(STORAGE.hiddenBangs, JSON.stringify([...new Set(settings.hiddenBangs.filter((key) => typeof key === "string"))]));
 
-      if (Array.isArray(settings.localBangs)) {
-        const imported = [];
-        const usedAliases = new Set(Object.keys(BANG_BUILDER_ALIAS_OWNERS));
-        if (settingsImportMode.value === "merge") {
-          localBangs.forEach((bang) => {
-            imported.push(bang);
-            bang.aliases.forEach((alias) => usedAliases.add(alias));
-          });
-        }
-        for (const item of settings.localBangs.slice(0, LOCAL_BANG_LIMIT)) {
-          const bang = normalizeLocalBang(item);
-          if (!bang) continue;
-          const existingIndex = imported.findIndex((current) => current.id === bang.id);
-          if (existingIndex >= 0) {
-            imported[existingIndex].aliases.forEach((alias) => usedAliases.delete(alias));
-            if (bang.aliases.some((alias) => usedAliases.has(alias))) {
-              imported[existingIndex].aliases.forEach((alias) => usedAliases.add(alias));
-              continue;
-            }
-            imported[existingIndex] = bang;
-            bang.aliases.forEach((alias) => usedAliases.add(alias));
-            continue;
-          }
-          if (bang.aliases.some((alias) => usedAliases.has(alias))) continue;
-          bang.aliases.forEach((alias) => usedAliases.add(alias));
-          imported.push(bang);
-          if (imported.length >= LOCAL_BANG_LIMIT) break;
-        }
-        localBangs = imported;
-        writeStorage(LOCAL_BANGS_STORAGE_KEY, JSON.stringify(imported));
-      } else if (settingsImportMode.value === "replace") {
-        localBangs = [];
-      }
+      localBangs = importedLocalBangs;
+      writeStorage(LOCAL_BANGS_STORAGE_KEY, JSON.stringify(localBangs));
 
       if (Array.isArray(settings.favorites)) {
         const validFavoriteKeys = new Set([
