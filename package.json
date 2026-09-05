@@ -2,6 +2,7 @@
   "name": "search",
   "private": true,
   "scripts": {
+    "test": "node --test test/*.test.cjs",
     "deploy": "wrangler deploy"
   },
   "devDependencies": {
